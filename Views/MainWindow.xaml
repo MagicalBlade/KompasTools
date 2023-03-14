@@ -3,9 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:KompasTools"
+        xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Инструменты для Компас 3D" Height="{Binding HeightMainWindow}" Width="{Binding WidthMainWindow}" WindowStyle="SingleBorderWindow">
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel/>
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventNAme ="Closing">
+            <i:InvokeCommandAction Command ="{Binding ClosingMainWindowCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+        
     <Grid>
 
     </Grid>
