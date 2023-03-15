@@ -7,17 +7,29 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
         mc:Ignorable="d"
-        Title="Инструменты для Компас 3D" Height="{Binding HeightMainWindow}" Width="{Binding WidthMainWindow}" WindowStyle="SingleBorderWindow">
+        Title="Инструменты для Компас 3D" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
+        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding ElementName=cb_Topmost, Path=IsChecked}">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
     <i:Interaction.Triggers>
-        <i:EventTrigger EventNAme ="Closing">
+        <i:EventTrigger EventName ="Closing">
             <i:InvokeCommandAction Command ="{Binding ClosingMainWindowCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
         
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Label Content="{Binding VersionAssembly}"/>
+            <ToggleButton  x:Name="cb_Topmost" Content="Topmost" ToolTip="Включить/выключить режим поверх всех окон" IsChecked="False" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StatusBar Grid.Row="2">
+            <TextBlock Text="{Binding StatisBar}" VerticalAlignment="Center"/>
+        </StatusBar>
     </Grid>
 </Window>
