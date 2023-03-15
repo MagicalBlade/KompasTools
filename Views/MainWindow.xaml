@@ -26,7 +26,8 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             <Label Content="{Binding VersionAssembly}"/>
-            <ToggleButton  x:Name="cb_Topmost" Content="Topmost" ToolTip="Включить/выключить режим поверх всех окон" IsChecked="False" VerticalAlignment="Center"/>
+            <ToggleButton  x:Name="cb_Topmost" Content="Topmost" ToolTip="Включить/выключить режим поверх всех окон"
+                           IsChecked="False" VerticalAlignment="Center"/>
         </StackPanel>
         <StatusBar Grid.Row="2">
             <TextBlock Text="{Binding StatisBar}" VerticalAlignment="Center"/>
