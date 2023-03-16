@@ -7,7 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
         mc:Ignorable="d"
-        Title="Инструменты для Компас 3D" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
+        Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding ElementName=cb_Topmost, Path=IsChecked}">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
@@ -16,8 +16,10 @@
         <i:EventTrigger EventName ="Closing">
             <i:InvokeCommandAction Command ="{Binding ClosingMainWindowCommand}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName ="Loaded">
+            <i:InvokeCommandAction Command ="{Binding LoadedMainWindowCommand}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
-        
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -32,5 +34,19 @@
         <StatusBar Grid.Row="2">
             <TextBlock Text="{Binding StatisBar}" VerticalAlignment="Center"/>
         </StatusBar>
+        <TabControl Grid.Row="1">
+            <TabItem Header="Чертеж">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <Label Content="123"/>
+                    </StackPanel>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
