@@ -27,6 +27,11 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Menu>
+                <MenuItem Header="Настройки">
+                    <MenuItem Header="Обновление"/>
+                </MenuItem>
+            </Menu>
             <Label Content="{Binding VersionAssembly}"/>
             <ToggleButton  x:Name="cb_Topmost" Content="Topmost" ToolTip="Включить/выключить режим поверх всех окон"
                            IsChecked="False" VerticalAlignment="Center"/>
@@ -42,9 +47,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <Label Content="123"/>
+                        <TextBox Text="{Binding Settings.Path_update, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
-
                 </Grid>
             </TabItem>
         </TabControl>

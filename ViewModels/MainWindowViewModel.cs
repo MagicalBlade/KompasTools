@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Reflection;
+using KompasTools.Classes;
+using KompasTools.Utils;
+using System.Text.Json;
+using System.Windows.Shapes;
+using System.Windows;
 using System.IO;
+using Path = System.IO.Path;
 
 namespace KompasTools.ViewModels
 {
@@ -34,34 +40,53 @@ namespace KompasTools.ViewModels
         [ObservableProperty]
         private string? _statisBar;
 
+        /// <summary>
+        /// Настройки приложения
+        /// </summary>
+        [ObservableProperty]
+        private ConfigData _mainSettings = new();
+        #endregion
 
         public string CurSelfDir { get => _curSelfDir; set => _curSelfDir = value; }
         private string _curSelfDir = Environment.CurrentDirectory;
 
-        #endregion
 
         #region Команды
+        /// <summary>
+        /// Событие при загрузке окна
+        /// </summary>
         [RelayCommand]
         private void LoadedMainWindow()
         {
-            string pathSettings = Path.Combine(CurSelfDir, "Settings.ini");
-            Dictionary<string, string> settings = new();
-            if (File.Exists(pathSettings))
+            string path_settings = Path.Combine(Environment.CurrentDirectory, "Settings.json");
+            if (File.Exists(path_settings))
             {
-                string? line;
-                using (StreamReader readSettings = new(pathSettings))
+                try
                 {
-                    while ((line = readSettings.ReadLine()) != null)
-                    {
-                        string[] strings = line.Split("=", 2, StringSplitOptions.TrimEntries);
-                        if (strings.Length != 2) { continue; }
-                        settings.Add(strings[0], strings[1]);
-                    }
-
+                    MainSettings = JsonUtils.Deserialize<ConfigData>("Settings.json");
+                }
+                catch (Exception)
+                {
+                    MainSettings = new ConfigData();
+                    FileUtils.WriteGlobalLog($"{DateTime.Now} - Проблема с десериализацией. Взяты стандартные настройки.");
+                    return;
                 }
             }
-            System.Windows.MessageBox.Show($"{settings["path_update"]}");
+            else
+            {
+                FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден файл настроек");
+                return;
+            }
+            if (MainSettings == null)
+            {
+                FileUtils.WriteGlobalLog($"{DateTime.Now} - Настройки пусты");
+                return;
+            }
+            UpdateUtils.CheckUpdate(MainSettings);
         }
+        /// <summary>
+        /// Событие при закрытии окна
+        /// </summary>
         [RelayCommand]
         private void ClosingMainWindow()
         {
@@ -69,7 +94,9 @@ namespace KompasTools.ViewModels
             Properties.Settings.Default.WidthMainWindow = WidthMainWindow;
             Properties.Settings.Default.Save();
 
+            JsonUtils.Serialize("Settings.json", MainSettings);
         }
+        
         #endregion
     }
 }
