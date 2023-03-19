@@ -39,7 +39,6 @@ namespace KompasTools.ViewModels
             $"{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
         [ObservableProperty]
         private string? _statisBar;
-
         /// <summary>
         /// Настройки приложения
         /// </summary>
