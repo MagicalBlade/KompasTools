@@ -32,7 +32,6 @@
                     <MenuItem Header="Обновление"/>
                 </MenuItem>
             </Menu>
-            <Label Content="{Binding VersionAssembly}"/>
             <ToggleButton  x:Name="cb_Topmost" Content="Topmost" ToolTip="Включить/выключить режим поверх всех окон"
                            IsChecked="False" VerticalAlignment="Center"/>
         </StackPanel>

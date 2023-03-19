@@ -21,10 +21,11 @@ namespace KompasTools.Utils
             string? nameSelf = Assembly.GetExecutingAssembly().GetName().Name;
             int processId = Environment.ProcessId;
             string curSelfDir = Environment.CurrentDirectory;
-            Version curver = Environment.Version;
             string readverPath = Path.Combine(configData.DirUpdate, "Version.txt");
             string pathUpdateProgram = Path.Combine(configData.DirUpdate, "Update.exe");
             string pathAchiveProgram = Path.Combine(configData.DirUpdate, $"{nameSelf}.zip");
+            Version? curver = Assembly.GetExecutingAssembly().GetName().Version;
+            Version? readver = new(File.ReadAllText(readverPath));
             if (!File.Exists(pathUpdateProgram))
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден Update.exe");
@@ -40,10 +41,9 @@ namespace KompasTools.Utils
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден архив обновления.");
                 return;
             }
-            Version? readver = new(File.ReadAllText(readverPath));
             if (curver != readver)
             {
-                if (MessageBox.Show("Доступна новая вресия. Обновить?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Доступна новая версия v.{readver}. Обновить?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
 
                     DirectoryInfo updateDirectory = Directory.CreateDirectory($@"{curSelfDir}\Update\"); //Создаем папку для хранения апдейтера
@@ -55,7 +55,6 @@ namespace KompasTools.Utils
                         process.Start();
                     };
                     Environment.Exit(0);
-
                 }
             }
         }

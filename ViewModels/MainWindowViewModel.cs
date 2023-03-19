@@ -33,8 +33,6 @@ namespace KompasTools.ViewModels
 
         #region Свойства общие для окна
         [ObservableProperty]
-        static private Version? _versionAssembly = Assembly.GetExecutingAssembly().GetName().Version;
-        [ObservableProperty]
         private string _titleMainWindow = $"Набор инструментов для Компас 3D. Версия приложения: " +
             $"{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
         [ObservableProperty]
