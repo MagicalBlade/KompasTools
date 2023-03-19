@@ -46,7 +46,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBox Text="{Binding Settings.Path_update, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding MainSettings.DirUpdate, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

@@ -32,21 +32,23 @@ namespace KompasTools.ViewModels
         #endregion
 
         #region Свойства общие для окна
+        /// <summary>
+        /// Титул основного окна
+        /// </summary>
         [ObservableProperty]
         private string _titleMainWindow = $"Набор инструментов для Компас 3D. Версия приложения: " +
             $"{Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}";
+        /// <summary>
+        /// Статус бар основного окна
+        /// </summary>
         [ObservableProperty]
         private string? _statisBar;
         /// <summary>
         /// Настройки приложения
         /// </summary>
         [ObservableProperty]
-        private ConfigData _mainSettings = new();
+        private ConfigData? _mainSettings = new();
         #endregion
-
-        public string CurSelfDir { get => _curSelfDir; set => _curSelfDir = value; }
-        private string _curSelfDir = Environment.CurrentDirectory;
-
 
         #region Команды
         /// <summary>
@@ -79,6 +81,7 @@ namespace KompasTools.ViewModels
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Настройки пусты");
                 return;
             }
+
             UpdateUtils.CheckUpdate(MainSettings);
         }
         /// <summary>
@@ -93,7 +96,6 @@ namespace KompasTools.ViewModels
 
             JsonUtils.Serialize("Settings.json", MainSettings);
         }
-        
         #endregion
     }
 }

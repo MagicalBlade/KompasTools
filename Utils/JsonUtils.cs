@@ -25,12 +25,9 @@ namespace KompasTools.Utils
             JsonSerializer serializer = new();
             serializer.Converters.Add(new JavaScriptDateTimeConverter());
             serializer.NullValueHandling = NullValueHandling.Ignore;
-            serializer.TypeNameAssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Full;
-            using (StreamWriter sw = new(path, false))
-            using (JsonWriter jw = new JsonTextWriter(sw))
-            {
-                serializer.Serialize(jw, obj);
-            }
+            using StreamWriter sw = new(path, false);
+            using JsonWriter jw = new JsonTextWriter(sw);
+            serializer.Serialize(jw, obj);
         }
     }
 }

@@ -17,7 +17,6 @@ namespace KompasTools.Utils
     {
         public static void CheckUpdate(ConfigData configData)
         {
-            string? exeSelfPath = Environment.ProcessPath;
             string? nameSelf = Assembly.GetExecutingAssembly().GetName().Name;
             int processId = Environment.ProcessId;
             string curSelfDir = Environment.CurrentDirectory;
@@ -46,7 +45,7 @@ namespace KompasTools.Utils
                 if (MessageBox.Show($"Доступна новая версия v.{readver}. Обновить?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
 
-                    DirectoryInfo updateDirectory = Directory.CreateDirectory($@"{curSelfDir}\Update\"); //Создаем папку для хранения апдейтера
+                    Directory.CreateDirectory($@"{curSelfDir}\Update\"); //Создаем папку для хранения апдейтера
                     File.Copy(pathUpdateProgram, $@"{curSelfDir}\Update\Update.exe", true); //Скопировали апдейтер
                     using (Process process = new())
                     {
