@@ -11,7 +11,7 @@ namespace KompasTools.Classes
         /// <summary>
         /// Путь к папке обновления
         /// </summary>
-        private string _dirUpdate = @"d:\Temp\4\Update";
+        private string _dirUpdate = @"\\auxserver\Обменник_ОГК\199 Компас\KompasTools";
         [JsonProperty("dir_update")]
         public string DirUpdate { get => _dirUpdate; set => _dirUpdate = value; }
     }

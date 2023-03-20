@@ -24,6 +24,11 @@ namespace KompasTools.Utils
             string pathUpdateProgram = Path.Combine(configData.DirUpdate, "Update.exe");
             string pathAchiveProgram = Path.Combine(configData.DirUpdate, $"{nameSelf}.zip");
             Version? curver = Assembly.GetExecutingAssembly().GetName().Version;
+            if (!File.Exists(readverPath))
+            {
+                FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден Version.txt");
+                return;
+            }
             Version? readver = new(File.ReadAllText(readverPath));
             if (!File.Exists(pathUpdateProgram))
             {
@@ -50,7 +55,7 @@ namespace KompasTools.Utils
                     using (Process process = new())
                     {
                         process.StartInfo.FileName = @$"{curSelfDir}\Update\Update.exe";
-                        process.StartInfo.Arguments = @$"{nameSelf} {processId} {curSelfDir} {configData.DirUpdate}";
+                        process.StartInfo.Arguments = $"\"{nameSelf}\" {processId} \"{curSelfDir}\" \"{configData.DirUpdate}\"";
                         process.Start();
                     };
                     Environment.Exit(0);
