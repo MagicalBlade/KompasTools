@@ -17,34 +17,30 @@ namespace KompasTools.Utils
     {
         public static void CheckUpdate(ConfigData configData)
         {
-            string? nameSelf = Assembly.GetExecutingAssembly().GetName().Name;
-            int processId = Environment.ProcessId;
-            string curSelfDir = Environment.CurrentDirectory;
             string readverPath = Path.Combine(configData.DirUpdate, "Version.txt");
             string pathUpdateProgram = Path.Combine(configData.DirUpdate, "Update.exe");
-            string pathAchiveProgram = Path.Combine(configData.DirUpdate, $"{nameSelf}.zip");
-            Version? curver = Assembly.GetExecutingAssembly().GetName().Version;
+
             if (!File.Exists(readverPath))
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден Version.txt");
                 return;
             }
-            Version? readver = new(File.ReadAllText(readverPath));
             if (!File.Exists(pathUpdateProgram))
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден Update.exe");
                 return;
             }
-            if (!File.Exists(readverPath))
-            {
-                FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден файл с версией обновления.");
-                return;
-            }
+            string? nameSelf = Assembly.GetExecutingAssembly().GetName().Name;
+            string pathAchiveProgram = Path.Combine(configData.DirUpdate, $"{nameSelf}.zip");
             if (!File.Exists(pathAchiveProgram))
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден архив обновления.");
                 return;
             }
+            int processId = Environment.ProcessId;
+            string curSelfDir = Environment.CurrentDirectory;
+            Version? curver = Assembly.GetExecutingAssembly().GetName().Version;
+            Version? readver = new(File.ReadAllText(readverPath));
             if (curver != readver)
             {
                 if (MessageBox.Show($"Доступна новая версия v.{readver}. Обновить?", "", MessageBoxButton.YesNo) == MessageBoxResult.Yes)

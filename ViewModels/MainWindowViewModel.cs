@@ -50,6 +50,11 @@ namespace KompasTools.ViewModels
         private ConfigData? _mainSettings = new();
         #endregion
 
+        #region TabControl - Заказ
+        [ObservableProperty]
+        private string? _orderRequest;
+        #endregion
+
         #region Команды
         /// <summary>
         /// Событие при загрузке окна
@@ -95,6 +100,15 @@ namespace KompasTools.ViewModels
             Properties.Settings.Default.Save();
 
             JsonUtils.Serialize("Settings.json", MainSettings);
+        }
+
+        /// <summary>
+        /// Поиск и открытие папки с заказом
+        /// </summary>
+        [RelayCommand]
+        private void OpenOrder()
+        {
+            SearchUtils.SearchFolder(OrderRequest, "d:\\Temp\\Search\\");
         }
         #endregion
     }

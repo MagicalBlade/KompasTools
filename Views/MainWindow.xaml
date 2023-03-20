@@ -39,14 +39,18 @@
             <TextBlock Text="{Binding StatisBar}" VerticalAlignment="Center"/>
         </StatusBar>
         <TabControl Grid.Row="1">
-            <TabItem Header="Чертеж">
+            <TabItem Header="Заказ">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBox Text="{Binding MainSettings.DirUpdate, UpdateSourceTrigger=PropertyChanged}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Открыть заказ" VerticalAlignment="Center" Margin="5"/>
+                            <TextBox Text="{Binding OrderRequest}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                            <Button Content="Открыть"  Command="{Binding OpenOrderCommand}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </TabItem>
