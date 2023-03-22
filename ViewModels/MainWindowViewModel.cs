@@ -53,6 +53,8 @@ namespace KompasTools.ViewModels
         #region TabControl - Заказ
         [ObservableProperty]
         private string? _orderRequest;
+        [ObservableProperty]
+        private string? _pathOrder;
         #endregion
 
         #region Команды
@@ -108,7 +110,7 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void OpenOrder()
         {
-            SearchUtils.SearchFolder(OrderRequest, "d:\\Temp\\Search\\");
+            SearchUtils.SearchFolder(OrderRequest, PathOrder);
         }
         #endregion
     }

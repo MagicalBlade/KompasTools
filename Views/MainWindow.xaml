@@ -51,6 +51,10 @@
                             <TextBox Text="{Binding OrderRequest}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
                             <Button Content="Открыть"  Command="{Binding OpenOrderCommand}"/>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Папка"/>
+                            <TextBox Text="{Binding PathOrder}" Height="25" Width="100"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </TabItem>
