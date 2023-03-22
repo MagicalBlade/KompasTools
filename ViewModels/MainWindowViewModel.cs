@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Windows;
 using System.IO;
 using Path = System.IO.Path;
+using System.Collections;
 
 namespace KompasTools.ViewModels
 {
@@ -55,6 +56,8 @@ namespace KompasTools.ViewModels
         private string? _orderRequest;
         [ObservableProperty]
         private string? _pathOrder;
+        [ObservableProperty]
+        private IEnumerable? _fileList;
         #endregion
 
         #region Команды
@@ -110,7 +113,7 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void OpenOrder()
         {
-            SearchUtils.SearchFolder(OrderRequest, PathOrder);
+            FileList = SearchUtils.SearchFolder(OrderRequest, PathOrder);
         }
         #endregion
     }

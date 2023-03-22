@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,13 +14,12 @@ namespace KompasTools.Utils
         /// <summary>
         /// Поиск папки
         /// </summary>
-        static public void SearchFolder(string? orderRequest, string searchPath)
+        static public IEnumerable SearchFolder(string? orderRequest, string searchPath)
         {
             Regex reg = new($@"\D*{orderRequest}\D*");
             IEnumerable<string> folders =  Directory.EnumerateDirectories(searchPath, "*", SearchOption.AllDirectories)
                 .Where(s => reg.IsMatch(s));
-            foreach (string folder in folders) { System.Windows.MessageBox.Show($"{folder}");}
-            
+            return folders;
         }
     }
 }

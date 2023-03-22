@@ -56,6 +56,11 @@
                             <TextBox Text="{Binding PathOrder}" Height="25" Width="100"/>
                         </StackPanel>
                     </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <ListBox ItemsSource="{Binding FileList}">
+                            
+                        </ListBox>
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>
