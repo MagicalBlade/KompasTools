@@ -17,7 +17,7 @@ namespace KompasTools.Utils
         static public IEnumerable SearchFolder(string? orderRequest, string searchPath)
         {
             Regex reg = new($@"\D*{orderRequest}\D*");
-            IEnumerable<string> folders =  Directory.EnumerateDirectories(searchPath, "*", SearchOption.AllDirectories)
+            IEnumerable<string> folders =  Directory.EnumerateDirectories(searchPath, "*")
                 .Where(s => reg.IsMatch(s));
             return folders;
         }
