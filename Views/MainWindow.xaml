@@ -48,7 +48,8 @@
                     <StackPanel Grid.Column="0" Orientation="Vertical">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Открыть заказ" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding OrderRequest}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                            <TextBox Text="{Binding OrderRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+
                             <Button Content="Открыть"  Command="{Binding OpenOrderCommand}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -56,11 +57,7 @@
                             <TextBox Text="{Binding PathOrder}" Height="25" Width="100"/>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Vertical">
-                        <ListBox ItemsSource="{Binding FileList}">
-                            
-                        </ListBox>
-                    </StackPanel>
+                    <ListBox Grid.Column="1" ItemsSource="{Binding FileList}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </Grid>
             </TabItem>
         </TabControl>

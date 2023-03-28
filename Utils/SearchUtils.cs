@@ -14,11 +14,16 @@ namespace KompasTools.Utils
         /// <summary>
         /// Поиск папки
         /// </summary>
-        static public IEnumerable SearchFolder(string? orderRequest, string searchPath)
+        static public IEnumerable SearchFolder(string? orderRequest, string? searchPath)
         {
-            Regex reg = new($@"\D*{orderRequest}\D*");
-            IEnumerable<string> folders =  Directory.EnumerateDirectories(searchPath, "*")
-                .Where(s => reg.IsMatch(s));
+            // TODO 1: При попытки поиска с символом * выдается ошибка, разобраться
+            Regex reg = new($@"{orderRequest}\d*\.\D");
+            if (!Directory.Exists(searchPath))
+            {
+                return "";
+            }
+            IEnumerable<string> folders = Directory.EnumerateDirectories(searchPath, "*")
+                                            .Where(s => reg.IsMatch(s));
             return folders;
         }
     }

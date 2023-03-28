@@ -15,6 +15,10 @@ namespace KompasTools.Utils
 {
     internal static class UpdateUtils
     {
+        /// <summary>
+        /// Проверка на наличие обновления программы
+        /// </summary>
+        /// <param name="configData"></param>
         public static void CheckUpdate(ConfigData configData)
         {
             string readverPath = Path.Combine(configData.DirUpdate, "Version.txt");

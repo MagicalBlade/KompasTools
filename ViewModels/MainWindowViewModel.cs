@@ -14,6 +14,7 @@ using System.Windows;
 using System.IO;
 using Path = System.IO.Path;
 using System.Collections;
+using Newtonsoft.Json.Linq;
 
 namespace KompasTools.ViewModels
 {
@@ -53,12 +54,19 @@ namespace KompasTools.ViewModels
 
         #region TabControl - Заказ
         [ObservableProperty]
-        private string? _orderRequest;
+        private string? _orderRequest = "";
+        // TODO 0: Удалить путь
         [ObservableProperty]
-        private string? _pathOrder;
+        private string? _pathOrder = "\\\\auxserver\\ОГК\\0. Чертежи компас";
         [ObservableProperty]
         private IEnumerable? _fileList;
         #endregion
+
+        partial void OnOrderRequestChanging(string? value)
+        {
+            FileList = SearchUtils.SearchFolder(value, PathOrder);
+        }
+
 
         #region Команды
         /// <summary>
@@ -67,6 +75,8 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void LoadedMainWindow()
         {
+            FileList = SearchUtils.SearchFolder(OrderRequest, PathOrder); //Начальное заполнение списка с заказами
+
             string path_settings = Path.Combine(Environment.CurrentDirectory, "Settings.json");
             if (File.Exists(path_settings))
             {
@@ -118,3 +128,6 @@ namespace KompasTools.ViewModels
         #endregion
     }
 }
+// TODO: Создать класс для хранения путей к папкам из которых буду получать списки файлов
+// TODO: Проблема с подпапками, например Архив в нулевой. Как заходить во внутрь? Что отображать при его выделении?
+// TODO: Двойной клик по заказу открывает папку с заказом. Кнопка для открытия папки?
