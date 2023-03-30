@@ -15,6 +15,7 @@ using System.IO;
 using Path = System.IO.Path;
 using System.Collections;
 using Newtonsoft.Json.Linq;
+using System.Windows.Controls;
 
 namespace KompasTools.ViewModels
 {
@@ -60,11 +61,21 @@ namespace KompasTools.ViewModels
         private string? _pathOrder = "\\\\auxserver\\ОГК\\0. Чертежи компас";
         [ObservableProperty]
         private IEnumerable? _fileList;
+        [ObservableProperty]
+        private TabItem? _orderSelectPath;
         #endregion
 
+        /// <summary>
+        /// Поиск заказа по введенным данным
+        /// </summary>
+        /// <param name="value"></param>
         partial void OnOrderRequestChanging(string? value)
         {
             FileList = SearchUtils.SearchFolder(value, PathOrder);
+        }
+        partial void OnOrderSelectPathChanged(TabItem? value)
+        {
+            PathOrder = value.Header.ToString();
         }
 
 
@@ -117,14 +128,6 @@ namespace KompasTools.ViewModels
             JsonUtils.Serialize("Settings.json", MainSettings);
         }
 
-        /// <summary>
-        /// Поиск и открытие папки с заказом
-        /// </summary>
-        [RelayCommand]
-        private void OpenOrder()
-        {
-            FileList = SearchUtils.SearchFolder(OrderRequest, PathOrder);
-        }
         #endregion
     }
 }

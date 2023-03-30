@@ -12,6 +12,11 @@
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName ="Closing">
             <i:InvokeCommandAction Command ="{Binding ClosingMainWindowCommand}"/>
@@ -41,23 +46,34 @@
         <TabControl Grid.Row="1">
             <TabItem Header="Заказ">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Открыть заказ" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding OrderRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
-
-                            <Button Content="Открыть"  Command="{Binding OpenOrderCommand}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Папка"/>
-                            <TextBox Text="{Binding PathOrder}" Height="25" Width="100"/>
-                        </StackPanel>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Открыть заказ" Margin="5"/>
+                        <TextBox Text="{Binding OrderRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                        <TextBlock Text="Папка"/>
+                        <TextBox Text="{Binding PathOrder}" Height="25" Width="100"/>
                     </StackPanel>
-                    <ListBox Grid.Column="1" ItemsSource="{Binding FileList}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <TabControl Grid.Row="0" TabStripPlacement="Left" SelectedItem="{Binding OrderSelectPath}">
+                            <TabItem>
+                                <TabItem.Header>
+                                    <TextBlock Text="bla bla" HorizontalAlignment="Stretch" >
+                                    </TextBlock>
+                                </TabItem.Header>
+                            </TabItem>
+                            <TabItem Header="Завершенные чертежи" Height="30">
+                                <TextBlock Text="{Binding OrderSelectPath}"/>
+                            </TabItem>
+                        </TabControl>
+                        <ListBox Grid.Column="1" ItemsSource="{Binding FileList}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>
