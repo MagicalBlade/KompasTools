@@ -26,5 +26,15 @@ namespace KompasTools.Utils
                                             .Where(s => reg.IsMatch(s));
             return folders;
         }
+
+        static public IEnumerable SearchFile(string? orderRequest, string? searchPath)
+        {
+            if (!Directory.Exists(searchPath))
+            {
+                return "";
+            }
+            IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*");
+            return files;
+        }
     }
 }

@@ -41,7 +41,7 @@
                            IsChecked="False" VerticalAlignment="Center"/>
         </StackPanel>
         <StatusBar Grid.Row="2">
-            <TextBlock Text="{Binding StatisBar}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding StatusBar}" VerticalAlignment="Center"/>
         </StatusBar>
         <TabControl Grid.Row="1">
             <TabItem Header="Заказ">
@@ -61,18 +61,19 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="200"/>
                         </Grid.ColumnDefinitions>
-                        <TabControl Grid.Row="0" TabStripPlacement="Left" SelectedItem="{Binding OrderSelectPath}">
-                            <TabItem>
-                                <TabItem.Header>
-                                    <TextBlock Text="bla bla" HorizontalAlignment="Stretch" >
-                                    </TextBlock>
-                                </TabItem.Header>
+                        <TabControl Grid.Row="0" TabStripPlacement="Left" SelectedIndex="{Binding OrderSelectPath}">
+                            <TabItem Header="Чертежи компас" Height="30">
+                                <ListBox ItemsSource="{Binding Drawings}">
+                                    
+                                </ListBox>
                             </TabItem>
                             <TabItem Header="Завершенные чертежи" Height="30">
-                                <TextBlock Text="{Binding OrderSelectPath}"/>
+                                <ListBox ItemsSource="{Binding Drawings}">
+
+                                </ListBox>
                             </TabItem>
                         </TabControl>
-                        <ListBox Grid.Column="1" ItemsSource="{Binding FileList}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        <ListBox Grid.Column="1" ItemsSource="{Binding OrdersPath}" SelectedItem="{Binding OrderSelected}"/>
                     </Grid>
                 </Grid>
             </TabItem>

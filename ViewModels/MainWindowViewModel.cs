@@ -45,24 +45,37 @@ namespace KompasTools.ViewModels
         /// Статус бар основного окна
         /// </summary>
         [ObservableProperty]
-        private string? _statisBar;
+        private string? _statusBar;
         /// <summary>
         /// Настройки приложения
         /// </summary>
         [ObservableProperty]
-        private ConfigData? _mainSettings = new();
+        private ConfigData _mainSettings = new();
         #endregion
 
         #region TabControl - Заказ
         [ObservableProperty]
         private string? _orderRequest = "";
-        // TODO 0: Удалить путь
+        // TODO 0: Удалить путь, удалить само свойство
         [ObservableProperty]
         private string? _pathOrder = "\\\\auxserver\\ОГК\\0. Чертежи компас";
+        /// <summary>
+        /// Список заказов
+        /// </summary>
         [ObservableProperty]
-        private IEnumerable? _fileList;
+        private IEnumerable? _ordersPath;
+        /// <summary>
+        /// Выбранная закладка
+        /// </summary>
         [ObservableProperty]
-        private TabItem? _orderSelectPath;
+        private int? _orderSelectPath;
+        /// <summary>
+        /// Выбранный заказ из списка
+        /// </summary>
+        [ObservableProperty]
+        private string? _orderSelected;
+        [ObservableProperty]
+        private IEnumerable? _drawings;
         #endregion
 
         /// <summary>
@@ -71,11 +84,30 @@ namespace KompasTools.ViewModels
         /// <param name="value"></param>
         partial void OnOrderRequestChanging(string? value)
         {
-            FileList = SearchUtils.SearchFolder(value, PathOrder);
+            OrdersPath = SearchUtils.SearchFolder(value, PathOrder);
         }
-        partial void OnOrderSelectPathChanged(TabItem? value)
+
+        /// <summary>
+        /// При переключении вкладок изменяется путь поиска и перестраивается список заказов.
+        /// </summary>
+        /// <param name="value"></param>
+        partial void OnOrderSelectPathChanged(int? value)
         {
-            PathOrder = value.Header.ToString();
+            switch (OrderSelectPath) 
+            {
+                case 0:
+                    OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathDrawingKompas);
+                    break;
+                case 1:
+                    OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathCompletedDrawing);
+                    break;
+            }
+        }
+
+        partial void OnOrderSelectedChanging(string? value)
+        {
+            Drawings = SearchUtils.SearchFile("*", value);
+
         }
 
 
@@ -86,8 +118,6 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void LoadedMainWindow()
         {
-            FileList = SearchUtils.SearchFolder(OrderRequest, PathOrder); //Начальное заполнение списка с заказами
-
             string path_settings = Path.Combine(Environment.CurrentDirectory, "Settings.json");
             if (File.Exists(path_settings))
             {
@@ -134,3 +164,4 @@ namespace KompasTools.ViewModels
 // TODO: Создать класс для хранения путей к папкам из которых буду получать списки файлов
 // TODO: Проблема с подпапками, например Архив в нулевой. Как заходить во внутрь? Что отображать при его выделении?
 // TODO: Двойной клик по заказу открывает папку с заказом. Кнопка для открытия папки?
+// TODO: В папке "Завершенные чертежи" внутри заказа искать по всем папкам

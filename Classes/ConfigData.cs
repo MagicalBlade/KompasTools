@@ -8,11 +8,12 @@ namespace KompasTools.Classes
 {
      internal class ConfigData
     {
-        /// <summary>
-        /// Путь к папке обновления
-        /// </summary>
-        private string _dirUpdate = @"\\auxserver\Обменник_ОГК\199 Компас\KompasTools";
         [JsonProperty("dir_update")]
-        public string DirUpdate { get => _dirUpdate; set => _dirUpdate = value; }
+        public string DirUpdate { get; set; } = @"\\auxserver\Обменник_ОГК\199 Компас\KompasTools";
+        [JsonProperty("path_drawing_kompas")]
+        public string PathDrawingKompas { get; set; } = "\\\\auxserver\\ОГК\\0. Чертежи компас";
+        [JsonProperty("path_completed_drawing")]
+        public string PathCompletedDrawing { get; set; } = "\\\\auxserver\\ОГК\\4. Завершённые_объекты_pdf";
+
     }
 }
