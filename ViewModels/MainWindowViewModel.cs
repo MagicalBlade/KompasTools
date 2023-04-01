@@ -63,7 +63,7 @@ namespace KompasTools.ViewModels
         /// Список заказов
         /// </summary>
         [ObservableProperty]
-        private IEnumerable? _ordersPath;
+        private List<FileInfo>? _ordersPath;
         /// <summary>
         /// Выбранная закладка
         /// </summary>
@@ -73,9 +73,13 @@ namespace KompasTools.ViewModels
         /// Выбранный заказ из списка
         /// </summary>
         [ObservableProperty]
-        private string? _orderSelected;
+        private FileInfo? _orderSelected;
         [ObservableProperty]
-        private IEnumerable? _drawings;
+        private List<FileInfo>? _drawingCompleted;
+        [ObservableProperty]
+        private List<FileInfo>? _drawingKompasAssembly;
+        [ObservableProperty]
+        private List<FileInfo>? _drawingKompasPart;
         #endregion
 
         /// <summary>
@@ -104,9 +108,20 @@ namespace KompasTools.ViewModels
             }
         }
 
-        partial void OnOrderSelectedChanging(string? value)
+        partial void OnOrderSelectedChanging(FileInfo? value)
         {
-            Drawings = SearchUtils.SearchFile("*", value);
+            // TODO: В зависимости от вкладки задавать разные пути. Например в чертежах компаса будет два пути: сборка и деталировка
+            switch (OrderSelectPath)
+            {
+                case 0:
+                    // TODO: Подумать как не хардкодить "Сборка" и "Деталировка"
+                    DrawingKompasAssembly= SearchUtils.SearchFile("*", $"{value}\\Сборка");
+                    DrawingKompasPart = SearchUtils.SearchFile("*", $"{value}\\Деталировка");
+                    break;
+                case 1:
+                    DrawingCompleted = SearchUtils.SearchFile("*", value?.FullName);
+                    break;
+            }
 
         }
 
@@ -124,22 +139,27 @@ namespace KompasTools.ViewModels
                 try
                 {
                     MainSettings = JsonUtils.Deserialize<ConfigData>("Settings.json");
+                    OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathDrawingKompas);
                 }
                 catch (Exception)
                 {
                     MainSettings = new ConfigData();
                     FileUtils.WriteGlobalLog($"{DateTime.Now} - Проблема с десериализацией. Взяты стандартные настройки.");
+                    // TODO: Придумать как записывать настройки если не удалось их прочитать, боеле красиво
+                    JsonUtils.Serialize("Settings.json", MainSettings);
                     return;
                 }
             }
             else
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Не найден файл настроек");
+                JsonUtils.Serialize("Settings.json", MainSettings);
                 return;
             }
             if (MainSettings == null)
             {
                 FileUtils.WriteGlobalLog($"{DateTime.Now} - Настройки пусты");
+                JsonUtils.Serialize("Settings.json", MainSettings);
                 return;
             }
 
@@ -154,8 +174,8 @@ namespace KompasTools.ViewModels
             Properties.Settings.Default.HeightMainWindow = HeightMainWindow;
             Properties.Settings.Default.WidthMainWindow = WidthMainWindow;
             Properties.Settings.Default.Save();
-
-            JsonUtils.Serialize("Settings.json", MainSettings);
+            // TODO: Раскомендить когда добавлю позможность именять настройки из программы
+            //JsonUtils.Serialize("Settings.json", MainSettings);
         }
 
         #endregion

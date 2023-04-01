@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KompasTools.Utils
 {
@@ -14,27 +15,38 @@ namespace KompasTools.Utils
         /// <summary>
         /// Поиск папки
         /// </summary>
-        static public IEnumerable SearchFolder(string? orderRequest, string? searchPath)
+        static public List<FileInfo> SearchFolder(string? orderRequest, string? searchPath)
         {
             // TODO 1: При попытки поиска с символом * выдается ошибка, разобраться
+            List<FileInfo> foldersInfo = new List<FileInfo>();
             Regex reg = new($@"{orderRequest}\d*\.\D");
             if (!Directory.Exists(searchPath))
             {
-                return "";
+                return foldersInfo;
             }
             IEnumerable<string> folders = Directory.EnumerateDirectories(searchPath, "*")
                                             .Where(s => reg.IsMatch(s));
-            return folders;
+            foreach (string folder in folders)
+            {
+                foldersInfo.Add(new FileInfo(folder));
+                
+            }
+            return foldersInfo;
         }
 
-        static public IEnumerable SearchFile(string? orderRequest, string? searchPath)
+        static public List<FileInfo> SearchFile(string? orderRequest, string? searchPath)
         {
+            List<FileInfo> filesInfo = new List<FileInfo>();
             if (!Directory.Exists(searchPath))
             {
-                return "";
+                return filesInfo;
             }
             IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*");
-            return files;
+            foreach (string folder in files)
+            {
+                filesInfo.Add(new FileInfo(folder));
+            }
+            return filesInfo;
         }
     }
 }
