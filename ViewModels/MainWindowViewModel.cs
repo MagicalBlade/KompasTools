@@ -16,6 +16,7 @@ using Path = System.IO.Path;
 using System.Collections;
 using Newtonsoft.Json.Linq;
 using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace KompasTools.ViewModels
 {
@@ -75,11 +76,11 @@ namespace KompasTools.ViewModels
         [ObservableProperty]
         private FileInfo? _orderSelected;
         [ObservableProperty]
-        private List<FileInfo>? _drawingCompleted;
+        private IEnumerable<FileInfo>? _drawingCompleted;
         [ObservableProperty]
-        private List<FileInfo>? _drawingKompasAssembly;
+        private IEnumerable<FileInfo>? _drawingKompasAssembly;
         [ObservableProperty]
-        private List<FileInfo>? _drawingKompasPart;
+        private IEnumerable<FileInfo>? _drawingKompasPart;
         #endregion
 
         /// <summary>
@@ -177,6 +178,14 @@ namespace KompasTools.ViewModels
             // TODO: Раскомендить когда добавлю позможность именять настройки из программы
             //JsonUtils.Serialize("Settings.json", MainSettings);
         }
+
+        [RelayCommand]
+        private void RunProcess(string path)
+        {
+            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = false });
+
+        }
+
 
         #endregion
     }

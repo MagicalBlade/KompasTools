@@ -34,7 +34,7 @@ namespace KompasTools.Utils
             return foldersInfo;
         }
 
-        static public List<FileInfo> SearchFile(string? orderRequest, string? searchPath)
+        static public IEnumerable<FileInfo> SearchFile(string? orderRequest, string? searchPath)
         {
             List<FileInfo> filesInfo = new List<FileInfo>();
             if (!Directory.Exists(searchPath))
@@ -46,7 +46,7 @@ namespace KompasTools.Utils
             {
                 filesInfo.Add(new FileInfo(folder));
             }
-            return filesInfo;
+            return filesInfo.Where(s => !s.Attributes.HasFlag(FileAttributes.Hidden));
         }
     }
 }

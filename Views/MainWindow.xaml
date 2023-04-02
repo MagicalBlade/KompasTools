@@ -93,7 +93,15 @@
                         <ListBox Grid.Column="1" ItemsSource="{Binding OrdersPath}" SelectedItem="{Binding OrderSelected}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"/>
+                                    <TextBlock Text="{Binding Name}">
+                                         <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName ="MouseDown">
+                                                <i:InvokeCommandAction 
+                                                    Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                    CommandParameter="{Binding FullName}"/>
+                                            </i:EventTrigger>
+                                          </i:Interaction.Triggers>
+                                    </TextBlock>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
