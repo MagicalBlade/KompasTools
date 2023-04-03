@@ -44,9 +44,13 @@ namespace KompasTools.Utils
             IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*");
             foreach (string folder in files)
             {
-                filesInfo.Add(new FileInfo(folder));
+                FileInfo fileInfo = new FileInfo(folder);
+                if (!fileInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    filesInfo.Add(fileInfo);
+                }
             }
-            return filesInfo.Where(s => !s.Attributes.HasFlag(FileAttributes.Hidden));
+            return filesInfo;
         }
     }
 }
