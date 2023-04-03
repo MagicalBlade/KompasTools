@@ -67,14 +67,14 @@
                                     <ListBox ItemsSource="{Binding DrawingKompasAssembly}" Width="300">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"/>
+                                                <Label Content="{Binding Name}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <ListBox ItemsSource="{Binding DrawingKompasPart}"  Width="300">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"/>
+                                                <Label Content="{Binding Name}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -84,7 +84,7 @@
                                 <ListBox ItemsSource="{Binding DrawingCompleted}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Name}"/>
+                                            <Label Content="{Binding Name}"/>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
@@ -93,15 +93,15 @@
                         <ListBox Grid.Column="1" ItemsSource="{Binding OrdersPath}" SelectedItem="{Binding OrderSelected}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Name}">
+                                    <Label Content="{Binding Name}">
                                          <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName ="MouseDown">
+                                            <i:EventTrigger EventName ="MouseDoubleClick">
                                                 <i:InvokeCommandAction 
                                                     Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
                                                     CommandParameter="{Binding FullName}"/>
                                             </i:EventTrigger>
                                           </i:Interaction.Triggers>
-                                    </TextBlock>
+                                    </Label>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>

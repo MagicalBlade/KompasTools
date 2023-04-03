@@ -182,7 +182,7 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void RunProcess(string path)
         {
-            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = false });
+            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
 
         }
 
