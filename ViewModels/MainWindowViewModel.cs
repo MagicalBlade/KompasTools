@@ -17,6 +17,7 @@ using System.Collections;
 using Newtonsoft.Json.Linq;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Threading;
 
 namespace KompasTools.ViewModels
 {
@@ -111,19 +112,40 @@ namespace KompasTools.ViewModels
 
         partial void OnOrderSelectedChanging(FileInfo? value)
         {
+            Task task = Task.Run(() => Test());
+            
             // TODO: В зависимости от вкладки задавать разные пути. Например в чертежах компаса будет два пути: сборка и деталировка
+            
+            //switch (OrderSelectPath)
+            //{
+            //    case 0:
+            //        // TODO: Подумать как не хардкодить "Сборка" и "Деталировка"
+            //        DrawingKompasAssembly= SearchUtils.SearchFile("*", $"{value}\\Сборка");
+            //        DrawingKompasPart = SearchUtils.SearchFile("*", $"{value}\\Деталировка");
+            //        break;
+            //    case 1:
+            //        DrawingCompleted = SearchUtils.SearchFile("*", value?.FullName);
+            //        break;
+            //}
+        }
+
+        private async Task TestAsync()
+        {
+            await Task.Run(() => Test());
+        }
+        private void Test()
+        {
             switch (OrderSelectPath)
             {
                 case 0:
                     // TODO: Подумать как не хардкодить "Сборка" и "Деталировка"
-                    DrawingKompasAssembly= SearchUtils.SearchFile("*", $"{value}\\Сборка");
-                    DrawingKompasPart = SearchUtils.SearchFile("*", $"{value}\\Деталировка");
+                    DrawingKompasAssembly = SearchUtils.SearchFile("*", $"{OrderSelected}\\Сборка");
+                    DrawingKompasPart = SearchUtils.SearchFile("*", $"{OrderSelected}\\Деталировка");
                     break;
                 case 1:
-                    DrawingCompleted = SearchUtils.SearchFile("*", value?.FullName);
+                    DrawingCompleted = SearchUtils.SearchFile("*", OrderSelected?.FullName);
                     break;
             }
-
         }
 
 
