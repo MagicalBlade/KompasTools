@@ -56,11 +56,17 @@ namespace KompasTools.ViewModels
         #endregion
 
         #region TabControl - Заказ
+        /// <summary>
+        /// Заказ который необходимо найти
+        /// </summary>
         [ObservableProperty]
         private string? _orderRequest = "";
-        // TODO 0: Удалить путь, удалить само свойство
         [ObservableProperty]
-        private string? _pathOrder = "\\\\auxserver\\ОГК\\0. Чертежи компас";
+        private string _posRequest = "";
+        [ObservableProperty]
+        private string _markRequest = "";
+        [ObservableProperty]
+        private string? _pathOrder = "";
         /// <summary>
         /// Список заказов
         /// </summary>
@@ -90,7 +96,16 @@ namespace KompasTools.ViewModels
         /// <param name="value"></param>
         partial void OnOrderRequestChanging(string? value)
         {
-            OrdersPath = SearchUtils.SearchFolder(value, PathOrder);
+            // TODO: Может стоит искать не в "папке" в уже в сформированом списке папок? Только проблема: список может быть устаревшим
+            switch (OrderSelectPath)
+            {
+                case 0:
+                    OrdersPath = SearchUtils.SearchFolder(value, MainSettings.PathDrawingKompas);
+                    break;
+                case 1:
+                    OrdersPath = SearchUtils.SearchFolder(value, MainSettings.PathCompletedDrawing);
+                    break;
+            }
         }
 
         /// <summary>
@@ -112,42 +127,29 @@ namespace KompasTools.ViewModels
 
         partial void OnOrderSelectedChanging(FileInfo? value)
         {
-            Task task = Task.Run(() => Test());
-            
             // TODO: В зависимости от вкладки задавать разные пути. Например в чертежах компаса будет два пути: сборка и деталировка
-            
-            //switch (OrderSelectPath)
-            //{
-            //    case 0:
-            //        // TODO: Подумать как не хардкодить "Сборка" и "Деталировка"
-            //        DrawingKompasAssembly= SearchUtils.SearchFile("*", $"{value}\\Сборка");
-            //        DrawingKompasPart = SearchUtils.SearchFile("*", $"{value}\\Деталировка");
-            //        break;
-            //    case 1:
-            //        DrawingCompleted = SearchUtils.SearchFile("*", value?.FullName);
-            //        break;
-            //}
-        }
 
-        private async Task TestAsync()
-        {
-            await Task.Run(() => Test());
-        }
-        private void Test()
-        {
             switch (OrderSelectPath)
             {
                 case 0:
                     // TODO: Подумать как не хардкодить "Сборка" и "Деталировка"
-                    DrawingKompasAssembly = SearchUtils.SearchFile("*", $"{OrderSelected}\\Сборка");
-                    DrawingKompasPart = SearchUtils.SearchFile("*", $"{OrderSelected}\\Деталировка");
+                    DrawingKompasAssembly = null;
+                    DrawingKompasPart = null;
+                    Task DrawingKompasAssemblyTask = Task.Run(() => DrawingKompasAssembly = SearchUtils.SearchFile(MarkRequest, $"{value}\\Сборка"));
+                    Task DrawingKompasPartTask = Task.Run(() => DrawingKompasPart = SearchUtils.SearchFile(PosRequest, $"{value}\\Деталировка"));
                     break;
                 case 1:
-                    DrawingCompleted = SearchUtils.SearchFile("*", OrderSelected?.FullName);
+                    DrawingCompleted = null;
+                    Task DrawingCompletedTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(MarkRequest, value?));
+
                     break;
             }
         }
 
+        partial void OnPosRequestChanged(string value)
+        {
+            Task DrawingKompasPartTask = Task.Run(() => DrawingKompasPart = SearchUtils.SearchFile(value, $"{OrderSelected}\\Деталировка"));
+        }
 
         #region Команды
         /// <summary>

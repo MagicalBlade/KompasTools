@@ -34,14 +34,17 @@ namespace KompasTools.Utils
             return foldersInfo;
         }
 
-        static public IEnumerable<FileInfo> SearchFile(string? orderRequest, string? searchPath)
+        static public IEnumerable<FileInfo> SearchFile(string orderRequest, string? searchPath)
         {
             List<FileInfo> filesInfo = new List<FileInfo>();
             if (!Directory.Exists(searchPath))
             {
                 return filesInfo;
             }
-            IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*");
+            // TODO: Решить проблему со спец сиволами по типу *. они вызывабт ошибки
+            Regex reg = new($@"{orderRequest}");
+            IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*")
+                .Where(s =>reg.IsMatch(s));
             foreach (string folder in files)
             {
                 FileInfo fileInfo = new FileInfo(folder);
