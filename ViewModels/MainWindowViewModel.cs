@@ -140,7 +140,7 @@ namespace KompasTools.ViewModels
                     break;
                 case 1:
                     DrawingCompleted = null;
-                    Task DrawingCompletedTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(MarkRequest, value?));
+                    Task DrawingCompletedTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(MarkRequest, value?.FullName));
 
                     break;
             }
