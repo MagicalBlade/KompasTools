@@ -190,6 +190,23 @@ namespace KompasTools.ViewModels
                     break;
             }
         }
+        /// <summary>
+        /// Происходит ввод запроса на поиск марки
+        /// </summary>
+        /// <param name="value"></param>
+        partial void OnMarkRequestChanged(string value)
+        {
+            switch (OrderSelectPath)
+            {
+                case 0:
+                    Task DrawingKompasAssemblyTask = Task.Run(() => DrawingKompasAssembly= SearchUtils.SearchFile(value, $"{OrderSelected}\\Сборка"));
+                    break;
+                case 1:
+                    Task DrawingCompletedAssemblyTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(value, $"{OrderSelected}"));
+
+                    break;
+            }
+        }
 
         #region Команды
         /// <summary>
