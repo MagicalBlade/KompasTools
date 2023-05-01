@@ -61,12 +61,16 @@ namespace KompasTools.ViewModels
         /// </summary>
         [ObservableProperty]
         private string? _orderRequest = "";
+        /// <summary>
+        /// Позиция которую необходимо найти
+        /// </summary>
         [ObservableProperty]
         private string _posRequest = "";
+        /// <summary>
+        /// Марка которую необходимо найти
+        /// </summary>
         [ObservableProperty]
         private string _markRequest = "";
-        [ObservableProperty]
-        private string? _pathOrder = "";
         /// <summary>
         /// Список заказов
         /// </summary>
@@ -114,17 +118,42 @@ namespace KompasTools.ViewModels
         /// <param name="value"></param>
         partial void OnOrderSelectPathChanged(int? value)
         {
+            //Обнуление списка найденных файлов.
+            DrawingKompasAssembly = null;
+            DrawingKompasPart = null;
+            DrawingCompleted = null;
+            FileInfo? oldOrderSelected = OrderSelected;
             switch (OrderSelectPath) 
             {
                 case 0:
                     OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathDrawingKompas);
+                    foreach (FileInfo item in OrdersPath)
+                    {
+                        if (item.Name == oldOrderSelected?.Name)
+                        {
+                            OrderSelected = item;
+                            break;
+                        }
+                    }
                     break;
                 case 1:
                     OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathCompletedDrawing);
+                    foreach (FileInfo item in OrdersPath)
+                    {
+                        if (item.Name == oldOrderSelected?.Name)
+                        {
+                            OrderSelected = item;
+                            break;
+                        }
+                    }
                     break;
             }
         }
 
+        /// <summary>
+        /// Выбран новый заказ
+        /// </summary>
+        /// <param name="value"></param>
         partial void OnOrderSelectedChanging(FileInfo? value)
         {
             // TODO: В зависимости от вкладки задавать разные пути. Например в чертежах компаса будет два пути: сборка и деталировка
@@ -146,9 +175,20 @@ namespace KompasTools.ViewModels
             }
         }
 
+        /// <summary>
+        /// Происходит ввод запроса на поиск позиции
+        /// </summary>
+        /// <param name="value"></param>
         partial void OnPosRequestChanged(string value)
         {
-            Task DrawingKompasPartTask = Task.Run(() => DrawingKompasPart = SearchUtils.SearchFile(value, $"{OrderSelected}\\Деталировка"));
+            switch (OrderSelectPath)
+            {
+                case 0:
+                    Task DrawingKompasPartTask = Task.Run(() => DrawingKompasPart = SearchUtils.SearchFile(value, $"{OrderSelected}\\Деталировка"));
+                    break;
+                case 1:
+                    break;
+            }
         }
 
         #region Команды

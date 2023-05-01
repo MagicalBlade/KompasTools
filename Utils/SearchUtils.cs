@@ -29,11 +29,16 @@ namespace KompasTools.Utils
             foreach (string folder in folders)
             {
                 foldersInfo.Add(new FileInfo(folder));
-                
+
             }
             return foldersInfo;
         }
-
+        /// <summary>
+        /// Поиск позиции
+        /// </summary>
+        /// <param name="orderRequest"></param>
+        /// <param name="searchPath"></param>
+        /// <returns></returns>
         static public IEnumerable<FileInfo> SearchFile(string orderRequest, string? searchPath)
         {
             List<FileInfo> filesInfo = new List<FileInfo>();
@@ -41,10 +46,38 @@ namespace KompasTools.Utils
             {
                 return filesInfo;
             }
-            // TODO: Решить проблему со спец сиволами по типу *. они вызывабт ошибки
+            // TODO: Решить проблему со спец сиволами по типу *. они вызывают ошибки
             Regex reg = new($@"{orderRequest}");
             IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*")
-                .Where(s =>reg.IsMatch(s));
+                .Where(s => reg.IsMatch(s));
+            foreach (string folder in files)
+            {
+                FileInfo fileInfo = new FileInfo(folder);
+                if (!fileInfo.Attributes.HasFlag(FileAttributes.Hidden))
+                {
+                    filesInfo.Add(fileInfo);
+                }
+            }
+            return filesInfo;
+        }
+
+        /// <summary>
+        /// Поиск Марки
+        /// </summary>
+        /// <param name="orderRequest"></param>
+        /// <param name="searchPath"></param>
+        /// <returns></returns>
+        static public IEnumerable<FileInfo> SearchMark(string orderRequest, string? searchPath)
+        {
+            List<FileInfo> filesInfo = new List<FileInfo>();
+            if (!Directory.Exists(searchPath))
+            {
+                return filesInfo;
+            }
+            // TODO: Решить проблему со спец сиволами по типу *. они вызывают ошибки
+            Regex reg = new($@"{orderRequest}");
+            IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*")
+                .Where(s => reg.IsMatch(s));
             foreach (string folder in files)
             {
                 FileInfo fileInfo = new FileInfo(folder);
