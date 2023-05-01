@@ -264,7 +264,6 @@ namespace KompasTools.ViewModels
         private void RunProcess(string path)
         {
             Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
-
         }
 
 

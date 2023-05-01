@@ -84,14 +84,30 @@
                                     <ListBox ItemsSource="{Binding DrawingKompasAssembly}" Width="300">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Content="{Binding Name}"/>
+                                                <Label Content="{Binding Name}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName ="MouseDoubleClick">
+                                                            <i:InvokeCommandAction 
+                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                                CommandParameter="{Binding FullName}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Label>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
                                     <ListBox ItemsSource="{Binding DrawingKompasPart}"  Width="300">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Content="{Binding Name}"/>
+                                                <Label Content="{Binding Name}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName ="MouseDoubleClick">
+                                                            <i:InvokeCommandAction 
+                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                                CommandParameter="{Binding FullName}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Label>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -101,7 +117,15 @@
                                 <ListBox ItemsSource="{Binding DrawingCompleted}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Content="{Binding Name}"/>
+                                            <Label Content="{Binding Name}" Margin="0">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName ="MouseDoubleClick">
+                                                        <i:InvokeCommandAction 
+                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                                CommandParameter="{Binding FullName}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </Label>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
