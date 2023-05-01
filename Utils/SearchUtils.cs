@@ -47,7 +47,7 @@ namespace KompasTools.Utils
                 return filesInfo;
             }
             // TODO: Решить проблему со спец сиволами по типу *. они вызывают ошибки
-            Regex reg = new($@"{orderRequest}");
+            Regex reg = new($@"\D{orderRequest}\D");
             IEnumerable<string> files = Directory.EnumerateFiles(searchPath, "*")
                 .Where(s => reg.IsMatch(s));
             foreach (string folder in files)

@@ -117,7 +117,7 @@
                                 <ListBox ItemsSource="{Binding DrawingCompleted}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <Label Content="{Binding Name}" Margin="0">
+                                            <Label Content="{Binding Name}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName ="MouseDoubleClick">
                                                         <i:InvokeCommandAction 
