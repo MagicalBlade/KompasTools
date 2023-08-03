@@ -130,6 +130,40 @@
                                     </ListBox.ItemTemplate>
                                 </ListBox>
                             </TabItem>
+                            <TabItem Header="3D" Height="30">
+                                <StackPanel Orientation="Horizontal">
+                                    <ListBox ItemsSource="{Binding Model3DAssembly}"  Width="300">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding Name}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName ="MouseDoubleClick">
+                                                            <i:InvokeCommandAction 
+                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                                CommandParameter="{Binding FullName}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Label>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <ListBox ItemsSource="{Binding Model3DPart}"  Width="300">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Label Content="{Binding Name}">
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName ="MouseDoubleClick">
+                                                            <i:InvokeCommandAction 
+                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
+                                                                CommandParameter="{Binding FullName}"/>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
+                                                </Label>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </StackPanel>
+                            </TabItem>
                         </TabControl>
                     </Grid>
                 </Grid>

@@ -92,6 +92,10 @@ namespace KompasTools.ViewModels
         private IEnumerable<FileInfo>? _drawingKompasAssembly;
         [ObservableProperty]
         private IEnumerable<FileInfo>? _drawingKompasPart;
+        [ObservableProperty]
+        private IEnumerable<FileInfo>? _model3DAssembly;
+        [ObservableProperty]
+        private IEnumerable<FileInfo>? _model3DPart;
         #endregion
 
         /// <summary>
@@ -122,6 +126,8 @@ namespace KompasTools.ViewModels
             DrawingKompasAssembly = null;
             DrawingKompasPart = null;
             DrawingCompleted = null;
+            Model3DAssembly = null;
+            Model3DPart = null;
             FileInfo? oldOrderSelected = OrderSelected;
             switch (OrderSelectPath) 
             {
@@ -138,6 +144,17 @@ namespace KompasTools.ViewModels
                     break;
                 case 1:
                     OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathCompletedDrawing);
+                    foreach (FileInfo item in OrdersPath)
+                    {
+                        if (item.Name == oldOrderSelected?.Name)
+                        {
+                            OrderSelected = item;
+                            break;
+                        }
+                    }
+                    break;
+                case 2:
+                    OrdersPath = SearchUtils.SearchFolder(OrderRequest, MainSettings.PathModel3D);
                     foreach (FileInfo item in OrdersPath)
                     {
                         if (item.Name == oldOrderSelected?.Name)
@@ -170,7 +187,11 @@ namespace KompasTools.ViewModels
                 case 1:
                     DrawingCompleted = null;
                     Task DrawingCompletedTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(MarkRequest, value?.FullName));
-
+                    break;
+                case 2:
+                    DrawingCompleted = null;
+                    Task Model3DAssemblyTask = Task.Run(() => Model3DAssembly = SearchUtils.SearchFile(MarkRequest, value?.FullName));
+                    Task Model3DPartTask = Task.Run(() => Model3DPart = SearchUtils.SearchFile(PosRequest, $"{value}\\2_Деталировка"));
                     break;
             }
         }
@@ -181,12 +202,17 @@ namespace KompasTools.ViewModels
         /// <param name="value"></param>
         partial void OnPosRequestChanged(string value)
         {
+            DrawingKompasPart = null;
+            Model3DPart = null;
             switch (OrderSelectPath)
             {
                 case 0:
                     Task DrawingKompasPartTask = Task.Run(() => DrawingKompasPart = SearchUtils.SearchFile(value, $"{OrderSelected}\\Деталировка"));
                     break;
                 case 1:
+                    break;
+                case 2:
+                    Task Model3DPartTask = Task.Run(() => Model3DPart = SearchUtils.SearchFile(value, $"{OrderSelected}\\2_Деталировка"));
                     break;
             }
         }
@@ -196,6 +222,9 @@ namespace KompasTools.ViewModels
         /// <param name="value"></param>
         partial void OnMarkRequestChanged(string value)
         {
+            DrawingKompasAssembly = null;
+            DrawingCompleted = null;
+            Model3DAssembly = null;
             switch (OrderSelectPath)
             {
                 case 0:
@@ -203,7 +232,9 @@ namespace KompasTools.ViewModels
                     break;
                 case 1:
                     Task DrawingCompletedAssemblyTask = Task.Run(() => DrawingCompleted = SearchUtils.SearchFile(value, $"{OrderSelected}"));
-
+                    break;
+                case 2:
+                    Task Model3DAssemblyTask = Task.Run(() => Model3DAssembly = SearchUtils.SearchFile(value, $"{OrderSelected}"));
                     break;
             }
         }

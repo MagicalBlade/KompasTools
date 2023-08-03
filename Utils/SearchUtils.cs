@@ -53,10 +53,13 @@ namespace KompasTools.Utils
             foreach (string folder in files)
             {
                 FileInfo fileInfo = new FileInfo(folder);
+                //filesInfo.Add(fileInfo);
+                
                 if (!fileInfo.Attributes.HasFlag(FileAttributes.Hidden))
                 {
                     filesInfo.Add(fileInfo);
                 }
+                
             }
             return filesInfo;
         }
