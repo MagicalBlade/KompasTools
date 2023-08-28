@@ -19,6 +19,12 @@ using System.Windows.Controls;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.Win32;
+using System.Windows.Forms;
+using KompasAPI7;
+using Kompas6API5;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace KompasTools.ViewModels
 {
@@ -97,6 +103,20 @@ namespace KompasTools.ViewModels
         private IEnumerable<FileInfo>? _model3DAssembly;
         [ObservableProperty]
         private IEnumerable<FileInfo>? _model3DPart;
+        #endregion
+
+        #region TabControl - Получить позиции
+        /// <summary>
+        /// Путь к папке с чертежами
+        /// </summary>
+        [ObservableProperty]
+        string? _pathFolderAllCdw;
+        /// <summary>
+        /// Информация по позициям
+        /// </summary>
+        [ObservableProperty]
+        List<string[]> _posinfo = new List<string[]>();
+
         #endregion
 
         /// <summary>
@@ -217,6 +237,7 @@ namespace KompasTools.ViewModels
                     break;
             }
         }
+       
         /// <summary>
         /// Происходит ввод запроса на поиск марки
         /// </summary>
@@ -304,12 +325,125 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void OpenFolder()
         {
-            OpenFileDialog openFileDialog = new();
-            
-            openFileDialog.ShowDialog();
+            FolderBrowserDialog dialog = new();
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                PathFolderAllCdw = dialog.SelectedPath;
+            }
         }
 
-        #endregion
+        [RelayCommand]
+        private void GetPos()
+        {
+            // TODO: Создать файл логов и записать туда
+            if (PathFolderAllCdw == null) return;
+            // TODO: Добавить выбор поиск по всей дериктории или толкьо в верхнем уровне
+            string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.AllDirectories);
+            Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
+            KompasObject? kompas = Activator.CreateInstance(kompasType) as KompasObject; //Запуск компаса
+            if (kompas == null)
+            {
+                return;
+            }
+            IApplication application = (IApplication)kompas.ksGetApplication7();
+            IDocuments documents = application.Documents;
+
+            foreach (string path in cdwFiles)
+            {
+                IKompasDocument2D kompasDocuments2D = (IKompasDocument2D)documents.Open(path, false, false);
+                string mark = "";
+                #region Получение имени марки из штампа
+                ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
+                foreach (ILayoutSheet layoutSheet in layoutSheets)
+                {
+                    IStamp stamp = layoutSheet.Stamp;
+                    IText text2 = stamp.Text[2]; //Текст из ячейки "Обозначения документа"
+                    string[] text2Split = text2.Str.Split(" ");
+                    mark = text2Split[^1];
+                    break;
+                }
+                #endregion
+
+                IViewsAndLayersManager viewsAndLayersManager = kompasDocuments2D.ViewsAndLayersManager;
+                IViews views = viewsAndLayersManager.Views;
+                foreach (IView view in views)
+                {
+                    ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                    IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                    foreach (ITable table in drawingTables)
+                    {
+                        if (((IText)table.Cell[0,0].Text).Str.IndexOf("Спецификация") != -1)
+                        {
+                            for (int i = 3; i < table.RowsCount; i++)
+                            {
+                                if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && ((IText)table.Cell[i, 0].Text).Str.IndexOf("швы") == -1)
+                                {
+                                    Posinfo.Add(new string[] { ((IText)table.Cell[i, 0].Text).Str, mark });
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            application.Quit();
+        }
+
+
+        /// <summary>
+        /// Сохранить файл отчёта
+        /// </summary>
+        [RelayCommand]
+        private void SaveExcel()
+        {
+
+
+            XLWorkbook workbook = new();
+            #region Лист "Позиции"
+            IXLWorksheet worksheetPos = workbook.Worksheets.Add("Позиции");
+            int incrementRow = 3; //Начальная строка
+            #region Формирование шапки листа
+            worksheetPos.Cell(1, 1).SetValue("Поз.");
+            worksheetPos.Cell(1, 2).SetValue("Марок");
+            #endregion
+
+            if (worksheetPos != null)
+            {
+                for (int i = 0; i < Posinfo.Count; i++)
+                {
+                    worksheetPos.Cell(i + incrementRow, 1).SetValue(Posinfo[i][0]); //Позиция
+                    worksheetPos.Cell(i + incrementRow, 2).SetValue(Posinfo[i][1]); //марка
+
+                }
+                //Ширина колонки по содержимому
+                #region Объединение ячеек
+                worksheetPos.Range("B1:C1").Row(1).Merge();
+                worksheetPos.Range("D1:F1").Row(1).Merge();
+                worksheetPos.Range("G1:H1").Row(1).Merge();
+                worksheetPos.Range("A1:A2").Column(1).Merge();
+                worksheetPos.Range("I1:I2").Column(1).Merge();
+                worksheetPos.Range("J1:J2").Column(1).Merge();
+                worksheetPos.Range("K1:K2").Column(1).Merge();
+                #endregion
+                worksheetPos.Columns(1, Posinfo.Count).Style.Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+                worksheetPos.Columns(1, Posinfo.Count).Style.Alignment.SetVertical(XLAlignmentVerticalValues.Center);
+                try
+                {
+                    workbook.SaveAs($"D:\\Отчёт.xlsx");
+                }
+                catch (Exception)
+                {
+                    System.Windows.Forms.MessageBox.Show("Ну удалось сохранить эксель файл");;
+                    return;
+                }
+
+            }
+            #endregion
+
+
+            #endregion
+        }
     }
 }
 // TODO: Создать класс для хранения путей к папкам из которых буду получать списки файлов

@@ -176,9 +176,10 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Папка:"/>
-                        <TextBox Text="" Width="120"/>
+                        <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
                         <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
-                        <Button Content="Получить"/>
+                        <Button Content="Получить" Command="{Binding GetPosCommand}"/>
+                        <Button Content="Сохранить в эксель" Command="{Binding SaveExcelCommand}"/>
                     </StackPanel>
                 </Grid>
                 
