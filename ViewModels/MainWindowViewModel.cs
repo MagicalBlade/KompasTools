@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Controls;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.Win32;
 
 namespace KompasTools.ViewModels
 {
@@ -297,6 +298,16 @@ namespace KompasTools.ViewModels
             Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
         }
 
+        /// <summary>
+        /// Указать папку
+        /// </summary>
+        [RelayCommand]
+        private void OpenFolder()
+        {
+            OpenFileDialog openFileDialog = new();
+            
+            openFileDialog.ShowDialog();
+        }
 
         #endregion
     }

@@ -150,7 +150,7 @@
                                     <ListBox ItemsSource="{Binding Model3DPart}"  Width="300">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <Label Content="{Binding Name}">
+                                                <Label Content="{Binding Name}" MouseMove="Label_MouseMove">
                                                     <i:Interaction.Triggers>
                                                         <i:EventTrigger EventName ="MouseDoubleClick">
                                                             <i:InvokeCommandAction 
@@ -167,6 +167,21 @@
                         </TabControl>
                     </Grid>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Получить позиции">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Папка:"/>
+                        <TextBox Text="" Width="120"/>
+                        <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
+                        <Button Content="Получить"/>
+                    </StackPanel>
+                </Grid>
+                
             </TabItem>
         </TabControl>
     </Grid>

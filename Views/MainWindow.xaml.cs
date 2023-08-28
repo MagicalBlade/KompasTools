@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace KompasTools
 {
@@ -7,6 +8,12 @@ namespace KompasTools
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Label_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            Label? label = sender as Label;
+            DragDrop.DoDragDrop(label, label?.Content, DragDropEffects.Move);
         }
     }
 }
