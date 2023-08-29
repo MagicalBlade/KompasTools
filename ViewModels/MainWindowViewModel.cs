@@ -334,60 +334,70 @@ namespace KompasTools.ViewModels
         }
 
         [RelayCommand]
-        private void GetPos()
+        private async Task GetPosAsync()
         {
+            StatusBar = "Началось извлечение данных позиций";
             // TODO: Создать файл логов и записать туда
             if (PathFolderAllCdw == null) return;
             // TODO: Добавить выбор поиск по всей дериктории или толкьо в верхнем уровне
             string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.AllDirectories);
-            Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
-            KompasObject? kompas = Activator.CreateInstance(kompasType) as KompasObject; //Запуск компаса
-            if (kompas == null)
-            {
-                return;
-            }
-            IApplication application = (IApplication)kompas.ksGetApplication7();
-            IDocuments documents = application.Documents;
 
-            foreach (string path in cdwFiles)
+            await Task.Run(SearchTable);
+
+            void SearchTable()
             {
-                IKompasDocument2D kompasDocuments2D = (IKompasDocument2D)documents.Open(path, false, false);
-                string mark = "";
-                #region Получение имени марки из штампа
-                ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
-                foreach (ILayoutSheet layoutSheet in layoutSheets)
+                Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
+                KompasObject? kompas = Activator.CreateInstance(kompasType) as KompasObject; //Запуск компаса
+                if (kompas == null)
                 {
-                    IStamp stamp = layoutSheet.Stamp;
-                    IText text2 = stamp.Text[2]; //Текст из ячейки "Обозначения документа"
-                    string[] text2Split = text2.Str.Split(" ");
-                    mark = text2Split[^1];
-                    break;
+                    return;
                 }
-                #endregion
+                IApplication application = (IApplication)kompas.ksGetApplication7();
+                IDocuments documents = application.Documents;
 
-                IViewsAndLayersManager viewsAndLayersManager = kompasDocuments2D.ViewsAndLayersManager;
-                IViews views = viewsAndLayersManager.Views;
-                foreach (IView view in views)
+                foreach (string path in cdwFiles)
                 {
-                    ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
-                    IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
-                    foreach (ITable table in drawingTables)
+                    StatusBar = $"{path.Split('\\')[^1]}";
+                    IKompasDocument2D kompasDocuments2D = (IKompasDocument2D)documents.Open(path, false, false);
+                    string mark = "";
+                    #region Получение имени марки из штампа
+                    ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
+                    foreach (ILayoutSheet layoutSheet in layoutSheets)
                     {
-                        if (((IText)table.Cell[0,0].Text).Str.IndexOf("Спецификация") != -1)
-                        {
-                            for (int i = 3; i < table.RowsCount; i++)
-                            {
-                                if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && ((IText)table.Cell[i, 0].Text).Str.IndexOf("швы") == -1)
-                                {
-                                    Posinfo.Add(new string[] { ((IText)table.Cell[i, 0].Text).Str, mark });
+                        IStamp stamp = layoutSheet.Stamp;
+                        IText text2 = stamp.Text[2]; //Текст из ячейки "Обозначения документа"
+                        string[] text2Split = text2.Str.Split(" ");
+                        mark = text2Split[^1];
+                        break;
+                    }
+                    #endregion
 
+                    IViewsAndLayersManager viewsAndLayersManager = kompasDocuments2D.ViewsAndLayersManager;
+                    IViews views = viewsAndLayersManager.Views;
+                    foreach (IView view in views)
+                    {
+                        ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+                        IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
+                        foreach (ITable table in drawingTables)
+                        {
+                            if (((IText)table.Cell[0, 0].Text).Str.IndexOf("Спецификация") != -1)
+                            {
+                                for (int i = 3; i < table.RowsCount; i++)
+                                {
+                                    if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && ((IText)table.Cell[i, 0].Text).Str.IndexOf("швы") == -1)
+                                    {
+                                        Posinfo.Add(new string[] { ((IText)table.Cell[i, 0].Text).Str, mark });
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                application.Quit();
+                StatusBar = "Извлечение данных позиций закончилось";
             }
-            application.Quit();
+
+
         }
 
 
@@ -397,8 +407,6 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void SaveExcel()
         {
-
-
             XLWorkbook workbook = new();
             #region Лист "Позиции"
             IXLWorksheet worksheetPos = workbook.Worksheets.Add("Позиции");
@@ -437,7 +445,7 @@ namespace KompasTools.ViewModels
                     System.Windows.Forms.MessageBox.Show("Ну удалось сохранить эксель файл");;
                     return;
                 }
-
+                StatusBar = "Отчет сохранен";
             }
             #endregion
 
