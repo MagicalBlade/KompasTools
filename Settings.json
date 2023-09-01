@@ -1,5 +1,6 @@
 {
   "dir_update": "\\\\auxserver\\Обменник_ОГК\\199 Компас\\KompasTools",
   "path_drawing_kompas": "\\\\auxserver\\ОГК\\0. Чертежи компас",
-  "path_completed_drawing": "\\\\auxserver\\ОГК\\4. Завершённые_объекты_pdf"
+  "path_completed_drawing": "\\\\auxserver\\ОГК\\4. Завершённые_объекты_pdf",
+  "path_model3D": "\\\\auxserver\\ОГК\\7. 3D"
 }

@@ -174,12 +174,17 @@
                         <RowDefinition Height="30"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Папка:"/>
-                        <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
-                        <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
-                        <Button Content="Получить" Command="{Binding GetPosCommand}"/>
-                        <Button Content="Сохранить в эксель" Command="{Binding SaveExcelCommand}"/>
+                    
+                    <StackPanel Grid.Row="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Папка:"/>
+                            <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
+                            <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
+                            <Button Content="Получить" Command="{Binding GetPosCommand}"/>
+                            <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
+                            <Button Content="Сохранить в эксель" Command="{Binding SaveExcelCommand}"/>
+                        </StackPanel>
+                        <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
                     </StackPanel>
                 </Grid>
                 

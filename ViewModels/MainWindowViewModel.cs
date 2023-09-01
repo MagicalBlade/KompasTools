@@ -116,7 +116,11 @@ namespace KompasTools.ViewModels
         /// </summary>
         [ObservableProperty]
         List<string[]> _posinfo = new List<string[]>();
-
+        /// <summary>
+        /// Прогресс бар извлечения данных позиций
+        /// </summary>
+        [ObservableProperty]
+        int _progresBarPos = 0;
         #endregion
 
         /// <summary>
@@ -280,7 +284,7 @@ namespace KompasTools.ViewModels
                 {
                     MainSettings = new ConfigData();
                     FileUtils.WriteGlobalLog($"{DateTime.Now} - Проблема с десериализацией. Взяты стандартные настройки.");
-                    // TODO: Придумать как записывать настройки если не удалось их прочитать, боеле красиво
+                    // TODO: Придумать как записывать настройки если не удалось их прочитать, более красиво
                     JsonUtils.Serialize("Settings.json", MainSettings);
                     return;
                 }
@@ -314,7 +318,7 @@ namespace KompasTools.ViewModels
         }
 
         [RelayCommand]
-        private void RunProcess(string path)
+        private static void RunProcess(string path)
         {
             Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
         }
@@ -333,32 +337,42 @@ namespace KompasTools.ViewModels
             }
         }
 
-        [RelayCommand]
-        private async Task GetPosAsync()
+        [RelayCommand(IncludeCancelCommand = true)]
+        private async Task GetPosAsync(CancellationToken token)
         {
             StatusBar = "Началось извлечение данных позиций";
-            // TODO: Создать файл логов и записать туда
-            if (PathFolderAllCdw == null) return;
-            // TODO: Добавить выбор поиск по всей дериктории или толкьо в верхнем уровне
+            if (PathFolderAllCdw == null)
+            {
+                StatusBar = "Не указан путь к папке с чертежами";
+                return;
+            }
+            // TODO: Добавить выбор поиск по всей дериктории или только в верхнем уровне
             string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.AllDirectories);
 
             await Task.Run(SearchTable);
 
             void SearchTable()
             {
+                ProgresBarPos = 1;
                 Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
-                KompasObject? kompas = Activator.CreateInstance(kompasType) as KompasObject; //Запуск компаса
-                if (kompas == null)
-                {
-                    return;
-                }
+                if (kompasType == null) return;
+                //Запуск компаса
+                if (Activator.CreateInstance(kompasType) is not KompasObject kompas) return;
                 IApplication application = (IApplication)kompas.ksGetApplication7();
                 IDocuments documents = application.Documents;
-
+                ProgresBarPos += 4;
+                if (token.IsCancellationRequested)
+                {
+                    application.Quit();
+                    ProgresBarPos = 0;
+                    StatusBar = "Команда отменена";
+                    return;
+                }
                 foreach (string path in cdwFiles)
                 {
                     StatusBar = $"{path.Split('\\')[^1]}";
-                    IKompasDocument2D kompasDocuments2D = (IKompasDocument2D)documents.Open(path, false, false);
+                    ProgresBarPos += 90 / cdwFiles.Length;
+                    if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D) return;
                     string mark = "";
                     #region Получение имени марки из штампа
                     ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
@@ -380,24 +394,40 @@ namespace KompasTools.ViewModels
                         IDrawingTables drawingTables = symbols2DContainer.DrawingTables;
                         foreach (ITable table in drawingTables)
                         {
-                            if (((IText)table.Cell[0, 0].Text).Str.IndexOf("Спецификация") != -1)
+                            if (((IText)table.Cell[0, 0].Text).Str.Contains("Спецификация", StringComparison.CurrentCultureIgnoreCase))
                             {
-                                for (int i = 3; i < table.RowsCount; i++)
+                                //Одна марка на чертеже
+                                if (table.ColumnsCount == 9 && ((IText)table.Cell[1, 0].Text).Str.Contains("поз", StringComparison.CurrentCultureIgnoreCase))
                                 {
-                                    if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && ((IText)table.Cell[i, 0].Text).Str.IndexOf("швы") == -1)
+                                    for (int i = 3; i < table.RowsCount; i++)
                                     {
-                                        Posinfo.Add(new string[] { ((IText)table.Cell[i, 0].Text).Str, mark });
+                                        if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && !((IText)table.Cell[i, 0].Text).Str.Contains("швы", StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            List<string> cellsAndMark = new();
+                                            cellsAndMark.Add(mark);
+                                            foreach (TableCell cell in ((object[])table.Range[i, 0, i, 8].Cells).Cast<TableCell>())
+                                            {
+                                                cellsAndMark.Add(((IText)cell.Text).Str);
+                                            }
+                                            Posinfo.Add(cellsAndMark.ToArray());
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                    if (token.IsCancellationRequested)
+                    {
+                        application.Quit();
+                        ProgresBarPos = 0;
+                        StatusBar = "Команда отменена";
+                        return;
+                    }
                 }
                 application.Quit();
+                ProgresBarPos += 5;
                 StatusBar = "Извлечение данных позиций закончилось";
             }
-
-
         }
 
 
@@ -407,6 +437,11 @@ namespace KompasTools.ViewModels
         [RelayCommand]
         private void SaveExcel()
         {
+            if (Posinfo.Count == 0)
+            {
+                StatusBar = "Извлеките данные для сохранения";
+                return;
+            }
             XLWorkbook workbook = new();
             #region Лист "Позиции"
             IXLWorksheet worksheetPos = workbook.Worksheets.Add("Позиции");
@@ -420,9 +455,10 @@ namespace KompasTools.ViewModels
             {
                 for (int i = 0; i < Posinfo.Count; i++)
                 {
-                    worksheetPos.Cell(i + incrementRow, 1).SetValue(Posinfo[i][0]); //Позиция
-                    worksheetPos.Cell(i + incrementRow, 2).SetValue(Posinfo[i][1]); //марка
-
+                    for (int j = 0; j < Posinfo[i].Length; j++)
+                    {
+                        worksheetPos.Cell(i + incrementRow, j + 1).SetValue(Posinfo[i][j]);
+                    }
                 }
                 //Ширина колонки по содержимому
                 #region Объединение ячеек
@@ -442,7 +478,7 @@ namespace KompasTools.ViewModels
                 }
                 catch (Exception)
                 {
-                    System.Windows.Forms.MessageBox.Show("Ну удалось сохранить эксель файл");;
+                    System.Windows.Forms.MessageBox.Show("Не удалось сохранить эксель файл");;
                     return;
                 }
                 StatusBar = "Отчет сохранен";
