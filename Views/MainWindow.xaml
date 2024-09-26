@@ -189,6 +189,28 @@
                 </Grid>
                 
             </TabItem>
+
+            <TabItem Header="Изменить штам">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Папка:"/>
+                            <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
+                            <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
+                            <Button Content="Изменить штамп" Command="{Binding EditStampCommand}"/>
+                            <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
+                            <TextBox Text="{Binding Stamp_16003}" Width="120"/>
+                        </StackPanel>
+                        <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
+                    </StackPanel>
+                </Grid>
+
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

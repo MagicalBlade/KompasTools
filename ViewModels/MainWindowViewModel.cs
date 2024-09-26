@@ -25,6 +25,7 @@ using Kompas6API5;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.EMMA;
+using Irony.Parsing;
 
 namespace KompasTools.ViewModels
 {
@@ -105,7 +106,7 @@ namespace KompasTools.ViewModels
         private IEnumerable<FileInfo>? _model3DPart;
         #endregion
 
-        #region TabControl - Получить позиции
+        #region TabControl - Получить данные из сборочного чертежа
         /// <summary>
         /// Путь к папке с чертежами
         /// </summary>
@@ -117,11 +118,18 @@ namespace KompasTools.ViewModels
         [ObservableProperty]
         List<string[]> _posinfo = new List<string[]>();
         /// <summary>
+        /// Информация по маркам
+        /// </summary>
+        [ObservableProperty]
+        List<string[]> _markinfo = new List<string[]>();
+        /// <summary>
         /// Прогресс бар извлечения данных позиций
         /// </summary>
         [ObservableProperty]
         int _progresBarPos = 0;
         #endregion
+        [ObservableProperty]
+        string _stamp_16003 = "";
 
         /// <summary>
         /// Поиск заказа по введенным данным
@@ -336,7 +344,11 @@ namespace KompasTools.ViewModels
                 PathFolderAllCdw = dialog.SelectedPath;
             }
         }
-
+        /// <summary>
+        /// Получение данных из сборочного чертежа
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [RelayCommand(IncludeCancelCommand = true)]
         private async Task GetPosAsync(CancellationToken token)
         {
@@ -403,13 +415,35 @@ namespace KompasTools.ViewModels
                                     {
                                         if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && !((IText)table.Cell[i, 0].Text).Str.Contains("швы", StringComparison.CurrentCultureIgnoreCase))
                                         {
-                                            List<string> cellsAndMark = new();
-                                            cellsAndMark.Add(mark);
+                                            List<string> posAndMark = new();
+                                            posAndMark.Add(mark);
                                             foreach (TableCell cell in ((object[])table.Range[i, 0, i, 8].Cells).Cast<TableCell>())
                                             {
-                                                cellsAndMark.Add(((IText)cell.Text).Str);
+                                                posAndMark.Add(((IText)cell.Text).Str);
                                             }
-                                            Posinfo.Add(cellsAndMark.ToArray());
+                                            Posinfo.Add(posAndMark.ToArray());
+                                        }
+                                    }
+                                }
+                                //Несколько марок на чертеже
+                                if (table.ColumnsCount == 11 && ((IText)table.Cell[1, 0].Text).Str.Contains("марк", StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    for (int i = 3; i < table.RowsCount; i++)
+                                    {
+                                        if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && !((IText)table.Cell[i, 0].Text).Str.Contains("швы", StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            if (table.Cell[i, 0] != null && ((IText)table.Cell[i, 0].Text).Str.Trim() != "" && ((IText)table.Cell[i, 1].Text).Str.Trim() == "")
+                                            {
+                                                //List<string> mark = new();
+                                                //mark.Add(mark);
+                                                //foreach (TableCell cell in ((object[])table.Range[i, 0, i, 8].Cells).Cast<TableCell>())
+                                                //{
+                                                //    mark.Add(((IText)cell.Text).Str);
+                                                //}
+                                                //Posinfo.Add(mark.ToArray());
+                                            }
+
+                                           
                                         }
                                     }
                                 }
@@ -487,6 +521,53 @@ namespace KompasTools.ViewModels
 
 
             #endregion
+        }
+
+        [RelayCommand]
+        private void EditStamp()
+        {
+            if (PathFolderAllCdw == null)
+            {
+                StatusBar = "Не указан путь к папке с чертежами";
+                return;
+            }
+            string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
+            Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
+            if (kompasType == null) return;
+            //Запуск компаса
+            if (Activator.CreateInstance(kompasType) is not KompasObject kompas) return;
+            IApplication application = (IApplication)kompas.ksGetApplication7();
+            IDocuments documents = application.Documents;
+            foreach (string path in cdwFiles)
+            {
+                if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D) return;
+                #region Получение имени марки из штампа
+                ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
+                foreach (ILayoutSheet layoutSheet in layoutSheets)
+                {
+                    IStamp stamp = layoutSheet.Stamp;
+                    IText text = stamp.Text[16003];
+                    text.Style = -1;
+                    ITextLine textLine = text.TextLine[0];
+                    ITextItem textItem = textLine.TextItem[0];
+                    ITextFont? textFont = textItem as ITextFont;
+                    double height = textFont.Height;
+                    //text.Str = Stamp_16003; //Изменяем текст в ячейке заказа
+                    ITextLine textLine1 = text.TextLine[0];
+                    ITextItem textItem1 = textLine1.TextItem[0];
+                    //textItem1.Str = Stamp_16003;
+                    ITextFont? textFont1 = textItem1 as ITextFont;
+                    textFont1.Height = 5;
+                    textItem1.Update();
+                    System.Windows.Forms.MessageBox.Show($"{textItem1.Str} - {textFont1.Height}");
+                    stamp.Update();
+                    break;
+                }
+                kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdSaveChanges);
+                #endregion
+            }
+            application.Quit();
+            StatusBar = "Готово";
         }
     }
 }
