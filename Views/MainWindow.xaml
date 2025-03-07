@@ -1,4 +1,4 @@
-﻿<Window x:Class="KompasTools.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,17 +6,18 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
+        xmlns:WorkingWithFiles="clr-namespace:KompasTools.ViewModels.WorkingWithFiles" x:Class="KompasTools.MainWindow"
         mc:Ignorable="d"
         Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
-        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding ElementName=cb_Topmost, Path=IsChecked}">
-    <Window.DataContext>
-        <viewmodels:MainWindowViewModel/>
-    </Window.DataContext>
+        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}">
     <Window.Resources>
-        <Style TargetType="TextBlock">
+        <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
+    <Window.DataContext>
+        <viewmodels:MainWindowViewModel/>
+    </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName ="Closing">
             <i:InvokeCommandAction Command ="{Binding ClosingMainWindowCommand}"/>
@@ -44,173 +45,195 @@
             <TextBlock Text="{Binding StatusBar}" VerticalAlignment="Center"/>
         </StatusBar>
         <TabControl Grid.Row="1">
-            <TabItem Header="Заказ">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Открыть заказ" Margin="5"/>
-                        <TextBox Text="{Binding OrderRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Найти марку" Margin="5"/>
-                        <TextBox Text="{Binding MarkRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
-                        <TextBlock Text="Найти позицию" Margin="5"/>
-                        <TextBox Text="{Binding PosRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
-                    </StackPanel>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="300"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <ListBox Grid.Column="0" ItemsSource="{Binding OrdersPath}" SelectedItem="{Binding OrderSelected}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <Label Content="{Binding Name}">
-                                         <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName ="MouseDoubleClick">
-                                                <i:InvokeCommandAction 
-                                                    Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                    CommandParameter="{Binding FullName}"/>
-                                            </i:EventTrigger>
-                                          </i:Interaction.Triggers>
-                                    </Label>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <TabControl Grid.Column="1" TabStripPlacement="Left" SelectedIndex="{Binding OrderSelectPath}">
-                            <TabItem Header="Чертежи компас" Height="30">
-                                <StackPanel Orientation="Horizontal">
-                                    <ListBox ItemsSource="{Binding DrawingKompasAssembly}" Width="300">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Name}">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName ="MouseDoubleClick">
-                                                            <i:InvokeCommandAction 
-                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                                CommandParameter="{Binding FullName}"/>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </Label>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <ListBox ItemsSource="{Binding DrawingKompasPart}"  Width="300">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Name}">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName ="MouseDoubleClick">
-                                                            <i:InvokeCommandAction 
-                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                                CommandParameter="{Binding FullName}"/>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </Label>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="Завершенные чертежи" Height="30">
-                                <ListBox ItemsSource="{Binding DrawingCompleted}">
+            <TabItem Header="Разное">
+                <TabControl>
+                    <TabItem Header="Заказ">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Открыть заказ" Margin="5"/>
+                                <TextBox Text="{Binding OrderRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Найти марку" Margin="5"/>
+                                <TextBox Text="{Binding MarkRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                                <TextBlock Text="Найти позицию" Margin="5"/>
+                                <TextBox Text="{Binding PosRequest, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" Height="25" Width="120" VerticalContentAlignment="Center" Margin="5"/>
+                            </StackPanel>
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ListBox Grid.Column="0" ItemsSource="{Binding OrdersPath}" SelectedItem="{Binding OrderSelected}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding Name}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName ="MouseDoubleClick">
                                                         <i:InvokeCommandAction 
-                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                                CommandParameter="{Binding FullName}"/>
+                                                            Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                            CommandParameter="{Binding FullName}"/>
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                             </Label>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
-                            </TabItem>
-                            <TabItem Header="3D" Height="30">
+                                <TabControl Grid.Column="1" TabStripPlacement="Left" SelectedIndex="{Binding OrderSelectPath}">
+                                    <TabItem Header="Чертежи компас" Height="30">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ListBox ItemsSource="{Binding DrawingKompasAssembly}" Width="300">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label Content="{Binding Name}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName ="MouseDoubleClick">
+                                                                    <i:InvokeCommandAction 
+                                                                        Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                                        CommandParameter="{Binding FullName}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <ListBox ItemsSource="{Binding DrawingKompasPart}"  Width="300">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label Content="{Binding Name}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName ="MouseDoubleClick">
+                                                                    <i:InvokeCommandAction 
+                                                                        Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                                        CommandParameter="{Binding FullName}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </TabItem>
+                                    <TabItem Header="Завершенные чертежи" Height="30">
+                                        <ListBox ItemsSource="{Binding DrawingCompleted}">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Label Content="{Binding Name}">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName ="MouseDoubleClick">
+                                                                <i:InvokeCommandAction 
+                                                                        Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                                        CommandParameter="{Binding FullName}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </TabItem>
+                                    <TabItem Header="3D" Height="30">
+                                        <StackPanel Orientation="Horizontal">
+                                            <ListBox ItemsSource="{Binding Model3DAssembly}"  Width="300">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label Content="{Binding Name}">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName ="MouseDoubleClick">
+                                                                    <i:InvokeCommandAction 
+                                                                        Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                                        CommandParameter="{Binding FullName}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <ListBox ItemsSource="{Binding Model3DPart}"  Width="300">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Label Content="{Binding Name}" MouseMove="Label_MouseMove">
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName ="MouseDoubleClick">
+                                                                    <i:InvokeCommandAction 
+                                                                        Command ="{Binding DataContext.RunProcessCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                                                        CommandParameter="{Binding FullName}"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Получить позиции">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="1" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
-                                    <ListBox ItemsSource="{Binding Model3DAssembly}"  Width="300">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Name}">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName ="MouseDoubleClick">
-                                                            <i:InvokeCommandAction 
-                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                                CommandParameter="{Binding FullName}"/>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </Label>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
-                                    <ListBox ItemsSource="{Binding Model3DPart}"  Width="300">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Name}" MouseMove="Label_MouseMove">
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName ="MouseDoubleClick">
-                                                            <i:InvokeCommandAction 
-                                                                Command ="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path = DataContext.RunProcessCommand}"
-                                                                CommandParameter="{Binding FullName}"/>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </Label>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                    <TextBlock Text="Папка:"/>
+                                    <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
+                                    <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
+                                    <Button Content="Получить" Command="{Binding GetPosCommand}"/>
+                                    <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
+                                    <Button Content="Сохранить в эксель" Command="{Binding SaveExcelCommand}"/>
                                 </StackPanel>
-                            </TabItem>
-                        </TabControl>
-                    </Grid>
-                </Grid>
+                                <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </TabItem>
+                </TabControl>
             </TabItem>
-            <TabItem Header="Получить позиции">
+            <TabItem Header="Работа с файлами">
+                <TabItem.DataContext>
+                    <WorkingWithFiles:WorkingWithFilesViewModel/>
+                </TabItem.DataContext>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    
+                    <TabControl Grid.Row="0">
+                        <TabItem Header="Изменить штам">
+                            <TabItem.DataContext>
+                                <WorkingWithFiles:EditStampViewModel/>
+                            </TabItem.DataContext>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="1" Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Папка:"/>
+                                        <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
+                                        <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
+                                        <Button Content="Изменить штамп" Command="{Binding EditStampCommand}"/>
+                                        <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
+                                        <TextBox Text="{Binding Stamp_16003}" Width="120"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+
+                        </TabItem>
+                    </TabControl>
                     <StackPanel Grid.Row="1" Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Папка:"/>
-                            <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
-                            <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
-                            <Button Content="Получить" Command="{Binding GetPosCommand}"/>
-                            <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
-                            <Button Content="Сохранить в эксель" Command="{Binding SaveExcelCommand}"/>
-                        </StackPanel>
                         <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
                     </StackPanel>
                 </Grid>
-                
             </TabItem>
 
-            <TabItem Header="Изменить штам">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="1" Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Папка:"/>
-                            <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
-                            <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
-                            <Button Content="Изменить штамп" Command="{Binding EditStampCommand}"/>
-                            <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
-                            <TextBox Text="{Binding Stamp_16003}" Width="120"/>
-                        </StackPanel>
-                        <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
-                    </StackPanel>
-                </Grid>
-
-            </TabItem>
         </TabControl>
     </Grid>
 </Window>
