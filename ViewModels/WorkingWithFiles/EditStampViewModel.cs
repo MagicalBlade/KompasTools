@@ -12,6 +12,7 @@ using KompasAPI7;
 using System.IO;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
+using KompasTools.Utils;
 
 namespace KompasTools.ViewModels.WorkingWithFiles
 {
@@ -24,61 +25,62 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         string? _pathFolderAllCdw;
         [ObservableProperty]
         string _stamp_16003 = "";
-        public class SendItemMessage : ValueChangedMessage<string>
-        {
-            public SendItemMessage(string text) : base(text)
-            {
-            }
-        }
-        [RelayCommand]
-        private void Test()
-        {
-            WeakReferenceMessenger.Default.Send(new SendItemMessage("Model Changed"));
-        }
 
         [RelayCommand]
-        private void EditStamp()
+        private async void EditStampAsync()
         {
-            WeakReferenceMessenger.Default.Send(new SendItemMessage(""));
+            InfoUtils.SetStatusBar("Началось заполнение штампа");
+            InfoUtils.ClearProgressBar();
+            InfoUtils.ClearLoggin();
             if (PathFolderAllCdw == null)
             {
-                WeakReferenceMessenger.Default.Send(new SendItemMessage("Не указан путь к папке с чертежами"));
+                InfoUtils.SetStatusBar("Не указан путь к папке с чертежами");
                 return;
             }
             string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
             if (kompasType == null) return;
             //Запуск компаса
-            if (Activator.CreateInstance(kompasType) is not KompasObject kompas) return;
-            IApplication application = (IApplication)kompas.ksGetApplication7();
-            IDocuments documents = application.Documents;
-            foreach (string path in cdwFiles)
+            await Task.Run(() => 
             {
-                if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D) return;
-                #region Получение имени марки из штампа
-                ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
-                foreach (ILayoutSheet layoutSheet in layoutSheets)
+                InfoUtils.SetProgressBar(2);
+                if (Activator.CreateInstance(kompasType) is not KompasObject kompas) return;
+                InfoUtils.SetLoggin("Запущен компас");
+                InfoUtils.SetProgressBar(5);
+                IApplication application = (IApplication)kompas.ksGetApplication7();
+                IDocuments documents = application.Documents;
+                int progressbarriter = 5;
+                foreach (string path in cdwFiles)
                 {
-                    IStamp stamp = layoutSheet.Stamp;
-                    IText text = stamp.Text[16003];
-                    ITextLine textLine = text.TextLine[0];
-                    ITextItem textItem = textLine.TextItem[0];
-                    ITextFont textFont = (ITextFont)textItem;
-                    double height = textFont.Height;
-                    text.Str = Stamp_16003; //Изменяем текст в ячейке заказа
-                    ITextLine textLine1 = text.TextLine[0];
-                    ITextItem textItem1 = textLine1.TextItem[0];
-                    ITextFont textFont1 = (ITextFont)textItem1;
-                    textFont1.Height = height;
-                    textItem1.Update();
-                    stamp.Update();
-                    break;
+                    progressbarriter += 90 / cdwFiles.Length;
+                    InfoUtils.SetProgressBar(progressbarriter);
+                    if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D) return;
+                    #region Изменение штампа
+                    ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
+                    foreach (ILayoutSheet layoutSheet in layoutSheets)
+                    {
+                        IStamp stamp = layoutSheet.Stamp;
+                        IText text = stamp.Text[16003];
+                        ITextLine textLine = text.TextLine[0];
+                        ITextItem textItem = textLine.TextItem[0];
+                        ITextFont textFont = (ITextFont)textItem;
+                        double height = textFont.Height;
+                        text.Str = Stamp_16003; //Изменяем текст в ячейке заказа
+                        ITextLine textLine1 = text.TextLine[0];
+                        ITextItem textItem1 = textLine1.TextItem[0];
+                        ITextFont textFont1 = (ITextFont)textItem1;
+                        textFont1.Height = height;
+                        textItem1.Update();
+                        stamp.Update();
+                        break;
+                    }
+                    kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdSaveChanges);
+                    #endregion
                 }
-                kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdSaveChanges);
-                #endregion
-            }
-            application.Quit();
-            WeakReferenceMessenger.Default.Send(new SendItemMessage("Готово"));
+                application.Quit();
+                InfoUtils.SetProgressBar(100);
+            });            
+            InfoUtils.SetStatusBar("Заполнение штампа завершено");
         }
 
         /// <summary>

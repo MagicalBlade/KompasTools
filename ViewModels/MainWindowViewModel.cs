@@ -27,7 +27,8 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml.EMMA;
 using Irony.Parsing;
 using CommunityToolkit.Mvvm.Messaging;
-using static KompasTools.ViewModels.WorkingWithFiles.EditStampViewModel;
+using static KompasTools.Utils.InfoUtils;
+using System.Windows.Controls.Primitives;
 
 namespace KompasTools.ViewModels
 {
@@ -124,14 +125,10 @@ namespace KompasTools.ViewModels
 
         public MainWindowViewModel()
         {
-            WeakReferenceMessenger.Default.Register<SendItemMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<SendItemStatusBarMessage>(this, (r, m) =>
             {
-                OnMessageReceived(m.Value);
+            StatusBar = m.Value;
             });
-        }
-        private void OnMessageReceived(string value)
-        {
-            StatusBar = value;
         }
         /// <summary>
         /// Поиск заказа по введенным данным

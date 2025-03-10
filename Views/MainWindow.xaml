@@ -9,7 +9,8 @@
         xmlns:WorkingWithFiles="clr-namespace:KompasTools.ViewModels.WorkingWithFiles" x:Class="KompasTools.MainWindow"
         mc:Ignorable="d"
         Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
-        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}">
+        WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}"
+        MinHeight="500">
     <Window.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -201,7 +202,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition MinHeight="100" Height="100"/>
                     </Grid.RowDefinitions>
                     <TabControl Grid.Row="0">
                         <TabItem Header="Изменить штам">
@@ -219,7 +220,7 @@
                                         <TextBlock Text="Папка:"/>
                                         <TextBox Text="{Binding PathFolderAllCdw}" Width="120"/>
                                         <Button Content="Открыть" Command="{Binding OpenFolderCommand}"/>
-                                        <Button Content="Изменить штамп" Command="{Binding EditStampCommand}"/>
+                                        <Button Content="Изменить штамп" Command="{Binding EditStampAsyncCommand}"/>
                                         <Button Content="Отмена" Command="{Binding GetPosCancelCommand}"/>
                                         <TextBox Text="{Binding Stamp_16003}" Width="120"/>
                                     </StackPanel>
@@ -229,7 +230,8 @@
                         </TabItem>
                     </TabControl>
                     <StackPanel Grid.Row="1" Orientation="Vertical">
-                        <ProgressBar Value="{Binding ProgresBarPos}" Height="25"/>
+                        <TextBox Text="{Binding Logging}" MinHeight="75" IsReadOnly="True"/>
+                        <ProgressBar Value="{Binding Progress_Bar}" Height="25"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
