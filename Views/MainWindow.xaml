@@ -202,7 +202,8 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
-                        <RowDefinition MinHeight="100" Height="100"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
                     <TabControl Grid.Row="0">
                         <TabItem Header="Изменить штам">
@@ -229,10 +230,11 @@
 
                         </TabItem>
                     </TabControl>
-                    <StackPanel Grid.Row="1" Orientation="Vertical">
-                        <TextBox Text="{Binding Logging}" MinHeight="75" IsReadOnly="True"/>
-                        <ProgressBar Value="{Binding Progress_Bar}" Height="25"/>
+                    <StackPanel Grid.Row="1" Orientation="Vertical" VerticalAlignment="Bottom">
+                        <ProgressBar Value="{Binding Progress_Bar}" Height="10"/>
+                        <Label Content="Журнал работы приложения:"/>
                     </StackPanel>
+                    <TextBox Grid.Row="2" Text="{Binding Logging}" IsReadOnly="True" VerticalScrollBarVisibility="Visible" TextChanged="TextBox_TextChanged"/>
                 </Grid>
             </TabItem>
 

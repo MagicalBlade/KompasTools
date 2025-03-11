@@ -75,8 +75,8 @@ namespace KompasTools.Utils
         /// <param name="text"></param>
         public static void SetLoggin(string text)
         {
-            logging += text;
-            WeakReferenceMessenger.Default.Send(new SendItemLoggingMessage($"{DateTime.Now:H:mm:ss [d/MM/yyyy]} - {logging}"));
+            logging += $"{DateTime.Now:H:mm:ss [d/MM/yyyy]} - {text}\n";
+            WeakReferenceMessenger.Default.Send(new SendItemLoggingMessage(logging));
         }
         /// <summary>
         /// Очистить журнал работы приложения

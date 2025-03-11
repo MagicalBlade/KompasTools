@@ -39,22 +39,32 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             }
             string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
-            if (kompasType == null) return;
+            if (kompasType == null)
+            {
+                InfoUtils.SetStatusBar("Не найден компас в системе");
+                return;
+            }
             //Запуск компаса
             await Task.Run(() => 
             {
                 InfoUtils.SetProgressBar(2);
-                if (Activator.CreateInstance(kompasType) is not KompasObject kompas) return;
-                InfoUtils.SetLoggin("Запущен компас");
+                if (Activator.CreateInstance(kompasType) is not KompasObject kompas)
+                {
+                    InfoUtils.SetStatusBar("Не удалось запустить компас");
+                    return;
+                }
                 InfoUtils.SetProgressBar(5);
                 IApplication application = (IApplication)kompas.ksGetApplication7();
                 IDocuments documents = application.Documents;
                 int progressbarriter = 5;
                 foreach (string path in cdwFiles)
                 {
-                    progressbarriter += 90 / cdwFiles.Length;
-                    InfoUtils.SetProgressBar(progressbarriter);
-                    if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D) return;
+                    InfoUtils.SetProgressBar(progressbarriter += 90 / cdwFiles.Length);
+                    if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D)
+                    {
+                        InfoUtils.SetLoggin($"Не удалось открыть - {path}");
+                        continue;
+                    }
                     #region Изменение штампа
                     ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
                     foreach (ILayoutSheet layoutSheet in layoutSheets)
@@ -74,7 +84,16 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                         stamp.Update();
                         break;
                     }
-                    kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdSaveChanges);
+                    kompasDocuments2D.Save();
+                    if (kompasDocuments2D.Changed)
+                    {
+                        InfoUtils.SetLoggin($"Не удалось сохранить - {path}");
+                    }
+                    else
+                    {
+                        InfoUtils.SetLoggin($"Успешно изменён и сохранён - {path}");
+                    }
+                    kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdDoNotSaveChanges);
                     #endregion
                 }
                 application.Quit();

@@ -125,6 +125,7 @@ namespace KompasTools.ViewModels
 
         public MainWindowViewModel()
         {
+            //Подписка на сообщения для статус бара
             WeakReferenceMessenger.Default.Register<SendItemStatusBarMessage>(this, (r, m) =>
             {
             StatusBar = m.Value;

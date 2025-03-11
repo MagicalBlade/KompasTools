@@ -15,5 +15,11 @@ namespace KompasTools
             Label? label = sender as Label;
             DragDrop.DoDragDrop(label, label?.Content, DragDropEffects.Move);
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.ScrollToEnd();
+        }
     }
 }

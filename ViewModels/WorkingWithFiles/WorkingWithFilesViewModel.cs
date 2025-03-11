@@ -25,10 +25,12 @@ namespace KompasTools.ViewModels.WorkingWithFiles
 
         public WorkingWithFilesViewModel()
         {
+            //Подписка на сообщения для прогресс бара
             WeakReferenceMessenger.Default.Register<SendItemProgressBarMessage>(this, (r, m) =>
             {
                 Progress_Bar = m.Value;
             });
+            //Подписка на сообщения для журнала работы приложения
             WeakReferenceMessenger.Default.Register<SendItemLoggingMessage>(this, (r, m) =>
             {
                 Logging = m.Value;
