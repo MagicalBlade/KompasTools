@@ -13,6 +13,7 @@ using System.IO;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using KompasTools.Utils;
+using System.Threading;
 
 namespace KompasTools.ViewModels.WorkingWithFiles
 {
@@ -26,8 +27,8 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         [ObservableProperty]
         string _stamp_16003 = "";
 
-        [RelayCommand]
-        private async void EditStampAsync()
+        [RelayCommand(IncludeCancelCommand = true)]
+        private async Task EditStampAsync(CancellationToken token)
         {
             InfoUtils.SetStatusBar("Началось заполнение штампа");
             InfoUtils.ClearProgressBar();
@@ -41,7 +42,12 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
             if (kompasType == null)
             {
-                InfoUtils.SetStatusBar("Не найден компас в системе");
+                InfoUtils.SetStatusBar("Заполнение штампа отменено");
+                return;
+            }
+            if (token.IsCancellationRequested)
+            {
+                InfoUtils.SetStatusBar("Не удалось запустить компас");
                 return;
             }
             //Запуск компаса
@@ -59,6 +65,12 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 int progressbarriter = 5;
                 foreach (string path in cdwFiles)
                 {
+                    if (token.IsCancellationRequested)
+                    {
+                        InfoUtils.SetStatusBar("Заполнение штампа отменено");
+                        application.Quit();
+                        return;
+                    }
                     InfoUtils.SetProgressBar(progressbarriter += 90 / cdwFiles.Length);
                     if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D)
                     {
@@ -98,8 +110,11 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 }
                 application.Quit();
                 InfoUtils.SetProgressBar(100);
-            });            
-            InfoUtils.SetStatusBar("Заполнение штампа завершено");
+            }, token);          
+            if (!token.IsCancellationRequested)
+            {
+                InfoUtils.SetStatusBar("Заполнение штампа завершено");
+            }
         }
 
         /// <summary>
