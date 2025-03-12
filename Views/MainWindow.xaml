@@ -15,6 +15,9 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
@@ -220,39 +223,47 @@
                                 <DockPanel Grid.Row="0" LastChildFill="True">
                                     <TextBlock DockPanel.Dock="Top" Text="Папка из которой будут браться чертежи:" Margin="2" />
                                     <Button DockPanel.Dock="Left" Width="Auto" Content="Выбрать папку" Padding="4,2" Margin="2" Command="{Binding OpenFolderCommand}"/>
-                                    <TextBox DockPanel.Dock="Left" Text="{Binding PathFolderAllCdw}" MinWidth="200" Margin="2,1" VerticalContentAlignment="Center"/>
+                                    <TextBox DockPanel.Dock="Left" Text="{Binding PathFolderAllCdw}" MinWidth="200" Margin="2,1"/>
                                 </DockPanel>
 
                                 <Grid Grid.Row="1" ShowGridLines="True">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="35"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="115"/>
+                                        <ColumnDefinition Width="75"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="350"/>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="45"/>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="70"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
+                                        <RowDefinition Height="25"/>
                                     </Grid.RowDefinitions>
-                                    <Label Content="Лист" Grid.Column="7" Grid.Row="8" Grid.ColumnSpan="2"/>
-                                    <TextBox Text="{Binding Stamp_16003}" Width="120" Grid.Column="9" Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="З/з.№" Grid.Column="6" Grid.Row="0" Grid.ColumnSpan="4" FontSize="14"/>
+                                    <DockPanel Grid.Column="10" Grid.Row="0" Grid.ColumnSpan="4">
+                                        <CheckBox DockPanel.Dock="Left" VerticalAlignment="Center"/>
+                                        <TextBox DockPanel.Dock="Left" Text="{Binding Stamp_16003}" Width="Auto"/>
+                                    </DockPanel>
+                                    <TextBlock Text="Лист" Grid.Column="6" Grid.Row="9" Grid.ColumnSpan="3" FontSize="14"/>
+                                    <TextBox Text="{Binding Stamp_16003}" Width="Auto" Grid.Column="9" Grid.Row="9" Grid.ColumnSpan="2"/>
                                 </Grid>
                                 
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
