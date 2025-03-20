@@ -25,11 +25,14 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         [ObservableProperty]
         string? _pathFolderAllCdw;
         [ObservableProperty]
-        string _stamp_16003 = "";
+        string _cell_16003 = "";
+        [ObservableProperty]
+        bool _isCell_16003 = false;
 
         [RelayCommand(IncludeCancelCommand = true)]
         private async Task EditStampAsync(CancellationToken token)
         {
+            ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
             InfoUtils.SetStatusBar("Началось заполнение штампа");
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
@@ -82,17 +85,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     foreach (ILayoutSheet layoutSheet in layoutSheets)
                     {
                         IStamp stamp = layoutSheet.Stamp;
-                        IText text = stamp.Text[16003];
-                        ITextLine textLine = text.TextLine[0];
-                        ITextItem textItem = textLine.TextItem[0];
-                        ITextFont textFont = (ITextFont)textItem;
-                        double height = textFont.Height;
-                        text.Str = Stamp_16003; //Изменяем текст в ячейке заказа
-                        ITextLine textLine1 = text.TextLine[0];
-                        ITextItem textItem1 = textLine1.TextItem[0];
-                        ITextFont textFont1 = (ITextFont)textItem1;
-                        textFont1.Height = height;
-                        textItem1.Update();
+                        if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003);
                         stamp.Update();
                         break;
                     }
@@ -115,6 +108,22 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             {
                 InfoUtils.SetStatusBar("Заполнение штампа завершено");
             }
+            #region Функции
+            static void ChangeStamp(IStamp _stamp, int cellnumber, string celltext)
+            {
+                IText text = _stamp.Text[cellnumber];
+                ITextLine textLine = text.TextLine[0];
+                ITextItem textItem = textLine.TextItem[0];
+                ITextFont textFont = (ITextFont)textItem;
+                double height = textFont.Height;
+                text.Str = celltext; //Изменяем текст в ячейке заказа
+                ITextLine textLine1 = text.TextLine[0];
+                ITextItem textItem1 = textLine1.TextItem[0];
+                ITextFont textFont1 = (ITextFont)textItem1;
+                textFont1.Height = height;
+                textItem1.Update();
+            } 
+            #endregion
         }
 
         /// <summary>
