@@ -24,23 +24,63 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         /// </summary>
         [ObservableProperty]
         string? _pathFolderAllCdw;
+        /// <summary>
+        /// Ячейка заказа
+        /// </summary>
         [ObservableProperty]
         string _cell_16003 = "";
+        /// <summary>
+        /// Изменять ячейку заказа
+        /// </summary>
         [ObservableProperty]
         bool _isCell_16003 = false;
+        /// <summary>
+        /// Ячейка инвентарного номера
+        /// </summary>
+        [ObservableProperty]
+        string _cell_16002 = "";
+        /// <summary>
+        /// Изменять ячейку инвентарного номера
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_16002 = false;
+        /// <summary>
+        /// Ячейка номера листа
+        /// </summary>
+        [ObservableProperty]
+        string _cell_16001 = "";
+        /// <summary>
+        /// Изменять ячейку номера листа
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_16001 = false;
+        [ObservableProperty]
+        bool _isNumberCell_16001 = false;
 
         [RelayCommand(IncludeCancelCommand = true)]
         private async Task EditStampAsync(CancellationToken token)
         {
+            double numberlist = 0;
             ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
-            InfoUtils.SetStatusBar("Началось заполнение штампа");
+            InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
+            if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003)
+            {
+                InfoUtils.SetStatusBar("Не выбраны ячейки для изменения");
+                return;
+            }
+            if (IsNumberCell_16001 && !Double.TryParse(Cell_16001, out numberlist))
+            {
+                InfoUtils.SetStatusBar("В номере листа указано не число");
+                return;
+            }
             if (PathFolderAllCdw == null)
             {
                 InfoUtils.SetStatusBar("Не указан путь к папке с чертежами");
                 return;
             }
+            InfoUtils.SetLoggin("Началось заполнение штампа");
             string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
             if (kompasType == null)
@@ -85,6 +125,19 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     foreach (ILayoutSheet layoutSheet in layoutSheets)
                     {
                         IStamp stamp = layoutSheet.Stamp;
+                        if (IsCell_16001)
+                        {
+                            if (IsNumberCell_16001)
+                            {
+                                ChangeStamp(stamp, 16001, numberlist.ToString());
+                                numberlist++;
+                            }
+                            else
+                            {
+                                ChangeStamp(stamp, 16001, Cell_16001);
+                            }
+                        }
+                        if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002);
                         if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003);
                         stamp.Update();
                         break;
@@ -106,7 +159,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             }, token);          
             if (!token.IsCancellationRequested)
             {
-                InfoUtils.SetStatusBar("Заполнение штампа завершено");
+                InfoUtils.SetLoggin("Заполнение штампа завершено");
             }
             #region Функции
             static void ChangeStamp(IStamp _stamp, int cellnumber, string celltext)
