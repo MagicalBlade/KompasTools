@@ -20,10 +20,27 @@ namespace KompasTools.ViewModels.WorkingWithFiles
     internal partial class EditStampViewModel : ObservableObject
     {
         /// <summary>
+        /// Получить чертежи из папки
+        /// </summary>
+        [ObservableProperty]
+        bool? _isFolderAllCdw = true;
+        /// <summary>
         /// Путь к папке с чертежами
         /// </summary>
         [ObservableProperty]
         string? _pathFolderAllCdw;
+
+        /// <summary>
+        /// Получить чертежи выбором файлов
+        /// </summary>
+        [ObservableProperty]
+        bool? _isPathsFileCdw = false;
+        /// <summary>
+        /// Список путей файлов чертежей
+        /// </summary>
+        [ObservableProperty]
+        string? _pathsFileCdw;
+
         /// <summary>
         /// Ячейка заказа
         /// </summary>
