@@ -42,6 +42,27 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         string[]? _pathsFileCdw;
 
         /// <summary>
+        /// Ячейка названия заказа
+        /// </summary>
+        [ObservableProperty]
+        string _cell_1 = "";
+        /// <summary>
+        /// Изменять ячейку названия заказа
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_1 = false;
+        /// <summary>
+        /// Высота шрифта в ячейке названия заказа
+        /// </summary>
+        [ObservableProperty]
+        double _cell_1Height = 7;
+        /// <summary>
+        /// Указать? высоту шрифта в ячейке названия заказа
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_1Height = false;
+
+        /// <summary>
         /// Ячейка заказа
         /// </summary>
         [ObservableProperty]
@@ -83,7 +104,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
-            if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003)
+            if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003 && !IsCell_1)
             {
                 InfoUtils.SetStatusBar("Не выбраны ячейки для изменения");
                 return;
@@ -157,6 +178,10 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                         }
                         if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002);
                         if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003);
+                        if (IsCell_1)
+                        {
+                            ChangeStampMultyLine(stamp, 1, Cell_1.Split("\r\n"), Cell_1Height, IsCell_1Height);
+                        }
                         stamp.Update();
                         break;
                     }
@@ -199,7 +224,30 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 ITextFont textFont1 = (ITextFont)textItem1;
                 textFont1.Height = height;
                 textItem1.Update();
-            } 
+            }
+            static void ChangeStampMultyLine(IStamp _stamp, int cellnumber, string[] celltext, double cellHeight, bool iscellheight)
+            {
+                IText text = _stamp.Text[cellnumber];
+                text.Clear();
+                foreach (var item in celltext)
+                {
+                    ITextLine textLine2 = text.Add();
+                    ITextItem textItem1 = textLine2.Add();
+                    textItem1.Str = item;
+                    ITextFont textFont1 = (ITextFont)textItem1;
+                    if (iscellheight)
+                    {
+                        textFont1.Height = cellHeight;
+                    }
+                    textItem1.Update();
+                }
+                //text.Str = celltext; //Изменяем текст в ячейке заказа
+                //ITextLine textLine1 = text.TextLine[0];
+                //ITextItem textItem1 = textLine1.TextItem[0];
+                //ITextFont textFont1 = (ITextFont)textItem1;
+                //textFont1.Height = height;
+                //textItem1.Update();
+            }
             #endregion
         }
 
