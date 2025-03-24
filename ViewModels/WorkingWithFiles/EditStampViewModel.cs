@@ -23,7 +23,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         /// Получить чертежи из папки
         /// </summary>
         [ObservableProperty]
-        bool? _isFolderAllCdw = true;
+        bool _isFolderAllCdw = true;
         /// <summary>
         /// Путь к папке с чертежами
         /// </summary>
@@ -34,12 +34,12 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         /// Получить чертежи выбором файлов
         /// </summary>
         [ObservableProperty]
-        bool? _isPathsFileCdw = false;
+        bool _isPathsFileCdw = false;
         /// <summary>
         /// Список путей файлов чертежей
         /// </summary>
         [ObservableProperty]
-        string? _pathsFileCdw;
+        string[]? _pathsFileCdw;
 
         /// <summary>
         /// Ячейка заказа
@@ -78,6 +78,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         private async Task EditStampAsync(CancellationToken token)
         {
             double numberlist = 0;
+            int errorcounter = 0;
             ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
             InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
@@ -92,22 +93,21 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 InfoUtils.SetStatusBar("В номере листа указано не число");
                 return;
             }
-            if (PathFolderAllCdw == null)
+            if (PathsFileCdw == null)
             {
-                InfoUtils.SetStatusBar("Не указан путь к папке с чертежами");
+                InfoUtils.SetStatusBar("Не указаны файлы для изменения");
                 return;
             }
             InfoUtils.SetLoggin("Началось заполнение штампа");
-            string[] cdwFiles = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
             if (kompasType == null)
             {
-                InfoUtils.SetStatusBar("Заполнение штампа отменено");
+                InfoUtils.SetStatusBar("Не найден компас на компьютере");
                 return;
             }
             if (token.IsCancellationRequested)
             {
-                InfoUtils.SetStatusBar("Не удалось запустить компас");
+                InfoUtils.SetStatusBar("Заполнение штампа отменено");
                 return;
             }
             //Запуск компаса
@@ -123,7 +123,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 IApplication application = (IApplication)kompas.ksGetApplication7();
                 IDocuments documents = application.Documents;
                 int progressbarriter = 5;
-                foreach (string path in cdwFiles)
+                foreach (string path in PathsFileCdw)
                 {
                     if (token.IsCancellationRequested)
                     {
@@ -131,10 +131,11 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                         application.Quit();
                         return;
                     }
-                    InfoUtils.SetProgressBar(progressbarriter += 90 / cdwFiles.Length);
+                    InfoUtils.SetProgressBar(progressbarriter += 90 / PathsFileCdw.Length);
                     if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D)
                     {
                         InfoUtils.SetLoggin($"Не удалось открыть - {path}");
+                        errorcounter++;
                         continue;
                     }
                     #region Изменение штампа
@@ -163,6 +164,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     if (kompasDocuments2D.Changed)
                     {
                         InfoUtils.SetLoggin($"Не удалось сохранить - {path}");
+                        errorcounter++;
                     }
                     else
                     {
@@ -174,9 +176,13 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 application.Quit();
                 InfoUtils.SetProgressBar(100);
             }, token);          
-            if (!token.IsCancellationRequested)
+            if (!token.IsCancellationRequested && errorcounter == 0)
             {
                 InfoUtils.SetLoggin("Заполнение штампа завершено");
+            }
+            if (errorcounter != 0)
+            {
+                InfoUtils.SetLoggin($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
             }
             #region Функции
             static void ChangeStamp(IStamp _stamp, int cellnumber, string celltext)
@@ -186,6 +192,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 ITextItem textItem = textLine.TextItem[0];
                 ITextFont textFont = (ITextFont)textItem;
                 double height = textFont.Height;
+                if (height == 5) height += 0.01;
                 text.Str = celltext; //Изменяем текст в ячейке заказа
                 ITextLine textLine1 = text.TextLine[0];
                 ITextItem textItem1 = textLine1.TextItem[0];
@@ -207,6 +214,31 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 PathFolderAllCdw = dialog.SelectedPath;
+                if (PathFolderAllCdw == null || PathFolderAllCdw == "")
+                {
+                    InfoUtils.SetStatusBar("Не указан путь к папке с чертежами");
+                    return;
+                }
+                PathsFileCdw = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
+            }
+        }
+
+        /// <summary>
+        /// Выбрать файлы
+        /// </summary>
+        [RelayCommand]
+        private void GetPathFiles()
+        {
+            OpenFileDialog openFileDialog = new()
+            {
+                Title = "Выберите файлы для изменения",
+                Multiselect = true,
+                DefaultExt = ".cdw",
+                Filter = "КОМПАС-Чертежи(*.cdw)|*.cdw"
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                PathsFileCdw = openFileDialog.FileNames;
             }
         }
     }
