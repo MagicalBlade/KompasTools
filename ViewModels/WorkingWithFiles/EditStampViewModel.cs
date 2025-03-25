@@ -63,6 +63,32 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         bool _isCell_1Height = false;
 
         /// <summary>
+        /// Изменять ячейку основной надписи
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_2 = false;
+        /// <summary>
+        /// Высота шрифта в ячейке основной надписи
+        /// </summary>
+        [ObservableProperty]
+        double _cell_2Height = 7;
+        /// <summary>
+        /// Указать? высоту шрифта в ячейке основной надписи
+        /// </summary>
+        [ObservableProperty]
+        bool _isCell_2Height = false;
+        /// <summary>
+        /// Из имени файла в основную надпись
+        /// </summary>
+        [ObservableProperty]
+        bool _Cell_2FromNameFile = true;
+        /// <summary>
+        /// В имя файла из основной надписи
+        /// </summary>
+        [ObservableProperty]
+        bool _Cell_2InFileName = false;
+
+        /// <summary>
         /// Ячейка заказа
         /// </summary>
         [ObservableProperty]
@@ -104,7 +130,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
-            if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003 && !IsCell_1)
+            if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003 && !IsCell_1 && !IsCell_2)
             {
                 InfoUtils.SetStatusBar("Не выбраны ячейки для изменения");
                 return;
@@ -164,24 +190,44 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     foreach (ILayoutSheet layoutSheet in layoutSheets)
                     {
                         IStamp stamp = layoutSheet.Stamp;
-                        if (IsCell_16001)
-                        {
-                            if (IsNumberCell_16001)
-                            {
-                                ChangeStamp(stamp, 16001, numberlist.ToString());
-                                numberlist++;
-                            }
-                            else
-                            {
-                                ChangeStamp(stamp, 16001, Cell_16001);
-                            }
-                        }
-                        if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002);
-                        if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003);
                         if (IsCell_1)
                         {
                             ChangeStampMultyLine(stamp, 1, Cell_1.Split("\r\n"), Cell_1Height, IsCell_1Height);
                         }
+                        if (IsCell_2)
+                        {
+                            if (Cell_2FromNameFile)
+                            {
+                                string namefile = Path.GetFileNameWithoutExtension(kompasDocuments2D.Name);
+                                if (IsCell_2Height)
+                                {
+                                    ChangeStamp(stamp, 2, namefile, Cell_2Height);
+                                }
+                                else
+                                {
+                                    ChangeStamp(stamp, 2, namefile, -1);
+                                }
+                            }
+                            if (Cell_2InFileName)
+                            {
+
+                            }
+                        }
+                        if (IsCell_16001)
+                        {
+                            if (IsNumberCell_16001)
+                            {
+                                ChangeStamp(stamp, 16001, numberlist.ToString(), -1);
+                                numberlist++;
+                            }
+                            else
+                            {
+                                ChangeStamp(stamp, 16001, Cell_16001, -1);
+                            }
+                        }
+                        if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002, -1);
+                        if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003, -1);
+
                         stamp.Update();
                         break;
                     }
@@ -208,15 +254,24 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             if (errorcounter != 0)
             {
                 InfoUtils.SetLoggin($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
+                MessageBox.Show($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
             }
             #region Функции
-            static void ChangeStamp(IStamp _stamp, int cellnumber, string celltext)
+            static void ChangeStamp(IStamp _stamp, int cellnumber, string celltext, double cellHeight)
             {
                 IText text = _stamp.Text[cellnumber];
                 ITextLine textLine = text.TextLine[0];
                 ITextItem textItem = textLine.TextItem[0];
                 ITextFont textFont = (ITextFont)textItem;
-                double height = textFont.Height;
+                double height;
+                if (cellHeight == -1)
+                {
+                    height = textFont.Height;
+                }
+                else
+                {
+                    height = cellHeight;
+                }
                 if (height == 5) height += 0.01;
                 text.Str = celltext; //Изменяем текст в ячейке заказа
                 ITextLine textLine1 = text.TextLine[0];
@@ -241,12 +296,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     }
                     textItem1.Update();
                 }
-                //text.Str = celltext; //Изменяем текст в ячейке заказа
-                //ITextLine textLine1 = text.TextLine[0];
-                //ITextItem textItem1 = textLine1.TextItem[0];
-                //ITextFont textFont1 = (ITextFont)textItem1;
-                //textFont1.Height = height;
-                //textItem1.Update();
             }
             #endregion
         }
