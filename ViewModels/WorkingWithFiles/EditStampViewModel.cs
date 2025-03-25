@@ -108,8 +108,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         /// </summary>
         [ObservableProperty]
         bool _isCell_16001 = false;
-        [ObservableProperty]
-        bool _isNumberCell_16001 = false;
 
         /// <summary>
         /// Изменить штамп
@@ -119,7 +117,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         [RelayCommand(IncludeCancelCommand = true)]
         private async Task EditStampAsync(CancellationToken token)
         {
-            double numberlist = 0;
             int errorcounter = 0;
             ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
             InfoUtils.ClearStatusBar();
@@ -128,11 +125,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             if (!IsCell_16001 && !IsCell_16002 && !IsCell_16003 && !IsCell_1 && !IsCell_2)
             {
                 InfoUtils.SetStatusBar("Не выбраны ячейки для изменения");
-                return;
-            }
-            if (IsNumberCell_16001 && !Double.TryParse(Cell_16001, out numberlist))
-            {
-                InfoUtils.SetStatusBar("В номере листа указано не число");
                 return;
             }
             if (PathsFileCdw == null)
@@ -260,15 +252,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     }
                     if (IsCell_16001)
                     {
-                        if (IsNumberCell_16001)
-                        {
-                            ChangeStamp(stamp, 16001, numberlist.ToString(), -1);
-                            numberlist++;
-                        }
-                        else
-                        {
-                            ChangeStamp(stamp, 16001, Cell_16001, -1);
-                        }
+                        ChangeStamp(stamp, 16001, Cell_16001, -1);
                     }
                     if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002, -1);
                     if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003, -1);
