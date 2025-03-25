@@ -77,16 +77,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         /// </summary>
         [ObservableProperty]
         bool _isCell_2Height = false;
-        /// <summary>
-        /// Из имени файла в основную надпись
-        /// </summary>
-        [ObservableProperty]
-        bool _Cell_2FromNameFile = true;
-        /// <summary>
-        /// В имя файла из основной надписи
-        /// </summary>
-        [ObservableProperty]
-        bool _Cell_2InFileName = false;
 
         /// <summary>
         /// Ячейка заказа
@@ -121,6 +111,11 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         [ObservableProperty]
         bool _isNumberCell_16001 = false;
 
+        /// <summary>
+        /// Изменить штамп
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [RelayCommand(IncludeCancelCommand = true)]
         private async Task EditStampAsync(CancellationToken token)
         {
@@ -179,6 +174,12 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                         return;
                     }
                     InfoUtils.SetProgressBar(progressbarriter += 90 / PathsFileCdw.Length);
+                    if (!File.Exists(path))
+                    {
+                        InfoUtils.SetLoggin($"Не найден файл - {path}");
+                        errorcounter++;
+                        continue;
+                    }
                     if (documents.Open(path, false, false) is not IKompasDocument2D kompasDocuments2D)
                     {
                         InfoUtils.SetLoggin($"Не удалось открыть - {path}");
@@ -205,54 +206,57 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     }
                     if (IsCell_2)
                     {
-                        if (Cell_2FromNameFile)
+                        string namefile = Path.GetFileNameWithoutExtension(kompasDocuments2D.Name);
+                        if (IsCell_2Height)
                         {
-                            string namefile = Path.GetFileNameWithoutExtension(kompasDocuments2D.Name);
-                            if (IsCell_2Height)
-                            {
-                                ChangeStamp(stamp, 2, namefile, Cell_2Height);
-                            }
-                            else
-                            {
-                                ChangeStamp(stamp, 2, namefile, -1);
-                            }
+                            ChangeStamp(stamp, 2, namefile, Cell_2Height);
                         }
-                        if (Cell_2InFileName)
+                        else
                         {
-                            IText text = stamp.Text[2];
-                            string? pathDirectory = Path.GetDirectoryName(path);
-                            if (pathDirectory == null)
-                            {
-                                InfoUtils.SetLoggin($"Не удалось получить путь к папке где находится файл - {path}");
-                                errorcounter++;
-                                continue;
-                            }
-                            string newFileFullPath = Path.Combine(pathDirectory, $"{text.Str}.cdw");
-                            newFileFullPath = newFileFullPath.Replace("\n", " ");
-                            if (newFileFullPath == null)
-                            {
-                                InfoUtils.SetLoggin($"Не удалось создать новый путь взамен - {path}");
-                                errorcounter++;
-                                continue;
-                            }
-                            if (File.Exists(newFileFullPath))
-                            {
-                                InfoUtils.SetLoggin($"Файл с новым именем {newFileFullPath} уже существует. Имя файла который изменяли - {path}");
-                                errorcounter++;
-                                continue;
-                            }
-                            try
-                            {
-                                File.Move(kompasDocuments2D.PathName, newFileFullPath);
-                            }
-                            catch (Exception e)
-                            {
-                                InfoUtils.SetLoggin($"Ошибка при изменении имени файла - {path}");
-                                InfoUtils.SetLoggin($"{e}");
-                                errorcounter++;
-                                continue;
-                            }
+                            ChangeStamp(stamp, 2, namefile, -1);
                         }
+
+                        #region Вынести в отдельную вкладку
+                        //TODO Вынести в отдельную вкладку
+                        //if (Cell_2InFileName)
+                        //{
+                        //    IText text = stamp.Text[2];
+                        //    string? pathDirectory = Path.GetDirectoryName(path);
+                        //    if (pathDirectory == null)
+                        //    {
+                        //        InfoUtils.SetLoggin($"Не удалось получить путь к папке где находится файл - {path}");
+                        //        errorcounter++;
+                        //        continue;
+                        //    }
+                        //    string newFileFullPath = Path.Combine(pathDirectory, $"{text.Str.Trim()}.cdw");
+                        //    newFileFullPath = newFileFullPath.Replace("\n", " ");
+                        //    if (newFileFullPath == null)
+                        //    {
+                        //        InfoUtils.SetLoggin($"Не удалось создать новый путь взамен - {path}");
+                        //        errorcounter++;
+                        //        continue;
+                        //    }
+                        //    if (File.Exists(newFileFullPath))
+                        //    {
+                        //        InfoUtils.SetLoggin($"Файл с новым именем {newFileFullPath} уже существует. Имя файла который изменяли - {path}");
+                        //        errorcounter++;
+                        //        continue;
+                        //    }
+                        //    kompasDocuments2D.Close(Kompas6Constants.DocumentCloseOptions.kdDoNotSaveChanges);
+                        //    try
+                        //    {
+                        //        //File.Delete("E:\\Temp\\Изменить штамп\\чертежи\\1.cdw");
+                        //        File.Move(kompasDocuments2D.PathName, newFileFullPath);
+                        //    }
+                        //    catch (Exception e)
+                        //    {
+                        //        InfoUtils.SetLoggin($"Ошибка при изменении имени файла - {path}");
+                        //        InfoUtils.SetLoggin($"{e}");
+                        //        errorcounter++;
+                        //        continue;
+                        //    }
+                        //} 
+                        #endregion
                     }
                     if (IsCell_16001)
                     {
