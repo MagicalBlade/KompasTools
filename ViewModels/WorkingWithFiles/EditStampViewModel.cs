@@ -187,50 +187,89 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     }
                     #region Изменение штампа
                     ILayoutSheets layoutSheets = kompasDocuments2D.LayoutSheets;
+                    IStamp? stamp = null;
                     foreach (ILayoutSheet layoutSheet in layoutSheets)
                     {
-                        IStamp stamp = layoutSheet.Stamp;
-                        if (IsCell_1)
+                        stamp = layoutSheet.Stamp;                        
+                        break;
+                    }
+                    if (stamp == null)
+                    {
+                        InfoUtils.SetLoggin($"Не удалось получить штамп - {path}");
+                        errorcounter++;
+                        continue;
+                    }
+                    if (IsCell_1)
+                    {
+                        ChangeStampMultyLine(stamp, 1, Cell_1.Split("\r\n"), Cell_1Height, IsCell_1Height);
+                    }
+                    if (IsCell_2)
+                    {
+                        if (Cell_2FromNameFile)
                         {
-                            ChangeStampMultyLine(stamp, 1, Cell_1.Split("\r\n"), Cell_1Height, IsCell_1Height);
-                        }
-                        if (IsCell_2)
-                        {
-                            if (Cell_2FromNameFile)
+                            string namefile = Path.GetFileNameWithoutExtension(kompasDocuments2D.Name);
+                            if (IsCell_2Height)
                             {
-                                string namefile = Path.GetFileNameWithoutExtension(kompasDocuments2D.Name);
-                                if (IsCell_2Height)
-                                {
-                                    ChangeStamp(stamp, 2, namefile, Cell_2Height);
-                                }
-                                else
-                                {
-                                    ChangeStamp(stamp, 2, namefile, -1);
-                                }
-                            }
-                            if (Cell_2InFileName)
-                            {
-
-                            }
-                        }
-                        if (IsCell_16001)
-                        {
-                            if (IsNumberCell_16001)
-                            {
-                                ChangeStamp(stamp, 16001, numberlist.ToString(), -1);
-                                numberlist++;
+                                ChangeStamp(stamp, 2, namefile, Cell_2Height);
                             }
                             else
                             {
-                                ChangeStamp(stamp, 16001, Cell_16001, -1);
+                                ChangeStamp(stamp, 2, namefile, -1);
                             }
                         }
-                        if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002, -1);
-                        if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003, -1);
-
-                        stamp.Update();
-                        break;
+                        if (Cell_2InFileName)
+                        {
+                            IText text = stamp.Text[2];
+                            string? pathDirectory = Path.GetDirectoryName(path);
+                            if (pathDirectory == null)
+                            {
+                                InfoUtils.SetLoggin($"Не удалось получить путь к папке где находится файл - {path}");
+                                errorcounter++;
+                                continue;
+                            }
+                            string newFileFullPath = Path.Combine(pathDirectory, $"{text.Str}.cdw");
+                            newFileFullPath = newFileFullPath.Replace("\n", " ");
+                            if (newFileFullPath == null)
+                            {
+                                InfoUtils.SetLoggin($"Не удалось создать новый путь взамен - {path}");
+                                errorcounter++;
+                                continue;
+                            }
+                            if (File.Exists(newFileFullPath))
+                            {
+                                InfoUtils.SetLoggin($"Файл с новым именем {newFileFullPath} уже существует. Имя файла который изменяли - {path}");
+                                errorcounter++;
+                                continue;
+                            }
+                            try
+                            {
+                                File.Move(kompasDocuments2D.PathName, newFileFullPath);
+                            }
+                            catch (Exception e)
+                            {
+                                InfoUtils.SetLoggin($"Ошибка при изменении имени файла - {path}");
+                                InfoUtils.SetLoggin($"{e}");
+                                errorcounter++;
+                                continue;
+                            }
+                        }
                     }
+                    if (IsCell_16001)
+                    {
+                        if (IsNumberCell_16001)
+                        {
+                            ChangeStamp(stamp, 16001, numberlist.ToString(), -1);
+                            numberlist++;
+                        }
+                        else
+                        {
+                            ChangeStamp(stamp, 16001, Cell_16001, -1);
+                        }
+                    }
+                    if (IsCell_16002) ChangeStamp(stamp, 16002, Cell_16002, -1);
+                    if (IsCell_16003) ChangeStamp(stamp, 16003, Cell_16003, -1);
+
+                    stamp.Update();
                     kompasDocuments2D.Save();
                     if (kompasDocuments2D.Changed)
                     {
@@ -253,7 +292,8 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             }
             if (errorcounter != 0)
             {
-                InfoUtils.SetLoggin($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
+                InfoUtils.SetLoggin("Заполнение штампа завершено с ошибками, проверьте журнал.");
+                InfoUtils.SetLoggin($"Количество ошибок = {errorcounter}");
                 MessageBox.Show($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
             }
             #region Функции
