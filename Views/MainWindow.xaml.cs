@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace KompasTools
@@ -20,6 +21,12 @@ namespace KompasTools
         {
             TextBox textBox = (TextBox)sender;
             textBox.ScrollToEnd();
+        }  
+
+        private void TB_PreviewTextInput_OnlyNumber(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            Regex onlyNumbers = new("[^0-9.]+");
+            e.Handled = onlyNumbers.IsMatch(e.Text);
         }
     }
 }

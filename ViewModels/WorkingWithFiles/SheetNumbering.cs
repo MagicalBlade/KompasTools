@@ -52,7 +52,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         private async Task SheetNumberingAsync(CancellationToken token)
         {
             int errorcounter = 0;
-            ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
             InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
@@ -186,6 +185,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                     return;
                 }
                 PathsFileCdw = Directory.GetFiles(PathFolderAllCdw, "*.cdw", SearchOption.TopDirectoryOnly);
+                Array.Sort(PathsFileCdw);
             }
         }
 
