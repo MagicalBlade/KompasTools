@@ -464,13 +464,50 @@
                                 </StackPanel>
                                 <DockPanel Grid.Row="1" LastChildFill="False" VerticalAlignment="Top">
                                     <TextBlock Text="Список чертежей для изменения:" Margin="2" DockPanel.Dock="Top"/>
-                                    <ListBox ItemsSource="{Binding PathsFileCdw}" DockPanel.Dock="Top"/>
+                                    <ListBox ItemsSource="{Binding PathsFileCdw}" DockPanel.Dock="Top" MinHeight="100"/>
                                     <TextBlock Text="Начать с номера: " DockPanel.Dock="Left"/>
                                     <TextBox Text="{Binding StartNumber}" DockPanel.Dock="Left" Height="25" Width="50" Margin="2" PreviewTextInput="TB_PreviewTextInput_OnlyNumber"/>
                                 </DockPanel>
                                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Button Content="Нумеровать" Padding="4,2" Margin="10,2" Command="{Binding SheetNumberingCommand}"/>
                                     <Button Content="Отмена" Padding="4,2" Margin="10,2" Command="{Binding SheetNumberingCancelCommand}"/>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <!--Записать основную надпись в имя файла-->
+                        <TabItem Header="Основную надпись в имя файла">
+                            <TabItem.DataContext>
+                                <WorkingWithFiles:TitleBlockToFileName/>
+                            </TabItem.DataContext>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Vertical">
+                                    <DockPanel LastChildFill="True">
+                                        <TextBlock DockPanel.Dock="Top" Text="Получить чертежи:" Margin="2"/>
+                                        <RadioButton IsChecked="{Binding IsFolderAllCdw}" DockPanel.Dock="Top" GroupName="Нумерация листов. Способ получения чертежей"
+                             Content="из папки"/>
+                                        <Button IsEnabled="{Binding IsFolderAllCdw}" DockPanel.Dock="Left" Width="Auto" Content="Выбрать папку" Padding="4,2" Margin="2"
+                        Command="{Binding OpenFolderCommand}"/>
+                                        <TextBox IsEnabled="{Binding IsFolderAllCdw}" Text="{Binding PathFolderAllCdw}" DockPanel.Dock="Left" MinWidth="200" Margin="2,1"/>
+                                    </DockPanel>
+                                    <DockPanel LastChildFill="False">
+                                        <RadioButton IsChecked="{Binding IsPathsFileCdw}" DockPanel.Dock="Top" GroupName="Нумерация листов. Способ получения чертежей"
+                             Content="выбором файлов"/>
+                                        <Button IsEnabled="{Binding IsPathsFileCdw}" DockPanel.Dock="Left" Width="Auto" Content="Выбрать чертежи" Padding="4,2" Margin="2"
+                        Command="{Binding GetPathFilesCommand}"/>
+                                    </DockPanel>
+                                </StackPanel>
+                                <DockPanel Grid.Row="1" LastChildFill="False" VerticalAlignment="Top">
+                                    <TextBlock Text="Список чертежей для изменения:" Margin="2" DockPanel.Dock="Top"/>
+                                    <ListBox ItemsSource="{Binding PathsFileCdw}" DockPanel.Dock="Top" MinHeight="100"/>
+                                </DockPanel>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Content="Записать" Padding="4,2" Margin="10,2" Command="{Binding WriteTitleBlockToFileNameCommand}"/>
+                                    <Button Content="Отмена" Padding="4,2" Margin="10,2" Command="{Binding WriteTitleBlockToFileNameCancelCommand}"/>
                                 </StackPanel>
                             </Grid>
                         </TabItem>
