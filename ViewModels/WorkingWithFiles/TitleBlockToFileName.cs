@@ -49,7 +49,6 @@ namespace KompasTools.ViewModels.WorkingWithFiles
         private async Task WriteTitleBlockToFileName(CancellationToken token)
         {
             int errorcounter = 0;
-            ///TODO проверка на пустые ячейки. напомнить пользователю что ячейка будет очищена
             InfoUtils.ClearStatusBar();
             InfoUtils.ClearProgressBar();
             InfoUtils.ClearLoggin();
@@ -58,7 +57,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 InfoUtils.SetStatusBar("Не указаны файлы для изменения");
                 return;
             }
-            InfoUtils.SetLoggin("Началось заполнение штампа");
+            InfoUtils.SetLoggin("Началась запись основной надписи в имя файла");
             Type? kompasType = Type.GetTypeFromProgID("Kompas.Application.5", true);
             if (kompasType == null)
             {
@@ -67,7 +66,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             }
             if (token.IsCancellationRequested)
             {
-                InfoUtils.SetStatusBar("Заполнение штампа отменено");
+                InfoUtils.SetStatusBar("Запись основной надписи в имя файла отменена");
                 return;
             }
             //Запуск компаса
@@ -87,7 +86,7 @@ namespace KompasTools.ViewModels.WorkingWithFiles
                 {
                     if (token.IsCancellationRequested)
                     {
-                        InfoUtils.SetStatusBar("Заполнение штампа отменено");
+                        InfoUtils.SetStatusBar("Запись основной надписи в имя файла отменена");
                         application.Quit();
                         return;
                     }
@@ -159,13 +158,13 @@ namespace KompasTools.ViewModels.WorkingWithFiles
             }, token);
             if (!token.IsCancellationRequested && errorcounter == 0)
             {
-                InfoUtils.SetLoggin("Заполнение штампа завершено");
+                InfoUtils.SetLoggin("Запись основной надписи в имя файла завершена");
             }
             if (errorcounter != 0)
             {
-                InfoUtils.SetLoggin("Заполнение штампа завершено с ошибками, проверьте журнал.");
+                InfoUtils.SetLoggin("Запись основной надписи в имя файла завершена с ошибками, проверьте журнал.");
                 InfoUtils.SetLoggin($"Количество ошибок = {errorcounter}");
-                MessageBox.Show($"Заполнение штампа завершено с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
+                MessageBox.Show($"Запись основной надписи в имя файла завершена с ошибками, проверьте журнал.\nКоличество ошибок = {errorcounter}");
             }
         }
         /// <summary>
