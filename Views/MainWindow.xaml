@@ -6,7 +6,7 @@
         xmlns:cm="clr-namespace:System.ComponentModel;assembly=System"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
-        xmlns:WorkingWithFiles="clr-namespace:KompasTools.ViewModels.WorkingWithFiles" x:Class="KompasTools.MainWindow"
+        xmlns:WorkingWithFiles="clr-namespace:KompasTools.ViewModels.WorkingWithFiles" xmlns:Sundry="clr-namespace:KompasTools.ViewModels.Sundry" x:Class="KompasTools.MainWindow"
         mc:Ignorable="d"
         Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}"
@@ -278,7 +278,7 @@
                                     <Border Grid.Column="3" Grid.Row="11"/>
                                     <Border Grid.Column="4" Grid.Row="11"/>
                                     <!--#endregion-->
-                                    
+
                                 </Grid>
 
                                 <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -509,7 +509,7 @@
                             <StackPanel Grid.Row="1" Orientation="Vertical">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="Папка:"/>
-                                    <TextBox Text="{}" Width="120"/>
+                                    <TextBox Text="" Width="120"/>
                                     <Button Content="Открыть" Command=""/>
                                     <Button Content="Получить" Command=""/>
                                     <Button Content="Отмена" Command=""/>
@@ -518,6 +518,15 @@
                             </StackPanel>
                         </Grid>
 
+                    </TabItem>
+                    <TabItem Header="Разделки">
+                        <TabItem.DataContext>
+                            <Sundry:Welding/>
+                        </TabItem.DataContext>
+                        <StackPanel>
+                            <TextBox Text="{Binding Thickness}" Width="50"/>
+                            <Button Content="Test" Command="{Binding TestCommand}"/>
+                        </StackPanel>
                     </TabItem>
                 </TabControl>
             </TabItem>
