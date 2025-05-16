@@ -28,5 +28,20 @@ namespace KompasTools
             Regex onlyNumbers = new("[^0-9.]+");
             e.Handled = onlyNumbers.IsMatch(e.Text);
         }
+
+        private void WeldGOSTs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            NameWeldJoints.UnselectAll();
+        }
+
+        private void NameWeldJoints_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            WeldingMethod.UnselectAll();
+        }
+
+        private void WeldingMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            WeldDates.UnselectAll();
+        }
     }
 }

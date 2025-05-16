@@ -520,12 +520,36 @@
 
                     </TabItem>
                     <TabItem Header="Разделки">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName ="Loaded">
+                                <i:InvokeCommandAction Command ="{Binding LoadedTabCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <TabItem.DataContext>
                             <Sundry:Welding/>
                         </TabItem.DataContext>
                         <StackPanel>
                             <TextBox Text="{Binding Thickness}" Width="50"/>
                             <Button Content="Test" Command="{Binding TestCommand}"/>
+                            <TextBlock Text="ГОСТы"/>
+                            <ListBox x:Name="WeldGOSTs" Height="100" ItemsSource="{Binding WeldGOSTs}" SelectedItem="{Binding SelectGOST}" SelectionChanged="WeldGOSTs_SelectionChanged"/>
+                            <TextBlock Text="Условное обозначение сварного соединения"/>
+                            <ListBox x:Name="NameWeldJoints" Height="100" ItemsSource="{Binding NameWeldJoints}" SelectedItem="{Binding SelectNameWeldJoints}" SelectionChanged="NameWeldJoints_SelectionChanged"/>
+                            <TextBlock Text="Способ сварки"/>
+                            <ListBox x:Name="WeldingMethod" Height="100" ItemsSource="{Binding WeldingMethod}" SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged"/>
+
+
+                            <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding NameWeldJoint}">Сварное соединение</GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding WeldingMethod}">Способ сварки</GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+
+                                                        
                         </StackPanel>
                     </TabItem>
                 </TabControl>
