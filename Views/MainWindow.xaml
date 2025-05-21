@@ -556,6 +556,8 @@
                                             <GridViewColumn DisplayMemberBinding="{Binding NameWeldJoint}">Обозначение соединения</GridViewColumn>
                                             <GridViewColumn DisplayMemberBinding="{Binding WeldingMethod}">Способ сварки</GridViewColumn>
                                             <GridViewColumn DisplayMemberBinding="{Binding RangeThickness}">Толщины</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding ParamC}">c, притупление</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding ParamA}">a, угол</GridViewColumn>
                                         </GridView>
                                     </ListView.View>
                                 </ListView>

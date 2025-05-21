@@ -6,6 +6,7 @@ using Irony.Parsing;
 using Kompas6API5;
 using Kompas6Constants;
 using KompasAPI7;
+using KompasTools.Classes.Sundry.Welding;
 using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using static KompasTools.ViewModels.Sundry.Welding.WeldData;
+using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.ViewModels.Sundry
 {
@@ -92,61 +93,168 @@ namespace KompasTools.ViewModels.Sundry
         [RelayCommand]
         public void LoadedTab()
         {
-            WeldDates = new WeldData[]{
-                new WeldData()
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Sundry\\Welding\\Параметры сварки.csv");
+            string text;
+            int columnCount = 29;
+            List<WeldData> data = new List<WeldData>();
+            using (StreamReader reader = new (path))
+            {
+                text = reader.ReadToEnd();
+            }
+            string[] temp = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            foreach (string row in temp)
+            {
+                string[] cells = row.Split("\t");
+                if(cells.Length != columnCount) continue;
+                WeldData weldData = new()
                 {
-                    NameGost = "14771",
-                    NameWeldJoint = "C15",
-                    WeldingMethod = WeldingMethodEnum.ИП,
-                    ThicknessMin = 8,
-                    ThicknessMax = 11
-                },
-                new WeldData()
+                    NameGost = cells[0],
+                    NameWeldJoint = cells[1]
+                };
+                if (Enum.TryParse(cells[2], out ConnectionTypeEnum connectionType) && connectionType != ConnectionTypeEnum.НЕ_УКАЗАНО)
                 {
-                    NameGost = "14771",
-                    NameWeldJoint = "C15",
-                    WeldingMethod = WeldingMethodEnum.ИП,
-                    ThicknessMin = 12,
-                    ThicknessMax = 14
-                },
-                new WeldData()
-                {
-                    NameGost = "14771",
-                    NameWeldJoint = "C18",
-                    WeldingMethod = WeldingMethodEnum.ИП,
-                    ThicknessMin = 7,
-                    ThicknessMax = 8
-                },
-                new WeldData()
-                {
-                    NameGost = "14771",
-                    NameWeldJoint = "C18",
-                    WeldingMethod = WeldingMethodEnum.УП,
-                    ThicknessMin = 50,
-                    ThicknessMax = 56
-                },
-                new WeldData()
-                {
-                    NameGost = "23518",
-                    NameWeldJoint = "У1",
-                    WeldingMethod = WeldingMethodEnum.ИП,
-                    ThicknessMin = 6,
-                    ThicknessMax = 30
-                },
-                new WeldData()
-                {
-                    NameGost = "23518",
-                    NameWeldJoint = "У1",
-                    WeldingMethod = WeldingMethodEnum.ИНп,
-                    ThicknessMin = 0.8,
-                    ThicknessMax = 2
+                    weldData.ConnectionType = connectionType;
                 }
-
-            };
-            OrigWeldDates = WeldDates;
+                else continue;
+                if (Enum.TryParse(cells[3], out ShapePreparedEdgesEnum shapePreparedEdges1) && shapePreparedEdges1 != ShapePreparedEdgesEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.ShapePreparedEdgesPart1 = shapePreparedEdges1;
+                }
+                else continue;
+                if (Enum.TryParse(cells[4], out ShapePreparedEdgesEnum shapePreparedEdges2) && shapePreparedEdges2 != ShapePreparedEdgesEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.ShapePreparedEdgesPart2 = shapePreparedEdges2;
+                }
+                else continue;
+                if (Enum.TryParse(cells[5], out WeldingMethodEnum weldingMethod) && weldingMethod != WeldingMethodEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.WeldingMethod = weldingMethod;
+                }
+                else continue;
+                if (Double.TryParse(cells[6], out double thicknessMin))
+                {
+                    weldData.ThicknessMin = thicknessMin;
+                }
+                else continue;
+                if (Double.TryParse(cells[7], out double thicknessMax))
+                {
+                    weldData.ThicknessMax = thicknessMax;
+                }
+                else continue;
+                if (Double.TryParse(cells[8], out double paramC))
+                {
+                    weldData.ParamC = paramC;
+                }
+                else continue;
+                string[] paramCTolerance = cells[9].Split(';');
+                switch (paramCTolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramCTolerance[0], out double paramCTolerance1))
+                            {
+                                weldData.ParamCTolerance[0] = paramCTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamCTolerance[1] = -paramCTolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramCTolerance[0], out double paramCTolerance1))
+                            {
+                                weldData.ParamCTolerance[0] = paramCTolerance1;
+                            }
+                            if (Double.TryParse(paramCTolerance[1], out double paramCTolerance2))
+                            {
+                                weldData.ParamCTolerance[1] = paramCTolerance2;
+                            } 
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Double.TryParse(cells[10], out double paramA))
+                {
+                    weldData.ParamA = paramA;
+                }
+                else continue;
+                string[] paramATolerance = cells[11].Split(';');
+                switch (paramATolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramATolerance[0], out double paramATolerance1))
+                            {
+                                weldData.ParamATolerance[0] = paramATolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamATolerance[1] = -paramATolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramATolerance[0], out double paramATolerance1))
+                            {
+                                weldData.ParamATolerance[0] = paramATolerance1;
+                            }
+                            if (Double.TryParse(paramATolerance[1], out double paramATolerance2))
+                            {
+                                weldData.ParamATolerance[1] = paramATolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Double.TryParse(cells[12], out double paramH))
+                {
+                    weldData.ParamH = paramH;
+                }
+                else continue;
+                if (Double.TryParse(cells[13], out double paramB))
+                {
+                    weldData.ParamB = paramB;
+                }
+                else continue;
+                string[] paramBTolerance = cells[14].Split(';');
+                switch (paramBTolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramBTolerance[0], out double paramBTolerance1))
+                            {
+                                weldData.ParamBTolerance[0] = paramBTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamBTolerance[1] = -paramBTolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramBTolerance[0], out double paramBTolerance1))
+                            {
+                                weldData.ParamBTolerance[0] = paramBTolerance1;
+                            }
+                            if (Double.TryParse(paramBTolerance[1], out double paramBTolerance2))
+                            {
+                                weldData.ParamBTolerance[1] = paramBTolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                data.Add(weldData);
+            }
+            OrigWeldDates = data.ToArray();
+            WeldDates = OrigWeldDates;
             if (WeldDates != null)
             {
-                WeldGOSTs = WeldDates.Select(n => n.NameGost).Distinct().ToArray();
+                WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
             }
 
             //    string currentDirectory = Directory.GetCurrentDirectory();
@@ -206,156 +314,6 @@ namespace KompasTools.ViewModels.Sundry
             //lineSegment.Update();
         }
 
-        public class WeldData
-        {
-            private string nameGost = "";
-            private string nameWeldJoint = "";
-            private WeldingMethodEnum weldingMethod;
-            private double thicknessMin;
-            private double thicknessMax;
-            private string? rangeThickness;
 
-            /// <summary>
-            /// Наименование ГОСТа
-            /// </summary>
-            public string NameGost { get => nameGost; set => nameGost = value; }
-            /// <summary>
-            /// Услоавное обозначение сварного соединения
-            /// </summary>
-            public string NameWeldJoint { get => nameWeldJoint; set => nameWeldJoint = value; }
-            /// <summary>
-            /// Способ сварки
-            /// </summary>
-            public WeldingMethodEnum WeldingMethod { get => weldingMethod; set => weldingMethod = value; }
-            /// <summary>
-            /// Минимальная толщина диапазона. Включается в диапазон
-            /// </summary>
-            public double ThicknessMin { get => thicknessMin; set => thicknessMin = value; }
-            /// <summary>
-            /// Максимальная толщина диапазона. Не включается в диапазон
-            /// </summary>
-            public double ThicknessMax { get => thicknessMax; set => thicknessMax = value; }
-            /// <summary>
-            /// Диапазон толщин
-            /// </summary>
-            public string? RangeThickness { get => $"{ThicknessMin}-{ThicknessMax}"; }
-
-            /// <summary>
-            /// Проверка вхождения толщины детали в диапазон толщин
-            /// </summary>
-            /// <param name="thickness"></param>
-            /// <returns></returns>
-            public bool CheckThickness(double thickness)
-            {
-                if(thickness >= thicknessMin &&  thickness < thicknessMax)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            public enum WeldingMethodEnum
-            {
-                ИП,
-                УП,
-                ИН,
-                ИНп
-            }
-            /// <summary>
-            /// Форма подготовленных кромок
-            /// </summary>
-            public enum ShapePreparedEdges
-            {
-                [EnumMember(Value = "Без скоса")]
-                Без_скоса,
-                [EnumMember(Value = "Со скосом одной кромки")]
-                Скос_одной_кромки,
-                [EnumMember(Value = "С двумя симметричными скосами")]
-                Два_симметричные_скоса,
-                [EnumMember(Value = "С двумя не симметричными скосами")]
-                Два_не_симметричные_скоса
-            }
-
-            /// <summary>
-            /// Размещение детали
-            /// </summary>
-            public enum LocationPart
-            {
-                Лево_Верх,
-                Лево_Низ,
-                Право_Верх,
-                Право_Низ,
-                Верх_Лево,
-                Верх_Право,
-                Низ_Лево,
-                Низ_Право
-            }
-
-            public void DrawingJoint(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
-            {
-
-            }
-
-            public void DrawingSeam(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
-            {
-
-            }
-
-            public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
-            {
-                #region Проверка входящих данных
-                if (view == null)
-                {
-                    MessageBox.Show($"При создании детали view равен null");
-                    return;
-                }
-                if (thickness <= 0)
-                {
-                    MessageBox.Show($"При создании детали толщина равна или меньше нуля");
-                    return;
-                }
-                #endregion
-
-                IDrawingContainer drawingContainer = (IDrawingContainer)view;
-                ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
-                ILineSegments lineSegments = drawingContainer.LineSegments;
-                //switch (ShapePrepared)
-                //{
-                //    case ShapePreparedEdges.Без_скоса:
-                //        break;
-                //    case ShapePreparedEdges.Скос_одной_кромки:
-                //        {
-                //            //double xangle = (thickness - Prit) * Math.Tan(angle * Math.PI / 180);
-                //            //DrawLineSegment(0, 0, );
-                //        }
-                //        break;
-                //    case ShapePreparedEdges.Два_симметричные_скоса:
-                //        break;
-                //    case ShapePreparedEdges.Два_не_симметричные_скоса:
-                //        break;
-                //}
-
-                void DrawLineSegment(double x1, double y1, double x2, double y2)
-                {
-                    ILineSegment lineSegment = lineSegments.Add();
-                    lineSegment.X1 = x1;
-                    lineSegment.Y1 = y1;
-                    lineSegment.X2 = x2;
-                    lineSegment.Y2 = y2;
-                    lineSegment.Update();
-
-                }
-            }
-
-            public void DrawingPart3D(IView view, double thickness, LocationPart locationPart)
-            {
-
-            }
-
-
-        }
     }
 }
