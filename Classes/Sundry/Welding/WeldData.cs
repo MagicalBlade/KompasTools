@@ -27,6 +27,21 @@ namespace KompasTools.Classes.Sundry.Welding
         private double paramH;
         private double paramB;
         private double[] paramBTolerance = new double[2];
+        private double paramN;
+        private double minUserAngle;
+        private double maxUserAngle;
+        private string? rangeUserAngle;
+        private WeldTypeEnum weldType;
+        private NatureSeamPerformedEnum natureSeamPerformed;
+        private double paramE;
+        private double[] paramETolerance = new double[2];
+        private double paramE1;
+        private double[] paramE1Tolerance = new double[2];
+        private double paramG;
+        private double[] paramGTolerance = new double[2];
+        private double paramG1;
+        private double[] paramG1Tolerance = new double[2];
+        private DependenceSeamThicknessEnum dependenceSeamThickness;
 
         /// <summary>
         /// Наименование ГОСТа
@@ -92,6 +107,63 @@ namespace KompasTools.Classes.Sundry.Welding
         /// Допуск на b, зазор в стыке
         /// </summary>
         public double[] ParamBTolerance { get => paramBTolerance; set => paramBTolerance = value; }
+        /// <summary>
+        /// n, уступ деталей для углового типа соединения
+        /// </summary>
+        public double ParamN { get => paramN; set => paramN = value; }
+        /// <summary>
+        /// Минимальный угол диапазона
+        /// </summary>
+        public double MinUserAngle { get => minUserAngle; set => minUserAngle = value; }
+        /// <summary>
+        /// Максимальный угол диапазона
+        /// </summary>
+        public double MaxUserAngle { get => maxUserAngle; set => maxUserAngle = value; }
+        public string? RangeUserAngle { get => $"{MinUserAngle}-{MaxUserAngle}"; }
+        /// <summary>
+        /// Тип шва
+        /// </summary>
+        public WeldTypeEnum WeldType { get => weldType; set => weldType = value; }
+        /// <summary>
+        /// Характер выполненного шва
+        /// </summary>
+        public NatureSeamPerformedEnum NatureSeamPerformed { get => natureSeamPerformed; set => natureSeamPerformed = value; }
+        /// <summary>
+        /// e, ширина большего валика
+        /// </summary>
+        public double ParamE { get => paramE; set => paramE = value; }
+        /// <summary>
+        /// Допуск на e, ширина большего валика
+        /// </summary>
+        public double[] ParamETolerance { get => paramETolerance; set => paramETolerance = value; }
+        /// <summary>
+        /// e1, ширина меньшего валика
+        /// </summary>
+        public double ParamE1 { get => paramE1; set => paramE1 = value; }
+        /// <summary>
+        /// Допуск на e1, ширина меньшего валика
+        /// </summary>
+        public double[] ParamE1Tolerance { get => paramE1Tolerance; set => paramE1Tolerance = value; }
+        /// <summary>
+        /// g, высота большего валика
+        /// </summary>
+        public double ParamG { get => paramG; set => paramG = value; }
+        /// <summary>
+        /// допуск на g, высота большего валика
+        /// </summary>
+        public double[] ParamGTolerance { get => paramGTolerance; set => paramGTolerance = value; }
+        /// <summary>
+        /// g1, высота меньшего валика
+        /// </summary>
+        public double ParamG1 { get => paramG1; set => paramG1 = value; }
+        /// <summary>
+        /// допуск на g1, высота меньшего валика
+        /// </summary>
+        public double[] ParamG1Tolerance { get => paramG1Tolerance; set => paramG1Tolerance = value; }
+        /// <summary>
+        /// Зависимость параметров шва от толщины
+        /// </summary>        
+        public DependenceSeamThicknessEnum DependenceSeamThickness { get => dependenceSeamThickness; set => dependenceSeamThickness = value; }
 
 
 

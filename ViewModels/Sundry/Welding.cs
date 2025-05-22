@@ -248,6 +248,172 @@ namespace KompasTools.ViewModels.Sundry
                     default:
                         continue;
                 }
+                if (Double.TryParse(cells[15], out double paramN))
+                {
+                    weldData.ParamN = paramN;
+                }
+                else continue;
+                if (Double.TryParse(cells[16], out double minUserAngle))
+                {
+                    weldData.MinUserAngle = minUserAngle;
+                }
+                else continue;
+                if (Double.TryParse(cells[17], out double maxUserAngle))
+                {
+                    weldData.MaxUserAngle = maxUserAngle;
+                }
+                else continue;
+                if (Enum.TryParse(cells[18], out WeldTypeEnum weldType) && weldType != WeldTypeEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.WeldType = weldType;
+                }
+                else continue;
+                if (Enum.TryParse(cells[19], out NatureSeamPerformedEnum natureSeamPerformed) && natureSeamPerformed != NatureSeamPerformedEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.NatureSeamPerformed = natureSeamPerformed;
+                }
+                else continue;
+                if (Double.TryParse(cells[20], out double paramE))
+                {
+                    weldData.ParamE = paramE;
+                }
+                else continue;
+                string[] paramETolerance = cells[21].Split(';');
+                switch (paramETolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramETolerance[0], out double paramETolerance1))
+                            {
+                                weldData.ParamETolerance[0] = paramETolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamETolerance[1] = -paramETolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramETolerance[0], out double paramETolerance1))
+                            {
+                                weldData.ParamETolerance[0] = paramETolerance1;
+                            }
+                            if (Double.TryParse(paramETolerance[1], out double paramETolerance2))
+                            {
+                                weldData.ParamETolerance[1] = paramETolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Double.TryParse(cells[22], out double paramE1))
+                {
+                    weldData.ParamE1 = paramE1;
+                }
+                else continue;
+                string[] paramE1Tolerance = cells[23].Split(';');
+                switch (paramE1Tolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramE1Tolerance[0], out double paramE1Tolerance1))
+                            {
+                                weldData.ParamE1Tolerance[0] = paramE1Tolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamE1Tolerance[1] = -paramE1Tolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramE1Tolerance[0], out double paramE1Tolerance1))
+                            {
+                                weldData.ParamE1Tolerance[0] = paramE1Tolerance1;
+                            }
+                            if (Double.TryParse(paramE1Tolerance[1], out double paramE1Tolerance2))
+                            {
+                                weldData.ParamE1Tolerance[1] = paramE1Tolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Double.TryParse(cells[24], out double paramG))
+                {
+                    weldData.ParamG = paramG;
+                }
+                else continue;
+                string[] paramGTolerance = cells[25].Split(';');
+                switch (paramGTolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramGTolerance[0], out double paramGTolerance1))
+                            {
+                                weldData.ParamGTolerance[0] = paramGTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamGTolerance[1] = -paramGTolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramGTolerance[0], out double paramGTolerance1))
+                            {
+                                weldData.ParamGTolerance[0] = paramGTolerance1;
+                            }
+                            if (Double.TryParse(paramGTolerance[1], out double paramGTolerance2))
+                            {
+                                weldData.ParamGTolerance[1] = paramGTolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Double.TryParse(cells[26], out double paramG1))
+                {
+                    weldData.ParamG1 = paramG1;
+                }
+                else continue;
+                string[] paramG1Tolerance = cells[27].Split(';');
+                switch (paramG1Tolerance.Length)
+                {
+                    case 0:
+                        continue;
+                    case 1:
+                        {
+                            if (Double.TryParse(paramG1Tolerance[0], out double paramG1Tolerance1))
+                            {
+                                weldData.ParamG1Tolerance[0] = paramG1Tolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamG1Tolerance[1] = -paramG1Tolerance1;
+                            }
+                        }
+                        break;
+                    case 2:
+                        {
+                            if (Double.TryParse(paramG1Tolerance[0], out double paramG1Tolerance1))
+                            {
+                                weldData.ParamG1Tolerance[0] = paramG1Tolerance1;
+                            }
+                            if (Double.TryParse(paramG1Tolerance[1], out double paramG1Tolerance2))
+                            {
+                                weldData.ParamG1Tolerance[1] = paramG1Tolerance2;
+                            }
+                        }
+                        break;
+                    default:
+                        continue;
+                }
+                if (Enum.TryParse(cells[28], out DependenceSeamThicknessEnum dependenceSeamThickness) && dependenceSeamThickness != DependenceSeamThicknessEnum.НЕ_УКАЗАНО)
+                {
+                    weldData.DependenceSeamThickness = dependenceSeamThickness;
+                }
+
                 data.Add(weldData);
             }
             OrigWeldDates = data.ToArray();

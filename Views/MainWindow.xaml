@@ -558,6 +558,7 @@
                                             <GridViewColumn DisplayMemberBinding="{Binding RangeThickness}">Толщины</GridViewColumn>
                                             <GridViewColumn DisplayMemberBinding="{Binding ParamC}">c, притупление</GridViewColumn>
                                             <GridViewColumn DisplayMemberBinding="{Binding ParamA}">a, угол</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding RangeUserAngle}">Углы</GridViewColumn>
                                         </GridView>
                                     </ListView.View>
                                 </ListView>

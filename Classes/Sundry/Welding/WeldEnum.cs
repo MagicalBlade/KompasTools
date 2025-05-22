@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.Classes.Sundry.Welding
 {
@@ -78,6 +79,38 @@ namespace KompasTools.Classes.Sundry.Welding
             Верх_Право,
             Низ_Лево,
             Низ_Право
+        }
+        /// <summary>
+        /// Тип шва
+        /// </summary>
+        public enum WeldTypeEnum
+        {
+            НЕ_УКАЗАНО,
+            Катет,
+            Параметрический
+        }
+        /// <summary>
+        /// Характер выполненного шва
+        /// </summary>
+        public enum NatureSeamPerformedEnum
+        {
+            НЕ_УКАЗАНО,
+            Односторонний,
+            Односторонний_на_съемной_подкладке,
+            Односторонний_на_остающейся_подкладке,
+            Двухсторонний_симметричный,
+            Двухсторонний_не_симметричный
+        }
+        /// <summary>
+        /// Зависимость параметров шва от толщины
+        /// </summary>
+        public enum DependenceSeamThicknessEnum
+        {
+            НЕ_УКАЗАНО,
+            Не_зависят,
+            Зависит_только_e,
+            Зависит_только_g,
+            Зависят_оба
         }
     }
 }
