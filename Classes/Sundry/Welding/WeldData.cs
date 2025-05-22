@@ -196,7 +196,7 @@ namespace KompasTools.Classes.Sundry.Welding
 
         }
 
-        public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
+        public void DrawingPart(IView view, double thickness, double thickness2, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
         {
             #region Проверка входящих данных
             if (view == null)
@@ -214,6 +214,56 @@ namespace KompasTools.Classes.Sundry.Welding
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
             ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
             ILineSegments lineSegments = drawingContainer.LineSegments;
+
+            switch (ShapePreparedEdgesPart1)
+            {
+                case ShapePreparedEdgesEnum.НЕ_УКАЗАНО:
+                    break;
+                case ShapePreparedEdgesEnum.Без_скоса:
+                    break;
+                case ShapePreparedEdgesEnum.Без_притупления:
+                    break;
+                case ShapePreparedEdgesEnum.Со_скосом_одной_кромки:
+                    break;
+                case ShapePreparedEdgesEnum.С_двумя_симметричными_скосами:
+                    break;
+                case ShapePreparedEdgesEnum.С_двумя_не_симметричными_скосами_h_со_стороны_угла:
+                    break;
+                case ShapePreparedEdgesEnum.С_двумя_не_симметричными_скосами_h_с_противоположной_стороны_угла:
+                    break;
+                case ShapePreparedEdgesEnum.Притупление_зависит_от_толщины:
+                    break;
+                case ShapePreparedEdgesEnum.Со_скосом_одной_кромки_без_притупления:
+                    break;
+                case ShapePreparedEdgesEnum.h_зависит_от_толщины:
+                    break;
+                default:
+                    break;
+            }
+
+            switch (locationPart)
+            {
+                case LocationPart.Лево_Верх:
+                    break;
+                case LocationPart.Лево_Низ:
+                    break;
+                case LocationPart.Право_Верх:
+
+                    break;
+                case LocationPart.Право_Низ:
+                    break;
+                case LocationPart.Верх_Лево:
+                    break;
+                case LocationPart.Верх_Право:
+                    break;
+                case LocationPart.Низ_Лево:
+                    break;
+                case LocationPart.Низ_Право:
+                    break;
+                default:
+                    break;
+            }
+
             //switch (ShapePrepared)
             //{
             //    case ShapePreparedEdges.Без_скоса:

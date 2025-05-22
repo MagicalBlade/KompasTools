@@ -547,7 +547,7 @@
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel>
-                                <TextBlock Text="Толщина детали"/>
+                                <TextBlock Text="Толщина"/>
                                 <TextBox Text="{Binding Thickness, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
                                 <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}">
                                     <ListView.View>

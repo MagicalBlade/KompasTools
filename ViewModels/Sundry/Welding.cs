@@ -28,7 +28,10 @@ namespace KompasTools.ViewModels.Sundry
 {
     public partial class Welding : ObservableObject
     {
-        [ObservableProperty]
+        /// <summary>
+        /// Толщина
+        /// </summary>
+        [ObservableProperty]        
         private string? _thickness; //TODO подумать про конвертацию в double
         partial void OnThicknessChanged(string? value)
         {
@@ -422,28 +425,15 @@ namespace KompasTools.ViewModels.Sundry
             {
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
             }
-
-            //    string currentDirectory = Directory.GetCurrentDirectory();
-            //    string pathsettings = $"{currentDirectory}\\Sundry\\Welding\\GOST_14771.xml";
-            //    XmlSerializer xmlSerializer = new(typeof(List<WeldGOST>), new[] { typeof(WeldGOST), typeof(KType), typeof(VType) });
-            //    if (File.Exists(pathsettings))
-            //    {
-            //        using FileStream fs = new(pathsettings, FileMode.Open);
-            //        WeldGOSTs = xmlSerializer.Deserialize(fs) as List<WeldGOST>;
-            //    }
         }
 
         [RelayCommand]
         public void Test()
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-
-
-
             KompasObject kompas = (KompasObject)ExMarshal.GetActiveObject("KOMPAS.Application.5");
             if (kompas == null)
             {
-                System.Windows.Forms.MessageBox.Show("Запустите компас");
+                MessageBox.Show("Запустите компас");
                 return;
             }
             IApplication application = (IApplication)kompas.ksGetApplication7();
@@ -458,7 +448,7 @@ namespace KompasTools.ViewModels.Sundry
             if (activeKD.DocumentType != DocumentTypeEnum.ksDocumentDrawing
                 && activeKD.DocumentType != DocumentTypeEnum.ksDocumentFragment)
             {
-                System.Windows.Forms.MessageBox.Show("Программа работает только в чертеже или фрагменте");
+                MessageBox.Show("Программа работает только в чертеже или фрагменте");
                 return;
             }
             IKompasDocument2D activeKD2D = (IKompasDocument2D)activeKD;
