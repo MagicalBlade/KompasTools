@@ -7,11 +7,13 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:KompasTools" xmlns:viewmodels="clr-namespace:KompasTools.ViewModels"
         xmlns:WorkingWithFiles="clr-namespace:KompasTools.ViewModels.WorkingWithFiles" xmlns:Sundry="clr-namespace:KompasTools.ViewModels.Sundry" x:Class="KompasTools.MainWindow"
+        xmlns:Welding="clr-namespace:KompasTools.Classes.Sundry.Welding"
         mc:Ignorable="d"
         Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}"
         MinHeight="900" MinWidth="990">
     <Window.Resources>
+        <Welding:RadioBoolConverterToLocationPart x:Key="radioBoolConverterToLocationPart" />
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
@@ -546,10 +548,29 @@
                                          SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged"/>
                                 </StackPanel>
                             </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Лево_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Лево_Верх}"/>
+                                <RadioButton Content="Лево_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Лево_Низ}"/>
+                                <RadioButton Content="Право_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Право_Верх}"/>
+                                <RadioButton Content="Право_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Право_Низ}"/>
+                                <RadioButton Content="Верх_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Лево}"/>
+                                <RadioButton Content="Верх_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Право}"/>
+                                <RadioButton Content="Низ_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Лево}"/>
+                                <RadioButton Content="Низ_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Право}"/>
+
+                            </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Толщина"/>
                                 <TextBox Text="{Binding Thickness, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
-                                <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}">
+                                <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}"  Height="500">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>

@@ -196,7 +196,8 @@ namespace KompasTools.Classes.Sundry.Welding
 
         }
 
-        public void DrawingPart(IView view, double thickness, double thickness2, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
+        public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, double extraLength = 20)
         {
             #region Проверка входящих данных
             if (view == null)
@@ -215,7 +216,39 @@ namespace KompasTools.Classes.Sundry.Welding
             ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
             ILineSegments lineSegments = drawingContainer.LineSegments;
 
-            switch (ShapePreparedEdgesPart1)
+            switch (locationPart)
+            {
+                case LocationPart.Лево_Верх:
+                    break;
+                case LocationPart.Лево_Низ:
+                    break;
+                case LocationPart.Право_Верх:
+                    if (numberPar)
+                    {
+                        DrawingPart2(shapePreparedEdgesPart1);
+                    }
+                    else
+                    {
+                        DrawingPart2(shapePreparedEdgesPart2);
+                    }
+                    break;
+                case LocationPart.Право_Низ:
+                    break;
+                case LocationPart.Верх_Лево:
+                    break;
+                case LocationPart.Верх_Право:
+                    break;
+                case LocationPart.Низ_Лево:
+                    break;
+                case LocationPart.Низ_Право:
+                    break;
+                default:
+                    break;
+            }
+
+            void DrawingPart2(ShapePreparedEdgesEnum shapePreparedEdges)
+            {
+                switch (shapePreparedEdges)
             {
                 case ShapePreparedEdgesEnum.НЕ_УКАЗАНО:
                     break;
@@ -224,7 +257,22 @@ namespace KompasTools.Classes.Sundry.Welding
                 case ShapePreparedEdgesEnum.Без_притупления:
                     break;
                 case ShapePreparedEdgesEnum.Со_скосом_одной_кромки:
-                    break;
+                        //Без переходов
+                        if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
+                        {
+                            DrawLineSegment(0, 0, 0, ParamC);
+                            double xangle = (thickness - ParamC) * Math.Tan(ParamA* Math.PI / 180);
+                            DrawLineSegment(0, ParamC, xangle, thickness);
+                            DrawLineSegment(xangle, thickness, xangle + extraLength, thickness);
+                            DrawLineSegment(0, 0, xangle + extraLength, 0);
+                        }
+
+                        //Обычный переход вверху
+
+                        //Обычный переход внизу
+
+                        //Обычный переход вверху и внизу
+                        break;
                 case ShapePreparedEdgesEnum.С_двумя_симметричными_скосами:
                     break;
                 case ShapePreparedEdgesEnum.С_двумя_не_симметричными_скосами_h_со_стороны_угла:
@@ -241,28 +289,9 @@ namespace KompasTools.Classes.Sundry.Welding
                     break;
             }
 
-            switch (locationPart)
-            {
-                case LocationPart.Лево_Верх:
-                    break;
-                case LocationPart.Лево_Низ:
-                    break;
-                case LocationPart.Право_Верх:
-
-                    break;
-                case LocationPart.Право_Низ:
-                    break;
-                case LocationPart.Верх_Лево:
-                    break;
-                case LocationPart.Верх_Право:
-                    break;
-                case LocationPart.Низ_Лево:
-                    break;
-                case LocationPart.Низ_Право:
-                    break;
-                default:
-                    break;
             }
+
+
 
             //switch (ShapePrepared)
             //{

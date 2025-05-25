@@ -10,6 +10,7 @@ using KompasTools.Classes.Sundry.Welding;
 using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -18,6 +19,7 @@ using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Xml.Linq;
@@ -88,7 +90,8 @@ namespace KompasTools.ViewModels.Sundry
             }
         }
 
-
+        [ObservableProperty]
+        private LocationPart _isLocationPart = LocationPart.Право_Верх;
 
 
 
@@ -437,7 +440,6 @@ namespace KompasTools.ViewModels.Sundry
                 return;
             }
             IApplication application = (IApplication)kompas.ksGetApplication7();
-            application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
             IKompasDocument? activeKD = application.ActiveDocument;
             ksDocument2D? document2DAPI5 = kompas.ActiveDocument2D() as ksDocument2D;
             if (activeKD == null || document2DAPI5 == null)
@@ -459,17 +461,13 @@ namespace KompasTools.ViewModels.Sundry
 
             double thickness = Convert.ToDouble(Thickness);
 
-            IDrawingContainer drawingContainer = (IDrawingContainer)activeView;
-            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)activeView;
-            ILineSegments lineSegments = drawingContainer.LineSegments;
-            //ILineSegment lineSegment = lineSegments.Add();
-            //lineSegment.X1 = 0;
-            //lineSegment.Y1 = 0;
-            //lineSegment.X2 = 0;
-            //lineSegment.Y2 = 0;
-            //lineSegment.Update();
+            SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, true, true, TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Без_перехода);
+            
+            document2DAPI5.ksUndoContainer(false);
+            application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
         }
 
 
+        
     }
 }

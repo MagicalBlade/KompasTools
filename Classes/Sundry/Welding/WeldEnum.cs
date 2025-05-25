@@ -37,6 +37,27 @@ namespace KompasTools.Classes.Sundry.Welding
 
         }
         /// <summary>
+        /// Размещение детали
+        /// </summary>
+        public enum LocationPart
+        {
+            Лево_Верх,
+            Лево_Низ,
+            Право_Верх,
+            Право_Низ,
+            Верх_Лево,
+            Верх_Право,
+            Низ_Лево,
+            Низ_Право
+        }
+        public enum TransitionTypeEnum
+        {
+            Без_перехода,
+            Обычный,
+            Занижение
+        }
+
+        /// <summary>
         /// Способ сварки
         /// </summary>
         public enum WeldingMethodEnum
@@ -66,20 +87,6 @@ namespace KompasTools.Classes.Sundry.Welding
             УП
         }
 
-        /// <summary>
-        /// Размещение детали
-        /// </summary>
-        public enum LocationPart
-        {
-            Лево_Верх,
-            Лево_Низ,
-            Право_Верх,
-            Право_Низ,
-            Верх_Лево,
-            Верх_Право,
-            Низ_Лево,
-            Низ_Право
-        }
         /// <summary>
         /// Тип шва
         /// </summary>
