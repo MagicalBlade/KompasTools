@@ -50,6 +50,9 @@ namespace KompasTools.Classes.Sundry.Welding
             Низ_Лево,
             Низ_Право
         }
+        /// <summary>
+        /// Тип перехода
+        /// </summary>
         public enum TransitionTypeEnum
         {
             Без_перехода,

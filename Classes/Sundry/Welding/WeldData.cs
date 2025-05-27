@@ -1,4 +1,5 @@
-﻿using KompasAPI7;
+﻿using Kompas6Constants;
+using KompasAPI7;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -215,40 +216,49 @@ namespace KompasTools.Classes.Sundry.Welding
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
             ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
             ILineSegments lineSegments = drawingContainer.LineSegments;
-
-            switch (locationPart)
+            //Если чертим вторую деталь то меняем направление на противомоложное
+            if (!numberPar)
             {
-                case LocationPart.Лево_Верх:
-                    break;
-                case LocationPart.Лево_Низ:
-                    break;
-                case LocationPart.Право_Верх:
-                    if (numberPar)
-                    {
-                        DrawingPart2(shapePreparedEdgesPart1);
-                    }
-                    else
-                    {
-                        DrawingPart2(shapePreparedEdgesPart2);
-                    }
-                    break;
-                case LocationPart.Право_Низ:
-                    break;
-                case LocationPart.Верх_Лево:
-                    break;
-                case LocationPart.Верх_Право:
-                    break;
-                case LocationPart.Низ_Лево:
-                    break;
-                case LocationPart.Низ_Право:
-                    break;
-                default:
-                    break;
+                switch (locationPart)
+                {
+                    case LocationPart.Лево_Верх:
+                        locationPart = LocationPart.Право_Верх;
+                        break;
+                    case LocationPart.Право_Верх:
+                        locationPart = LocationPart.Лево_Верх;
+                        break;
+                    case LocationPart.Лево_Низ:
+                        locationPart = LocationPart.Право_Низ;
+                        break;
+                    case LocationPart.Право_Низ:
+                        locationPart = LocationPart.Лево_Низ;
+                        break;
+                    case LocationPart.Верх_Лево:
+                        locationPart = LocationPart.Низ_Лево;
+                        break;
+                    case LocationPart.Низ_Лево:
+                        locationPart = LocationPart.Верх_Лево;
+                        break;
+                    case LocationPart.Верх_Право:
+                        locationPart = LocationPart.Низ_Право;
+                        break;
+                    case LocationPart.Низ_Право:
+                        locationPart = LocationPart.Верх_Право;
+                        break;
+                    default:
+                        break;
+                }
             }
-
-            void DrawingPart2(ShapePreparedEdgesEnum shapePreparedEdges)
+            ShapePreparedEdgesEnum shapePreparedEdges;
+            if (numberPar)
             {
-                switch (shapePreparedEdges)
+                shapePreparedEdges = shapePreparedEdgesPart1;
+            }
+            else
+            {
+                shapePreparedEdges = shapePreparedEdgesPart2;
+            }
+            switch (shapePreparedEdges)
             {
                 case ShapePreparedEdgesEnum.НЕ_УКАЗАНО:
                     break;
@@ -257,22 +267,64 @@ namespace KompasTools.Classes.Sundry.Welding
                 case ShapePreparedEdgesEnum.Без_притупления:
                     break;
                 case ShapePreparedEdgesEnum.Со_скосом_одной_кромки:
-                        //Без переходов
-                        if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
-                        {
-                            DrawLineSegment(0, 0, 0, ParamC);
-                            double xangle = (thickness - ParamC) * Math.Tan(ParamA* Math.PI / 180);
-                            DrawLineSegment(0, ParamC, xangle, thickness);
-                            DrawLineSegment(xangle, thickness, xangle + extraLength, thickness);
-                            DrawLineSegment(0, 0, xangle + extraLength, 0);
-                        }
+                    switch (locationPart)
+                    {
+                        case LocationPart.Лево_Верх:
+                            break;
+                        case LocationPart.Лево_Низ:
+                            break;
+                        case LocationPart.Право_Верх:
+                            //Без переходов
+                            if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
+                            {
+                                List<object> list = new List<object>();
+                                list.Add(DrawLineSegment(0, 0, 0, ParamC));
+                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                list.Add(DrawLineSegment(0, ParamC, xangle, thickness));
+                                list.Add(DrawLineSegment(xangle, thickness, xangle + extraLength, thickness));
+                                list.Add(DrawLineSegment(0, 0, xangle + extraLength, 0));
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = xangle + extraLength;
+                                waveLine.Y1 = 0;
+                                waveLine.X2 = xangle + extraLength;
+                                waveLine.Y2 = thickness;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                list.Add(waveLine);
+                                //Штриховка
+                                IHatches hatches = drawingContainer.Hatches;
+                                IHatch hatch = hatches.Add();
+                                hatch.X = 1;
+                                hatch.Y = 1;
+                                IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                boundariesObject.AddBoundaries(list, false);
+                                hatch.Update();
 
-                        //Обычный переход вверху
+                            }
 
-                        //Обычный переход внизу
+                            //Обычный переход вверху
 
-                        //Обычный переход вверху и внизу
-                        break;
+                            //Обычный переход внизу
+
+                            //Обычный переход вверху и внизу
+
+                            break;
+                        case LocationPart.Право_Низ:
+                            break;
+                        case LocationPart.Верх_Лево:
+                            break;
+                        case LocationPart.Верх_Право:
+                            break;
+                        case LocationPart.Низ_Лево:
+                            break;
+                        case LocationPart.Низ_Право:
+                            break;
+                        default:
+                            break;
+                    }                    
+                    break;
                 case ShapePreparedEdgesEnum.С_двумя_симметричными_скосами:
                     break;
                 case ShapePreparedEdgesEnum.С_двумя_не_симметричными_скосами_h_со_стороны_угла:
@@ -289,27 +341,9 @@ namespace KompasTools.Classes.Sundry.Welding
                     break;
             }
 
-            }
 
 
-
-            //switch (ShapePrepared)
-            //{
-            //    case ShapePreparedEdges.Без_скоса:
-            //        break;
-            //    case ShapePreparedEdges.Скос_одной_кромки:
-            //        {
-            //            //double xangle = (thickness - Prit) * Math.Tan(angle * Math.PI / 180);
-            //            //DrawLineSegment(0, 0, );
-            //        }
-            //        break;
-            //    case ShapePreparedEdges.Два_симметричные_скоса:
-            //        break;
-            //    case ShapePreparedEdges.Два_не_симметричные_скоса:
-            //        break;
-            //}
-
-            void DrawLineSegment(double x1, double y1, double x2, double y2)
+            ILineSegment DrawLineSegment(double x1, double y1, double x2, double y2)
             {
                 ILineSegment lineSegment = lineSegments.Add();
                 lineSegment.X1 = x1;
@@ -317,7 +351,7 @@ namespace KompasTools.Classes.Sundry.Welding
                 lineSegment.X2 = x2;
                 lineSegment.Y2 = y2;
                 lineSegment.Update();
-
+                return lineSegment;
             }
         }
 

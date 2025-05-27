@@ -565,7 +565,33 @@
                                     ConverterParameter=Низ_Лево}"/>
                                 <RadioButton Content="Низ_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
                                     ConverterParameter=Низ_Право}"/>
-
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Первая деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
+                                <RadioButton Content="Вторая деталь" GroupName="Number part"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Верх второй детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Низ второй детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Верх первой детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstUP}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Низ первой детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstBottom}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <CheckBox Content="Чертить размеры?" IsChecked="{Binding IsDrawingDimensions}"/>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Толщина"/>

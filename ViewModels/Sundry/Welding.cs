@@ -78,7 +78,6 @@ namespace KompasTools.ViewModels.Sundry
         {
             Filter();
         }
-
         public void Filter()
         {
             if (OrigWeldDates != null)
@@ -90,9 +89,35 @@ namespace KompasTools.ViewModels.Sundry
             }
         }
 
+
         [ObservableProperty]
         private LocationPart _isLocationPart = LocationPart.Право_Верх;
+        /// <summary>
+        /// Номер детали
+        /// </summary>
+        [ObservableProperty]
+        private bool _numberPart = true;
+        /// <summary>
+        /// Тип перехода
+        /// </summary>
+        [ObservableProperty]
+        private TransitionTypeEnum[] _transitionTypes = new TransitionTypeEnum[]
+        {
+            TransitionTypeEnum.Без_перехода,
+            TransitionTypeEnum.Обычный,
+            TransitionTypeEnum.Занижение
+        };
+        [ObservableProperty]
+        private TransitionTypeEnum _selectTransitionTypesFirstUP = TransitionTypeEnum.Без_перехода;
+        [ObservableProperty]
+        private TransitionTypeEnum _selectTransitionTypesFirstBottom = TransitionTypeEnum.Без_перехода;
+        [ObservableProperty]
+        private TransitionTypeEnum _selectTransitionTypesSecondUP = TransitionTypeEnum.Без_перехода;
+        [ObservableProperty]
+        private TransitionTypeEnum _selectTransitionTypesSecondBottom = TransitionTypeEnum.Без_перехода;
 
+        [ObservableProperty]
+        private bool _isDrawingDimensions = true;
 
 
 
@@ -460,14 +485,17 @@ namespace KompasTools.ViewModels.Sundry
             document2DAPI5.ksUndoContainer(true);
 
             double thickness = Convert.ToDouble(Thickness);
+            if (NumberPart)
+            {
+                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom);
+            }
+            else
+            {
+                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom);
+            }
 
-            SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, true, true, TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Без_перехода);
-            
             document2DAPI5.ksUndoContainer(false);
             application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
-        }
-
-
-        
+        }        
     }
 }
