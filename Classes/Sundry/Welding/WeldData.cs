@@ -1,5 +1,8 @@
-﻿using Kompas6Constants;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Kompas6API5;
+using Kompas6Constants;
 using KompasAPI7;
+using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -187,23 +190,23 @@ namespace KompasTools.Classes.Sundry.Welding
 
         
 
-        public void DrawingJoint(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
+        public void DrawingJoint()
         {
 
         }
 
-        public void DrawingSeam(IView view, double thickness, LocationPart locationPart, bool drawDimensions, double extraLength = 20)
+        public void DrawingSeam()
         {
 
         }
 
-        public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
+        public void DrawingPart(KompasObject kompas, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
             TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, double extraLength = 20)
         {
             #region Проверка входящих данных
-            if (view == null)
+            if (kompas == null)
             {
-                MessageBox.Show($"При создании детали view равен null");
+                MessageBox.Show($"При создании детали не найден активный Компас");
                 return;
             }
             if (thickness <= 0)
@@ -212,9 +215,15 @@ namespace KompasTools.Classes.Sundry.Welding
                 return;
             }
             #endregion
-
-            IDrawingContainer drawingContainer = (IDrawingContainer)view;
-            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
+            IApplication application = (IApplication)kompas.ksGetApplication7();
+            IKompasDocument? kompasDocument = application.ActiveDocument;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView activeView = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)activeView;
+            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)activeView;
             ILineSegments lineSegments = drawingContainer.LineSegments;
             //Если чертим вторую деталь то меняем направление на противомоложное
             if (!numberPar)
@@ -277,12 +286,15 @@ namespace KompasTools.Classes.Sundry.Welding
                             //Без переходов
                             if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
                             {
-                                List<object> list = new List<object>();
-                                list.Add(DrawLineSegment(0, 0, 0, ParamC));
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                list.Add(DrawLineSegment(0, ParamC, xangle, thickness));
-                                list.Add(DrawLineSegment(xangle, thickness, xangle + extraLength, thickness));
-                                list.Add(DrawLineSegment(0, 0, xangle + extraLength, 0));
+                                List<object> forboundaries = new();
+                                IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+                                IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
+                                drawingGroup.Open();
+                                forboundaries.Add(DrawLineSegment(0, 0, 0, ParamC));
+                                forboundaries.Add(DrawLineSegment(0, ParamC, xangle, thickness));
+                                forboundaries.Add(DrawLineSegment(xangle, thickness, xangle + extraLength, thickness));
+                                forboundaries.Add(DrawLineSegment(0, 0, xangle + extraLength, 0));
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -292,16 +304,28 @@ namespace KompasTools.Classes.Sundry.Welding
                                 waveLine.Y2 = thickness;
                                 waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
                                 waveLine.Update();
-                                list.Add(waveLine);
+                                forboundaries.Add(waveLine);
+                                drawingGroup.Close();
                                 //Штриховка
                                 IHatches hatches = drawingContainer.Hatches;
                                 IHatch hatch = hatches.Add();
-                                hatch.X = 1;
-                                hatch.Y = 1;
                                 IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                boundariesObject.AddBoundaries(list, false);
+                                boundariesObject.AddBoundaries(forboundaries.ToArray(), false);
                                 hatch.Update();
 
+                                ksDocument2D document2DAPI5 = (ksDocument2D)kompas.ActiveDocument2D();
+                                double xpaste = 0; double ypaste = 0;
+                                ksPhantom phantom = (ksPhantom)kompas.GetParamStruct(6);
+                                phantom.phantom = 1; //Указываем тип фантом "Фантом для сдвига группы"
+                                ksType1 type1 = (ksType1)phantom.GetPhantomParam();
+                                type1.gr = drawingGroup.Reference;
+                                if (document2DAPI5.ksCursorEx(null, ref xpaste, ref ypaste, phantom, null) == 0) //Вызываем курсор для указания точки вставки. Если была нажата Esc, прерываем вставку.
+                                {
+                                    document2DAPI5.ksDeleteObj(type1.gr);
+                                    return;
+                                }
+                                document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
+                                drawingGroup?.Store();
                             }
 
                             //Обычный переход вверху
@@ -355,7 +379,7 @@ namespace KompasTools.Classes.Sundry.Welding
             }
         }
 
-        public void DrawingPart3D(IView view, double thickness, LocationPart locationPart)
+        public void DrawingPart3D()
         {
 
         }

@@ -478,20 +478,17 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Программа работает только в чертеже или фрагменте");
                 return;
             }
-            IKompasDocument2D activeKD2D = (IKompasDocument2D)activeKD;
-            IViewsAndLayersManager viewsAndLayersManager = activeKD2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView activeView = views.ActiveView;
+            
             document2DAPI5.ksUndoContainer(true);
 
             double thickness = Convert.ToDouble(Thickness);
             if (NumberPart)
             {
-                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom);
+                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom);
             }
             else
             {
-                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom);
+                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom);
             }
 
             document2DAPI5.ksUndoContainer(false);
