@@ -287,14 +287,13 @@ namespace KompasTools.Classes.Sundry.Welding
                             if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
                             {
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                List<object> forboundaries = new();
                                 IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
                                 IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
                                 drawingGroup.Open();
-                                forboundaries.Add(DrawLineSegment(0, 0, 0, ParamC));
-                                forboundaries.Add(DrawLineSegment(0, ParamC, xangle, thickness));
-                                forboundaries.Add(DrawLineSegment(xangle, thickness, xangle + extraLength, thickness));
-                                forboundaries.Add(DrawLineSegment(0, 0, xangle + extraLength, 0));
+                                DrawLineSegment(0, 0, 0, ParamC);
+                                DrawLineSegment(0, ParamC, xangle, thickness);
+                                DrawLineSegment(xangle, thickness, xangle + extraLength, thickness);
+                                DrawLineSegment(0, 0, xangle + extraLength, 0);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -304,14 +303,24 @@ namespace KompasTools.Classes.Sundry.Welding
                                 waveLine.Y2 = thickness;
                                 waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
                                 waveLine.Update();
-                                forboundaries.Add(waveLine);
-                                drawingGroup.Close();
+
+                                IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                IDrawingContour drawingContour = drawingContours.Add();
+                                IContour contour = (IContour)drawingContour;
+                                contour.CopySegments(drawingGroup.Objects[0], false);
+                                drawingContour.Update();
+
+
                                 //Штриховка
                                 IHatches hatches = drawingContainer.Hatches;
                                 IHatch hatch = hatches.Add();
                                 IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                boundariesObject.AddBoundaries(forboundaries.ToArray(), false);
+                                boundariesObject.AddBoundaries(drawingContour, true);
                                 hatch.Update();
+
+                                drawingGroup.Close();
+
+
 
                                 ksDocument2D document2DAPI5 = (ksDocument2D)kompas.ActiveDocument2D();
                                 double xpaste = 0; double ypaste = 0;
