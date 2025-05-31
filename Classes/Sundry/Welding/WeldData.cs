@@ -11,6 +11,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.Classes.Sundry.Welding
@@ -203,7 +204,7 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(KompasObject kompas, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
-            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, double extraLength = 20)
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double dimtopart = 8, double extraLength = 20)
         {
             #region Проверка входящих данных
             if (kompas == null)
@@ -220,7 +221,6 @@ namespace KompasTools.Classes.Sundry.Welding
             IApplication application = (IApplication)kompas.ksGetApplication7();
             IKompasDocument? kompasDocument = application.ActiveDocument;
             IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
-            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)kompasDocument;
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView activeView = views.ActiveView;
@@ -228,7 +228,8 @@ namespace KompasTools.Classes.Sundry.Welding
             ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)activeView;
             ILineSegments lineSegments = drawingContainer.LineSegments;
             ILineDimensions lineDimensions = symbols2DContainer.LineDimensions;
-            //Если чертим вторую деталь то меняем направление на противомоложное
+            IAngleDimensions angleDimensions = symbols2DContainer.AngleDimensions;
+            //Если чертим вторую деталь то меняем направление на противоположное
             if (!numberPar)
             {
                 switch (locationPart)
@@ -290,15 +291,13 @@ namespace KompasTools.Classes.Sundry.Welding
                             if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
                             {
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
-                                IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
-                                drawingGroup.Open();
-                                DrawLineSegment(0, 0, 0, ParamC);
-                                DrawLineSegment(0, ParamC, xangle, thickness);
-                                DrawLineSegment(xangle, thickness, xangle + extraLength, thickness);
-                                DrawLineSegment(0, 0, xangle + extraLength, 0);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                //Чертим графику
+                                //Создаём основу разделки
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
+                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, xangle, thickness);
+                                DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
+                                DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                IWaveLines waveLines = symbols2DContainer.WaveLines; //Волнистая линия
                                 IWaveLine waveLine = waveLines.Add();
                                 waveLine.X1 = xangle + extraLength;
                                 waveLine.Y1 = 0;
@@ -319,33 +318,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                 IHatch hatch = hatches.Add();
                                 IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
                                 boundariesObject.AddBoundaries(drawingContour, true);
-                                hatch.Update();
-                                double dimtopart = 8;
+                                hatch.Update(); 
+
                                 //Чертим размеры
+                                dimtopart /= activeView.Scale;
                                 if (drawDimensions)
                                 {
-                                    LineDimension(xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + dimtopart, thickness / 2
+                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + dimtopart, thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    LineDimension(0, ParamC, xangle, thickness, xangle / 2, thickness + dimtopart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(0, 0, 0, ParamC, - dimtopart, - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    SetDimensionText(dtParamC, paramCTolerance);
-                                }
-
-                                drawingGroup.Close();
-
-                                ksDocument2D document2DAPI5 = (ksDocument2D)kompas.ActiveDocument2D();
-                                double xpaste = 0; double ypaste = 0;
-                                ksPhantom phantom = (ksPhantom)kompas.GetParamStruct(6);
-                                phantom.phantom = 1; //Указываем тип фантом "Фантом для сдвига группы"
-                                ksType1 type1 = (ksType1)phantom.GetPhantomParam();
-                                type1.gr = drawingGroup.Reference;
-                                if (document2DAPI5.ksCursorEx(null, ref xpaste, ref ypaste, phantom, null) == 0) //Вызываем курсор для указания точки вставки. Если была нажата Esc, прерываем вставку.
-                                {
-                                    document2DAPI5.ksDeleteObj(type1.gr);
-                                    return;
-                                }
-                                document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
-                                drawingGroup?.Store();
+                                    LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + dimtopart,
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - dimtopart, - 1,
+                                        ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    SetDeviation(dtParamC, paramCTolerance);
+                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, thickness + dimtopart * 2);
+                                    SetDeviation(dtParamA, ParamATolerance);
+                                }                                
                             }
 
                             //Обычный переход вверху
@@ -387,42 +375,9 @@ namespace KompasTools.Classes.Sundry.Welding
 
 
 
-            void DrawLineSegment(double x1, double y1, double x2, double y2)
-            {
-                ILineSegment lineSegment = lineSegments.Add();
-                lineSegment.X1 = x1;
-                lineSegment.Y1 = y1;
-                lineSegment.X2 = x2;
-                lineSegment.Y2 = y2;
-                lineSegment.Update();
-            }
-            ILineDimension LineDimension(double x1, double y1, double x2, double y2, double x3, double y3, ksLineDimensionOrientationEnum orientation)
-            {
-                ILineDimension lineDimension = lineDimensions.Add();
-                IDimensionParams dimensionParams = (IDimensionParams)lineDimension;
-                dimensionParams.InitDefaultValues();
-                dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
-                lineDimension.X1 = x1;
-                lineDimension.Y1 = y1;
-                lineDimension.X2 = x2;
-                lineDimension.Y2 = y2;
-                lineDimension.X3 = x3;
-                lineDimension.Y3 = y3;
-                lineDimension.Orientation = orientation;
-                lineDimension.Update();
-                //Необходимо для размеров у которых текста размеры находится снаружи
-                dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTAuto;
-                lineDimension.Update();
-                return lineDimension;
-            }
-            void SetDimensionText(IDimensionText dimensionText, double[] deviation)
-            {
-                dimensionText.HighDeviation.Str = deviation[0].ToString();
-                dimensionText.LowDeviation.Str = deviation[1].ToString();
-                dimensionText.DeviationOn = true;
-                dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
-                ((DrawingObject)dimensionText).Update();
-            }
+            
+            
+
         }
 
         public void DrawingPart3D()
@@ -430,6 +385,94 @@ namespace KompasTools.Classes.Sundry.Welding
 
         }
 
+
+        //Статичные методы
+        /// <summary>
+        /// Создание отрезка
+        /// </summary>
+        /// <param name="lineSegments"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        private static ILineSegment DrawLineSegment(ILineSegments lineSegments, double x1, double y1, double x2, double y2)
+        {
+            ILineSegment lineSegment = lineSegments.Add();
+            lineSegment.X1 = x1;
+            lineSegment.Y1 = y1;
+            lineSegment.X2 = x2;
+            lineSegment.Y2 = y2;
+            lineSegment.Update();
+            return lineSegment;
+        }
+        /// <summary>
+        /// Создание линейного размера
+        /// </summary>
+        /// <param name="lineDimensions"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <param name="x3"></param>
+        /// <param name="y3"></param>
+        /// <param name="orientation"></param>
+        /// <returns></returns>
+        private static ILineDimension LineDimension(ILineDimensions lineDimensions, double x1, double y1, double x2, double y2, double x3, double y3,
+            ksLineDimensionOrientationEnum orientation)
+        {
+            ILineDimension lineDimension = lineDimensions.Add();
+            IDimensionParams dimensionParams = (IDimensionParams)lineDimension;
+            dimensionParams.InitDefaultValues();
+            dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTManual;
+            lineDimension.X1 = x1;
+            lineDimension.Y1 = y1;
+            lineDimension.X2 = x2;
+            lineDimension.Y2 = y2;
+            lineDimension.X3 = x3;
+            lineDimension.Y3 = y3;
+            lineDimension.Orientation = orientation;
+            lineDimension.Update();
+            //Необходимо для размеров у которых текста размеры находится снаружи
+            dimensionParams.TextType = ksDimensionTextTypeEnum.ksDimTAuto;
+            lineDimension.Update();
+            return lineDimension;
+        }
+        /// <summary>
+        /// Создание углового размера
+        /// </summary>
+        /// <param name="angleDimensions"></param>
+        /// <param name="baseobjAngle1"></param>
+        /// <param name="baseobjAngle2"></param>
+        /// <param name="x3"></param>
+        /// <param name="y3"></param>
+        /// <returns></returns>
+        private static IAngleDimension AngleDimension(IAngleDimensions angleDimensions, ILineSegment baseobjAngle1, ILineSegment baseobjAngle2,
+            double x3, double y3)
+        {
+            IAngleDimension angleDimension = angleDimensions.Add(DrawingObjectTypeEnum.ksDrADimension);
+            IDimensionParams dimensionParams = (IDimensionParams)angleDimension;
+            dimensionParams.InitDefaultValues();
+            angleDimension.BaseObject1 = baseobjAngle1;
+            angleDimension.BaseObject2 = baseobjAngle2;
+            angleDimension.X3 = x3;
+            angleDimension.Y3 = y3;
+            angleDimension.Update();
+            return angleDimension;
+        }
+
+        /// <summary>
+        /// Доабвление допуска к размеру
+        /// </summary>
+        /// <param name="dimensionText"></param>
+        /// <param name="deviation"></param>
+        private static void SetDeviation(IDimensionText dimensionText, double[] deviation)
+        {
+            dimensionText.HighDeviation.Str = deviation[0].ToString();
+            dimensionText.LowDeviation.Str = deviation[1].ToString();
+            dimensionText.DeviationOn = true;
+            dimensionText.TextAlign = ksDimensionTextAlignEnum.ksDimACentre;
+            ((DrawingObject)dimensionText).Update();
+        }
 
     }
 }

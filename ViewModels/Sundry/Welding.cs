@@ -467,6 +467,8 @@ namespace KompasTools.ViewModels.Sundry
             IApplication application = (IApplication)kompas.ksGetApplication7();
             IKompasDocument? activeKD = application.ActiveDocument;
             ksDocument2D? document2DAPI5 = kompas.ActiveDocument2D() as ksDocument2D;
+            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)activeKD;
+            IKompasDocument2D1 kompasDocument2D1 = (IKompasDocument2D1)activeKD;
             if (activeKD == null || document2DAPI5 == null)
             {
                 MessageBox.Show("Запустите чертеж или фрагмент");
@@ -478,18 +480,51 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Программа работает только в чертеже или фрагменте");
                 return;
             }
-            
+            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
+            IViews views = viewsAndLayersManager.Views;
+            IView activeView = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)activeView;
             document2DAPI5.ksUndoContainer(true);
 
             double thickness = Convert.ToDouble(Thickness);
+            double dimtopart = 8; //Зазор между размерами
+            double extraLength = 20; //Длина детали от скоса
+
+            IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
+            IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
+            drawingGroup.Open();
             if (NumberPart)
             {
-                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom);
+                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                    drawingGroup);
             }
             else
             {
-                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom);
+                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                    drawingGroup);
             }
+            drawingGroup.Close();
+
+            
+            double xpaste = 0; double ypaste = 0;
+            ksPhantom phantom = (ksPhantom)kompas.GetParamStruct(6);
+            phantom.phantom = 1; //Указываем тип фантом "Фантом для сдвига группы"
+            ksType1 type1 = (ksType1)phantom.GetPhantomParam();
+            type1.gr = drawingGroup.Reference;
+            //Вызываем курсор для указания точки вставки. Если была нажата Esc, прерываем вставку.
+            if (document2DAPI5.ksCursorEx(null, ref xpaste, ref ypaste, phantom, null) == 0)
+            {
+                document2DAPI5.ksDeleteObj(type1.gr);
+                return;
+            }
+            document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
+            drawingGroup?.Store();
+            drawingGroup?.Clear(true);
+            IMacroObjects macroObjects = drawingContainer.MacroObjects;
+            IMacroObject macroObject = macroObjects.Add();
+            macroObject.Name = "test";
+            macroObject.AddObjects(drawingGroup.Objects[0]);
+            macroObject.Update();
 
             document2DAPI5.ksUndoContainer(false);
             application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
