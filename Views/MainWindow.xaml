@@ -595,10 +595,21 @@
                                 <CheckBox Content="Объединить в макроэлемент?" IsChecked="{Binding IsMacro}"/>
                                 <TextBox x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
                                 <Button x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Вставить сечение в:"/>
+                                    <RadioButton Content="Активный вид" GroupName="WhichView"/>
+                                    <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Масштаб"/>
+                                        <TextBox x:Name="Tb_LeftScale" Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="20" PreviewTextInput="Tb_LeftScale_PreviewTextInput"/>
+                                        <TextBlock Text=":"/>
+                                        <TextBox Width="40" Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Толщина"/>
-                                <TextBox Text="{Binding Thickness, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
+                                <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
                                 <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}"  Height="500">
                                     <ListView.View>
                                         <GridView>

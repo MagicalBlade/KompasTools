@@ -10,6 +10,7 @@ using KompasTools.Classes.Sundry.Welding;
 using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -28,15 +29,27 @@ using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.ViewModels.Sundry
 {
-    public partial class Welding : ObservableObject
+    public partial class Welding : ObservableValidator
     {
         /// <summary>
         /// Толщина
         /// </summary>
-        [ObservableProperty]        
-        private string _thickness = "22"; //TODO сделать равным "". с подумать про конвертацию в double
-        partial void OnThicknessChanged(string value)
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
+        private string _thicknessStr = "22"; //TODO сделать равным "". с подумать про конвертацию в double
+        private double Thickness = 0; //TODO сделать равным "". с подумать про конвертацию в double
+        partial void OnThicknessStrChanged(string value)
         {
+            if (GetErrors(nameof(ThicknessStr)).Any())
+            {
+                Thickness = 0;
+            }
+            else if(!double.TryParse(ThicknessStr, out Thickness))
+            {
+                Thickness = 0;
+            }
             Filter();
         }
         /// <summary>
@@ -99,7 +112,8 @@ namespace KompasTools.ViewModels.Sundry
                 if (SelectGOST != null) WeldDates = WeldDates.Where(n => n.NameGost == SelectGOST).ToArray();
                 if (SelectNameWeldJoints != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.NameWeldJoint == SelectNameWeldJoints).ToArray();
                 if (SelectWeldingMethod!= null && WeldDates != null) WeldDates = WeldDates.Where(n => n.WeldingMethod == SelectWeldingMethod).ToArray();
-                if (Thickness != "" && Thickness != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Convert.ToDouble(Thickness))).ToArray();                
+
+                if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();                
             }
         }
         /// <summary>
@@ -157,15 +171,29 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]
         private string _nameCut = "1-1"; //TODO сделать равным ""
+        /// <summary>
+        /// Подобрать вид по масштабу? Если true то подбираем. Если false то вставляем в активный вид
+        /// </summary>
+        [ObservableProperty]
+        private bool _isSearchView = false;
 
+        [ObservableProperty]
+        private string _leftScale = "1";
+        [ObservableProperty]
+        private string _rightScale = "1";
+
+        /// <summary>
+        /// Действия при загрузке закладки
+        /// </summary>
         [RelayCommand]
         public void LoadedTab()
         {
+            #region Загрузка и парсинг данных. Так же заполнение  списков.
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources\\Sundry\\Welding\\Параметры сварки.csv");
             string text;
-            int columnCount = 29;
-            List<WeldData> data = new List<WeldData>();
-            using (StreamReader reader = new (path))
+            int columnCount = 29; //Правильное количество параметров шва
+            List<WeldData> data = new();
+            using (StreamReader reader = new(path))
             {
                 text = reader.ReadToEnd();
             }
@@ -174,7 +202,7 @@ namespace KompasTools.ViewModels.Sundry
             foreach (string row in temp)
             {
                 string[] cells = row.Split("\t");
-                if(cells.Length != columnCount) continue;
+                if (cells.Length != columnCount) continue;
                 WeldData weldData = new()
                 {
                     NameGost = cells[0],
@@ -238,7 +266,7 @@ namespace KompasTools.ViewModels.Sundry
                             if (Double.TryParse(paramCTolerance[1], out double paramCTolerance2))
                             {
                                 weldData.ParamCTolerance[1] = paramCTolerance2;
-                            } 
+                            }
                         }
                         break;
                     default:
@@ -487,15 +515,32 @@ namespace KompasTools.ViewModels.Sundry
             }
             OrigWeldDates = data.ToArray();
             WeldDates = OrigWeldDates;
+            //Заполняем список гостов
             if (WeldDates != null)
             {
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
-            }
+            } 
+            #endregion
         }
 
         [RelayCommand]
         public void Test()
         {
+            if (GetErrors(nameof(ThicknessStr)).Any() || Thickness <= 0)
+            {
+                MessageBox.Show("Толщина должна быть числом которое больше нуля");
+                return;
+            }
+            if (!double.TryParse(LeftScale, out double leftScale))
+            {
+                MessageBox.Show("В левую часть масштаба введено не число. Исправьте.");
+                return;
+            }
+            if (!double.TryParse(RightScale, out double rightScale))
+            {
+                MessageBox.Show("В правую часть масштаба введено не число. Исправьте.");
+                return;
+            }
             KompasObject kompas = (KompasObject)ExMarshal.GetActiveObject("KOMPAS.Application.5");
             if (kompas == null)
             {
@@ -521,10 +566,12 @@ namespace KompasTools.ViewModels.Sundry
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
+            if (IsSearchView)
+            {
+            }
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
             document2DAPI5.ksUndoContainer(true);
 
-            double thickness = Convert.ToDouble(Thickness);
             double gapDim = 8; //Зазор размеров
             gapDim /= view.Scale;
             double gapDimToDim = gapDim; //Расстояние между размерами
@@ -535,12 +582,12 @@ namespace KompasTools.ViewModels.Sundry
             drawingGroup.Open();
             if (NumberPart)
             {
-                SelectWeldDates?.DrawingPart(view, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
                     drawingGroup, gapDim);
             }
             else
             {
-                SelectWeldDates?.DrawingPart(view, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
                     drawingGroup, gapDim);
             }
             //Создаём текст названия сечения
@@ -602,10 +649,6 @@ namespace KompasTools.ViewModels.Sundry
 
             document2DAPI5.ksUndoContainer(false);
             application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
-
-            IDrawingTexts drawingTexts1 = drawingContainer.DrawingTexts;
-            IDrawingText drawingText1 = drawingTexts1.DrawingText[0];
-            IText text1 = (IText)drawingText1;
         }        
     }
 }
