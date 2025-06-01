@@ -34,7 +34,7 @@ namespace KompasTools.ViewModels.Sundry
         /// Толщина
         /// </summary>
         [ObservableProperty]        
-        private string? _thickness; //TODO подумать про конвертацию в double
+        private string _thickness = "22"; //TODO сделать равным "". с подумать про конвертацию в double
         partial void OnThicknessChanged(string? value)
         {
             Filter();
@@ -121,14 +121,16 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]
         private bool _isDrawingDimensions = true;
-
         /// <summary>
         /// Объединить в макроэлемент?
         /// </summary>
         [ObservableProperty]
         private bool _isMacro = true;
-
-
+        /// <summary>
+        /// Имя сечения
+        /// </summary>
+        [ObservableProperty]
+        private string _nameCut = "1-1"; //TODO сделать равным ""
 
         [RelayCommand]
         public void LoadedTab()
@@ -492,11 +494,14 @@ namespace KompasTools.ViewModels.Sundry
             }
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
-            IView activeView = views.ActiveView;
+            IView view = views.ActiveView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)view;
             document2DAPI5.ksUndoContainer(true);
 
             double thickness = Convert.ToDouble(Thickness);
-            double dimtopart = 8; //Зазор между размерами
+            double gapDim = 8; //Зазор размеров
+            gapDim /= view.Scale;
+            double gapDimToDim = gapDim; //Расстояние между размерами
             double extraLength = 20; //Длина детали от скоса
 
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
@@ -504,13 +509,34 @@ namespace KompasTools.ViewModels.Sundry
             drawingGroup.Open();
             if (NumberPart)
             {
-                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup);
+                SelectWeldDates?.DrawingPart(view, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                    drawingGroup, gapDim);
             }
             else
             {
-                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup);
+                SelectWeldDates?.DrawingPart(view, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                    drawingGroup, gapDim);
+            }
+            //Создаём текст названия сечения
+            if (NameCut.Trim() != "")
+            {
+                ksRectParam rectParam = (ksRectParam)kompas.GetParamStruct(15); //Параметры прямоугольника
+                document2DAPI5.ksGetObjGabaritRect(drawingGroup.Reference, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
+
+                IDrawingTexts drawingTexts = drawingContainer.DrawingTexts;
+                IDrawingText drawingText = drawingTexts.Add();
+                IText text = (IText)drawingText;
+                text.Str = NameCut;
+                ITextLine textLine = text.TextLine[0];
+                ITextItem textItem = textLine.TextItem[0];
+                ITextFont textFont = (ITextFont)textItem;
+                textFont.Underline = true;
+                textItem.Update();
+                ksMathPointParam pointBot = (ksMathPointParam)rectParam.GetpBot();
+                ksMathPointParam pointTop = (ksMathPointParam)rectParam.GetpTop();
+                drawingText.X = (pointBot.x + pointTop.x) / 2 / view.Scale;
+                drawingText.Y = pointTop.y / view.Scale + gapDimToDim / 2;
+                drawingText.Update();
             }
             drawingGroup.Close();
 
@@ -550,6 +576,10 @@ namespace KompasTools.ViewModels.Sundry
 
             document2DAPI5.ksUndoContainer(false);
             application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
+
+            IDrawingTexts drawingTexts1 = drawingContainer.DrawingTexts;
+            IDrawingText drawingText1 = drawingTexts1.DrawingText[0];
+            IText text1 = (IText)drawingText1;
         }        
     }
 }

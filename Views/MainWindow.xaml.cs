@@ -46,5 +46,10 @@ namespace KompasTools
         {
             WeldDates.UnselectAll();
         }
+
+        private void B_CurTurned_Click(object sender, RoutedEventArgs e)
+        {
+            Tb_NameCut.Text += "@63~"; //Добавляем значёк повёрнуто
+        }
     }
 }

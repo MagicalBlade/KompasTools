@@ -204,8 +204,11 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
-            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double dimtopart = 8, double extraLength = 20)
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDim, double extraLength = 20)
         {
+            double gapDimToPart = gapDim / 2; //Расстояние до детали находящейся снизу или справа
+            double gapDimToDim = gapDim; //Расстояние между размерами
+            double gapDimToPartLeft = gapDim; //Расстояние до детали находящейся слева
             #region Проверка входящих данных
             if (view == null)
             {
@@ -315,17 +318,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                 hatch.Update(); 
 
                                 //Чертим размеры
-                                dimtopart /= view.Scale;
                                 if (drawDimensions)
                                 {
-                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + dimtopart, thickness / 2
+                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + gapDimToPartLeft, thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + dimtopart,
+                                    LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - dimtopart, - 1,
+                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, - 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, thickness + dimtopart * 2);
+                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, thickness + gapDimToPart + gapDim);
                                     SetDeviation(dtParamA, ParamATolerance);
                                 }
                             }
