@@ -35,18 +35,24 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]        
         private string _thickness = "22"; //TODO сделать равным "". с подумать про конвертацию в double
-        partial void OnThicknessChanged(string? value)
+        partial void OnThicknessChanged(string value)
         {
             Filter();
         }
-
+        /// <summary>
+        /// Отображаемый список сварных швов. Отфильтрован
+        /// </summary>
         [ObservableProperty]
         private WeldData[]? _weldDates;
         [ObservableProperty]
         private WeldData? _selectWeldDates;
-
+        /// <summary>
+        /// Изначальный список сварных швов
+        /// </summary>
         private WeldData[]? OrigWeldDates;
-
+        /// <summary>
+        /// Списов гостов
+        /// </summary>
         [ObservableProperty]
         private string[]? _weldGOSTs;
         [ObservableProperty]
@@ -58,7 +64,9 @@ namespace KompasTools.ViewModels.Sundry
             Filter();
             NameWeldJoints = WeldDates?.Select(n => n.NameWeldJoint).Distinct().ToArray();
         }
-
+        /// <summary>
+        /// Список условных обозначений швов
+        /// </summary>
         [ObservableProperty]
         private string[]? _nameWeldJoints;
         [ObservableProperty]
@@ -69,7 +77,9 @@ namespace KompasTools.ViewModels.Sundry
             Filter();
             WeldingMethod = WeldDates?.Select(n => n.WeldingMethod).Distinct().ToArray();
         }
-
+        /// <summary>
+        /// Способ сварки
+        /// </summary>
         [ObservableProperty]
         private WeldingMethodEnum[]? _weldingMethod;
         [ObservableProperty]
@@ -78,18 +88,23 @@ namespace KompasTools.ViewModels.Sundry
         {
             Filter();
         }
+        /// <summary>
+        /// Фильтр списка сварных швов
+        /// </summary>
         public void Filter()
         {
             if (OrigWeldDates != null)
             {
-                if (SelectGOST != null) WeldDates = OrigWeldDates.Where(n => n.NameGost == SelectGOST).ToArray();
+                WeldDates = OrigWeldDates;
+                if (SelectGOST != null) WeldDates = WeldDates.Where(n => n.NameGost == SelectGOST).ToArray();
                 if (SelectNameWeldJoints != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.NameWeldJoint == SelectNameWeldJoints).ToArray();
                 if (SelectWeldingMethod!= null && WeldDates != null) WeldDates = WeldDates.Where(n => n.WeldingMethod == SelectWeldingMethod).ToArray();
                 if (Thickness != "" && Thickness != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Convert.ToDouble(Thickness))).ToArray();                
             }
         }
-
-
+        /// <summary>
+        /// Тип расположения деталей сварного шва
+        /// </summary>
         [ObservableProperty]
         private LocationPart _isLocationPart = LocationPart.Право_Верх;
         /// <summary>
@@ -107,15 +122,26 @@ namespace KompasTools.ViewModels.Sundry
             TransitionTypeEnum.Обычный,
             TransitionTypeEnum.Занижение
         };
+        /// <summary>
+        /// Тип перехода верхней части первой детали
+        /// </summary>
         [ObservableProperty]
         private TransitionTypeEnum _selectTransitionTypesFirstUP = TransitionTypeEnum.Без_перехода;
+        /// <summary>
+        /// Тип перехода нижней части первой детали
+        /// </summary>
         [ObservableProperty]
         private TransitionTypeEnum _selectTransitionTypesFirstBottom = TransitionTypeEnum.Без_перехода;
+        /// <summary>
+        /// Тип перехода верхней части второй детали
+        /// </summary>
         [ObservableProperty]
         private TransitionTypeEnum _selectTransitionTypesSecondUP = TransitionTypeEnum.Без_перехода;
+        /// <summary>
+        /// Тип перехода нижней части второй детали
+        /// </summary>
         [ObservableProperty]
-        private TransitionTypeEnum _selectTransitionTypesSecondBottom = TransitionTypeEnum.Без_перехода;
-        
+        private TransitionTypeEnum _selectTransitionTypesSecondBottom = TransitionTypeEnum.Без_перехода;        
         /// <summary>
         /// Чертить размеры?
         /// </summary>
