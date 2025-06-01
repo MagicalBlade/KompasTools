@@ -115,9 +115,18 @@ namespace KompasTools.ViewModels.Sundry
         private TransitionTypeEnum _selectTransitionTypesSecondUP = TransitionTypeEnum.Без_перехода;
         [ObservableProperty]
         private TransitionTypeEnum _selectTransitionTypesSecondBottom = TransitionTypeEnum.Без_перехода;
-
+        
+        /// <summary>
+        /// Чертить размеры?
+        /// </summary>
         [ObservableProperty]
         private bool _isDrawingDimensions = true;
+
+        /// <summary>
+        /// Объединить в макроэлемент?
+        /// </summary>
+        [ObservableProperty]
+        private bool _isMacro = true;
 
 
 
@@ -133,6 +142,7 @@ namespace KompasTools.ViewModels.Sundry
                 text = reader.ReadToEnd();
             }
             string[] temp = text.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+            //Заполняем данными
             foreach (string row in temp)
             {
                 string[] cells = row.Split("\t");
@@ -186,7 +196,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramCTolerance[0], out double paramCTolerance1))
                             {
-                                weldData.ParamCTolerance[0] = paramCTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamCTolerance[0] = paramCTolerance1;
                                 weldData.ParamCTolerance[1] = -paramCTolerance1;
                             }
                         }
@@ -220,7 +230,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramATolerance[0], out double paramATolerance1))
                             {
-                                weldData.ParamATolerance[0] = paramATolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamATolerance[0] = paramATolerance1;
                                 weldData.ParamATolerance[1] = -paramATolerance1;
                             }
                         }
@@ -259,7 +269,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramBTolerance[0], out double paramBTolerance1))
                             {
-                                weldData.ParamBTolerance[0] = paramBTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamBTolerance[0] = paramBTolerance1;
                                 weldData.ParamBTolerance[1] = -paramBTolerance1;
                             }
                         }
@@ -318,7 +328,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramETolerance[0], out double paramETolerance1))
                             {
-                                weldData.ParamETolerance[0] = paramETolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamETolerance[0] = paramETolerance1;
                                 weldData.ParamETolerance[1] = -paramETolerance1;
                             }
                         }
@@ -352,7 +362,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramE1Tolerance[0], out double paramE1Tolerance1))
                             {
-                                weldData.ParamE1Tolerance[0] = paramE1Tolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamE1Tolerance[0] = paramE1Tolerance1;
                                 weldData.ParamE1Tolerance[1] = -paramE1Tolerance1;
                             }
                         }
@@ -386,7 +396,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramGTolerance[0], out double paramGTolerance1))
                             {
-                                weldData.ParamGTolerance[0] = paramGTolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamGTolerance[0] = paramGTolerance1;
                                 weldData.ParamGTolerance[1] = -paramGTolerance1;
                             }
                         }
@@ -420,7 +430,7 @@ namespace KompasTools.ViewModels.Sundry
                         {
                             if (Double.TryParse(paramG1Tolerance[0], out double paramG1Tolerance1))
                             {
-                                weldData.ParamG1Tolerance[0] = paramG1Tolerance1; //TODO проверить сработает ли если в размер передать верхний и нижний одинаковый допуск
+                                weldData.ParamG1Tolerance[0] = paramG1Tolerance1;
                                 weldData.ParamG1Tolerance[1] = -paramG1Tolerance1;
                             }
                         }
@@ -483,7 +493,6 @@ namespace KompasTools.ViewModels.Sundry
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView activeView = views.ActiveView;
-            IDrawingContainer drawingContainer = (IDrawingContainer)activeView;
             document2DAPI5.ksUndoContainer(true);
 
             double thickness = Convert.ToDouble(Thickness);
@@ -495,12 +504,12 @@ namespace KompasTools.ViewModels.Sundry
             drawingGroup.Open();
             if (NumberPart)
             {
-                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
                     drawingGroup);
             }
             else
             {
-                SelectWeldDates?.DrawingPart(kompas, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                SelectWeldDates?.DrawingPart(activeView, thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
                     drawingGroup);
             }
             drawingGroup.Close();
@@ -518,13 +527,26 @@ namespace KompasTools.ViewModels.Sundry
                 return;
             }
             document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
-            drawingGroup?.Store();
+            drawingGroup.Store();
+            //Создаём макроэлемент
+            if(IsMacro)
+            {
+                document2DAPI5.ksMacro(0);
+                int macro = document2DAPI5.ksEndObj();
+                document2DAPI5.ksAddObjectToMacro(macro, drawingGroup.Reference);
+                //TODO Разобраться почему не работает создание макроэлемента в API7
+                #region Создание макроэлемента в API7
+                //IMacroObjects macroObjects = drawingContainer.MacroObjects;
+                //IMacroObject macroObject = macroObjects.Add(false);
+                //macroObject.DoubleClickEditable = true;
+                //macroObject.HotPointsEditable = false;
+                //macroObject.ExternalEditable = false;
+                //macroObject.PropertyObjectEditable = false;
+                //MessageBox.Show($"{macroObject.AddObjects(drawingGroup)}");
+                //macroObject.Update(); 
+                #endregion
+             }
             drawingGroup?.Clear(true);
-            IMacroObjects macroObjects = drawingContainer.MacroObjects;
-            IMacroObject macroObject = macroObjects.Add();
-            macroObject.Name = "test";
-            macroObject.AddObjects(drawingGroup.Objects[0]);
-            macroObject.Update();
 
             document2DAPI5.ksUndoContainer(false);
             application.MessageBoxEx("Работа со сварным швом завершена", "", 64);

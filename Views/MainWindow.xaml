@@ -592,6 +592,7 @@
                                     </StackPanel>
                                 </StackPanel>
                                 <CheckBox Content="Чертить размеры?" IsChecked="{Binding IsDrawingDimensions}"/>
+                                <CheckBox Content="Объединить в макроэлемент?" IsChecked="{Binding IsMacro}"/>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Толщина"/>

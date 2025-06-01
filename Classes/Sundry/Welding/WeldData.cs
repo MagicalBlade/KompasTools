@@ -203,13 +203,13 @@ namespace KompasTools.Classes.Sundry.Welding
 
         }
 
-        public void DrawingPart(KompasObject kompas, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
+        public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
             TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double dimtopart = 8, double extraLength = 20)
         {
             #region Проверка входящих данных
-            if (kompas == null)
+            if (view == null)
             {
-                MessageBox.Show($"При создании детали не найден активный Компас");
+                MessageBox.Show($"При создании детали view равен null");
                 return;
             }
             if (thickness <= 0)
@@ -218,14 +218,8 @@ namespace KompasTools.Classes.Sundry.Welding
                 return;
             }
             #endregion
-            IApplication application = (IApplication)kompas.ksGetApplication7();
-            IKompasDocument? kompasDocument = application.ActiveDocument;
-            IKompasDocument2D kompasDocument2D = (IKompasDocument2D)kompasDocument;
-            IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
-            IViews views = viewsAndLayersManager.Views;
-            IView activeView = views.ActiveView;
-            IDrawingContainer drawingContainer = (IDrawingContainer)activeView;
-            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)activeView;
+            IDrawingContainer drawingContainer = (IDrawingContainer)view;
+            ISymbols2DContainer symbols2DContainer = (ISymbols2DContainer)view;
             ILineSegments lineSegments = drawingContainer.LineSegments;
             ILineDimensions lineDimensions = symbols2DContainer.LineDimensions;
             IAngleDimensions angleDimensions = symbols2DContainer.AngleDimensions;
@@ -321,7 +315,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 hatch.Update(); 
 
                                 //Чертим размеры
-                                dimtopart /= activeView.Scale;
+                                dimtopart /= view.Scale;
                                 if (drawDimensions)
                                 {
                                     LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + dimtopart, thickness / 2
@@ -333,7 +327,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     SetDeviation(dtParamC, paramCTolerance);
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, thickness + dimtopart * 2);
                                     SetDeviation(dtParamA, ParamATolerance);
-                                }                                
+                                }
                             }
 
                             //Обычный переход вверху
