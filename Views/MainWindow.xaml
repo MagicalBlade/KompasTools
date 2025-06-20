@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         Title="{Binding TitleMainWindow}" Height="{Binding HeightMainWindow, Mode=TwoWay}" Width="{Binding WidthMainWindow, Mode=TwoWay}"
         WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" Topmost="{Binding IsChecked, ElementName=cb_Topmost}"
-        MinHeight="900" MinWidth="990">
+        MinHeight="850" MinWidth="990">
     <Window.Resources>
         <Welding:RadioBoolConverterToLocationPart x:Key="radioBoolConverterToLocationPart" />
         <Style TargetType="{x:Type TextBlock}">
@@ -386,87 +386,188 @@
                         <TabItem.DataContext>
                             <Sundry:Welding/>
                         </TabItem.DataContext>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="ГОСТ"/>
-                                    <ListBox x:Name="WeldGOSTs" Height="100" Width="100" ItemsSource="{Binding WeldGOSTs}"
-                                         SelectedItem="{Binding SelectGOST}" SelectionChanged="WeldGOSTs_SelectionChanged"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                                <!--Госты-->
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="ГОСТ" HorizontalAlignment="Center"/>
+                                    <ListBox x:Name="WeldGOSTs" Height="100" Width="70" ItemsSource="{Binding WeldGOSTs}"
+                                        SelectedItem="{Binding SelectGOST}" SelectionChanged="WeldGOSTs_SelectionChanged" HorizontalAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Условное обозначение"/>
-                                    <ListBox x:Name="NameWeldJoints" Height="100" ItemsSource="{Binding NameWeldJoints}"
-                                         SelectedItem="{Binding SelectNameWeldJoints}" SelectionChanged="NameWeldJoints_SelectionChanged"/>
+                                <!--Условные обозначения сварных швов-->
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="Обозначение" HorizontalAlignment="Center"/>
+                                    <ListBox x:Name="NameWeldJoints" Height="100" Width="80" ItemsSource="{Binding NameWeldJoints}"
+                                        SelectedItem="{Binding SelectNameWeldJoints}" SelectionChanged="NameWeldJoints_SelectionChanged"  HorizontalAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Способ сварки"/>
-                                    <ListBox x:Name="WeldingMethod" Height="100" ItemsSource="{Binding WeldingMethod}"
-                                         SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged"/>
+                                <!--Способ сварки-->
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="Способ сварки" HorizontalAlignment="Center"/>
+                                    <ListBox x:Name="WeldingMethod" Height="100" Width="90" ItemsSource="{Binding WeldingMethod}"
+                                        SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged" HorizontalAlignment="Center"/>
                                 </StackPanel>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="Лево_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Лево_Верх}"/>
-                                <RadioButton Content="Лево_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Лево_Низ}"/>
-                                <RadioButton Content="Право_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Право_Верх}"/>
-                                <RadioButton Content="Право_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Право_Низ}"/>
-                                <RadioButton Content="Верх_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Верх_Лево}"/>
-                                <RadioButton Content="Верх_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Верх_Право}"/>
-                                <RadioButton Content="Низ_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Низ_Лево}"/>
-                                <RadioButton Content="Низ_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Низ_Право}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="Первая деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
-                                <RadioButton Content="Вторая деталь" GroupName="Number part"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
+                                <!--Выбор расположения главной детали-->
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="Выбор расположения главной детали" HorizontalAlignment="Center"/>
+                                    <Canvas Width="200" Height="100" Margin="5" HorizontalAlignment="Center">
+                                        <Polygon Fill="Gray"  Points="0,40,40,40,40,30,20,0,0,0" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                        ConverterParameter=Лево_Верх}" Canvas.Left="9.5" Canvas.Top="14.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Лево верх"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="0,50,40,50,40,60,20,90,0,90" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                        ConverterParameter=Лево_Низ}" Canvas.Left="9.5" Canvas.Top="64.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Лево Низ"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="90,40,50,40,50,30,70,0,90,0" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                        ConverterParameter=Право_Верх}" Canvas.Left="69.5" Canvas.Top="14.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Право Верх"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="90,50,50,50,50,60,70,90,90,90" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Право_Низ}" Canvas.Left="69.5" Canvas.Top="64.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Право Низ"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="140,0,140,40,130,40,100,20,100,0" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Лево}" Canvas.Left="114.5" Canvas.Top="9.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Верх Лево"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="140,90,140,50,130,50,100,70,100,90" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Лево}" Canvas.Left="114.5" Canvas.Top="69.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Низ Лево"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="150,0,150,40,160,40,190,20,190,0" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Право}" Canvas.Left="164.5" Canvas.Top="9.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Верх Право"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                        <Polygon Fill="Gray"  Points="150,90,150,50,160,50,190,70,190,90" Stroke="Black"/>
+                                        <RadioButton GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Право}" Canvas.Left="164.5" Canvas.Top="69.5">
+                                            <RadioButton.ToolTip>
+                                                <TextBlock Text="Низ Право"/>
+                                            </RadioButton.ToolTip>
+                                        </RadioButton>
+                                    </Canvas>
+                                </StackPanel>
+
+                                <!--Выбор типа перехода деталей-->
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="Выбор типа перехода деталей:"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Верх второй детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
+                                        <CheckBox Content="длина перехода = высота перехода умноженная на К" VerticalAlignment="Center"/>
+                                        <TextBox Text="" Width="25" Height="25" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="5,0"/>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Низ второй детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Верх первой детали"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                                         <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstUP}"/>
+                                        <TextBlock Text="- верх главной детали" Margin="5,0,0,0"/>
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Низ первой детали"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
                                         <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstBottom}"/>
+                                        <TextBlock Text="- низ главной детали" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
+                                        <TextBlock Text="- верх второстепенной детали" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
+                                        <TextBlock Text="- низ второстепенной детали" Margin="5,0,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
-                                <CheckBox Content="Чертить размеры?" IsChecked="{Binding IsDrawingDimensions}"/>
-                                <CheckBox Content="Объединить в макроэлемент?" IsChecked="{Binding IsMacro}"/>
-                                <TextBox x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
-                                <Button x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5,0,0,0">
                                 <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Какую деталь чертить:"/>
+                                    <RadioButton Content="Главную деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
+                                    <RadioButton Content="Второстепенную деталь" GroupName="Number part"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <CheckBox Content="Чертить размеры" IsChecked="{Binding IsDrawingDimensions}"/>
+                                    <CheckBox Content="Объединить в макроэлемент" IsChecked="{Binding IsMacro}"/>
+                                </StackPanel>
+                                <DockPanel Margin="5,0,0,0" VerticalAlignment="Top">
+                                    <TextBlock DockPanel.Dock="Top" Text="Наименование сечения/узла"/>
+                                    <TextBox DockPanel.Dock="Left" x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60" Height="25"/>
+                                    <Button DockPanel.Dock="Left" x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click" Width="80" Height="25">
+                                        <Button.ToolTip>
+                                            <TextBlock Text="Добавляет значёк повернуто в наименование сечения/узла"/>
+                                        </Button.ToolTip>
+                                    </Button>
+                                </DockPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
                                     <TextBlock Text="Вставить сечение в:"/>
                                     <RadioButton Content="Активный вид" GroupName="WhichView" IsChecked="True"/>
                                     <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Масштаб"/>
-                                        <TextBox x:Name="Tb_LeftScale" Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="20" IsEnabled="{Binding IsSearchView}"/>
-                                        <TextBlock Text=":"/>
-                                        <TextBox Width="40" Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsSearchView}"/>
+                                    <!--Масштаб-->
+                                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                                        <TextBlock Text="Масштаб" Margin="0,0,5,0"/>
+                                        <TextBox Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
+                                                 HorizontalContentAlignment="Center">
+                                            <TextBox.ToolTip>
+                                                <TextBlock>
+                                                   Масштаб должен быть числом и оно должно быть больше нуля.
+                                                   <LineBreak/>
+                                                   Дробная часть должна разделяться запятой.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
+                                        <TextBlock Text=":" Margin="5,0"/>
+                                        <TextBox Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
+                                                 HorizontalContentAlignment="Center">
+                                            <TextBox.ToolTip>
+                                                <TextBlock>
+                                                    Масштаб должен быть числом и оно должно быть больше нуля.
+                                                    <LineBreak/>
+                                                    Дробная часть должна разделяться запятой.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
                                     </StackPanel>
                                 </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
+                                        <TextBlock Text="Толщина:"/>
+                                        <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2"
+                                             HorizontalContentAlignment="Center">
+                                            <TextBox.ToolTip>
+                                                <TextBlock>
+                                                Толщина должна быть числом и оно должно быть больше нуля.
+                                                <LineBreak/>
+                                                Дробная часть должна разделяться запятой.
+                                                </TextBlock>
+                                            </TextBox.ToolTip>
+                                        </TextBox>
+                                    </StackPanel>
+                                    <Button Content="Начертить" Command="{Binding TestCommand}"/>
+                                </StackPanel>
                             </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Толщина"/>
-                                <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
-                                <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}"  Height="500">
+                            <DockPanel Grid.Row="2">
+                                <TextBlock DockPanel.Dock="Top" Text="Список сварных швов:" Margin="0,2"/>
+                                <ListView DockPanel.Dock="Top" x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>
@@ -479,9 +580,8 @@
                                         </GridView>
                                     </ListView.View>
                                 </ListView>
-                                <Button Content="Test" Command="{Binding TestCommand}"/>
-                            </StackPanel>
-                        </StackPanel>
+                            </DockPanel>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Заказ">
                         <Grid>

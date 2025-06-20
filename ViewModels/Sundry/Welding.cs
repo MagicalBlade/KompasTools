@@ -179,8 +179,14 @@ namespace KompasTools.ViewModels.Sundry
         private bool _isSearchView = false;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _leftScale = "1";
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _rightScale = "1";
 
         /// <summary>
@@ -527,19 +533,24 @@ namespace KompasTools.ViewModels.Sundry
         [RelayCommand]
         public void Test()
         {
+            if (SelectWeldDates == null)
+            {
+                MessageBox.Show("Выберите сварной шов");
+                return;
+            }
             if (GetErrors(nameof(ThicknessStr)).Any() || Thickness <= 0)
             {
-                MessageBox.Show("Толщина должна быть числом которое больше нуля");
+                MessageBox.Show("Толщина должна быть числом и оно должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
             if (!double.TryParse(LeftScale, out double leftScale))
             {
-                MessageBox.Show("В левую часть масштаба введено не число. Исправьте.");
+                MessageBox.Show("В левую часть масштаба введено не число. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
             if (!double.TryParse(RightScale, out double rightScale))
             {
-                MessageBox.Show("В правую часть масштаба введено не число. Исправьте.");
+                MessageBox.Show("В правую часть масштаба введено не число. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
             KompasObject kompas = (KompasObject)ExMarshal.GetActiveObject("KOMPAS.Application.5");
@@ -570,7 +581,7 @@ namespace KompasTools.ViewModels.Sundry
             //Подбираем вид в зависимости от масштаба
             if (IsSearchView)
             {
-                double scale = Double.Parse(LeftScale) / Double.Parse(RightScale);
+                double scale = leftScale / rightScale;
                 bool isview = false;
                 foreach (IView view1 in views)
                 {
