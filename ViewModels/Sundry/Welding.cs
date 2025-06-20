@@ -38,8 +38,8 @@ namespace KompasTools.ViewModels.Sundry
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
-        private string _thicknessStr = "22"; //TODO сделать равным "". с подумать про конвертацию в double
-        private double Thickness = 0; //TODO сделать равным "". с подумать про конвертацию в double
+        private string _thicknessStr = "20"; //TODO сделать равным "". с подумать про конвертацию в double
+        private double Thickness = 20; //TODO сделать равным "". с подумать про конвертацию в double
         partial void OnThicknessStrChanged(string value)
         {
             if (GetErrors(nameof(ThicknessStr)).Any())
@@ -76,6 +76,7 @@ namespace KompasTools.ViewModels.Sundry
             SelectWeldingMethod = null;
             Filter();
             NameWeldJoints = WeldDates?.Select(n => n.NameWeldJoint).Distinct().ToArray();
+            WeldingMethod = WeldDates?.Select(n => n.WeldingMethod).Distinct().ToArray();
         }
         /// <summary>
         /// Список условных обозначений швов
@@ -566,8 +567,31 @@ namespace KompasTools.ViewModels.Sundry
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
+            //Подбираем вид в зависимости от масштаба
             if (IsSearchView)
             {
+                double scale = Double.Parse(LeftScale) / Double.Parse(RightScale);
+                bool isview = false;
+                foreach (IView view1 in views)
+                {
+                    if (view1.Scale == scale)
+                    {
+                        view = view1;
+                        view.Current = true;
+                        view.Update();
+                        isview = true;
+                    }             
+                }
+                //Если вид не найден, создаём новый
+                if (!isview)
+                {
+                    IView newview = views.Add(LtViewType.vt_Normal);
+                    newview.Scale = scale;
+                    newview.Current = true;
+                    newview.Update();
+                    newview.Name = $"Вид {newview.Number}";
+                    newview.Update();
+                }
             }
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
             document2DAPI5.ksUndoContainer(true);

@@ -54,16 +54,5 @@ namespace KompasTools
             Tb_NameCut.Text += "@63~"; //Добавляем значёк повёрнуто
         }
 
-        private void Tb_LeftScale_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
-        {
-            //System.Windows.Forms.MessageBox.Show($"{((TextBox)sender).Text}");
-            //bool approvedDecimalPoint = false;
-            //if (e.Text == ".")
-            //{
-            //    if (!((TextBox)sender).Text.Contains('.')) approvedDecimalPoint = true;
-            //}
-
-            //if (!(char.IsDigit(e.Text, e.Text.Length - 1) || approvedDecimalPoint)) e.Handled = true;
-        } 
     }
 }

@@ -377,6 +377,112 @@
             <!--Разное-->
             <TabItem Header="Разное">
                 <TabControl>
+                    <TabItem Header="Разделки">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName ="Loaded">
+                                <i:InvokeCommandAction Command ="{Binding LoadedTabCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <TabItem.DataContext>
+                            <Sundry:Welding/>
+                        </TabItem.DataContext>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="ГОСТ"/>
+                                    <ListBox x:Name="WeldGOSTs" Height="100" Width="100" ItemsSource="{Binding WeldGOSTs}"
+                                         SelectedItem="{Binding SelectGOST}" SelectionChanged="WeldGOSTs_SelectionChanged"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Условное обозначение"/>
+                                    <ListBox x:Name="NameWeldJoints" Height="100" ItemsSource="{Binding NameWeldJoints}"
+                                         SelectedItem="{Binding SelectNameWeldJoints}" SelectionChanged="NameWeldJoints_SelectionChanged"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Способ сварки"/>
+                                    <ListBox x:Name="WeldingMethod" Height="100" ItemsSource="{Binding WeldingMethod}"
+                                         SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Лево_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Лево_Верх}"/>
+                                <RadioButton Content="Лево_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Лево_Низ}"/>
+                                <RadioButton Content="Право_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Право_Верх}"/>
+                                <RadioButton Content="Право_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Право_Низ}"/>
+                                <RadioButton Content="Верх_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Лево}"/>
+                                <RadioButton Content="Верх_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Верх_Право}"/>
+                                <RadioButton Content="Низ_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Лево}"/>
+                                <RadioButton Content="Низ_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
+                                    ConverterParameter=Низ_Право}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="Первая деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
+                                <RadioButton Content="Вторая деталь" GroupName="Number part"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Верх второй детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Низ второй детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Верх первой детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstUP}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Низ первой детали"/>
+                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstBottom}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <CheckBox Content="Чертить размеры?" IsChecked="{Binding IsDrawingDimensions}"/>
+                                <CheckBox Content="Объединить в макроэлемент?" IsChecked="{Binding IsMacro}"/>
+                                <TextBox x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
+                                <Button x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Вставить сечение в:"/>
+                                    <RadioButton Content="Активный вид" GroupName="WhichView" IsChecked="True"/>
+                                    <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Масштаб"/>
+                                        <TextBox x:Name="Tb_LeftScale" Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="20" IsEnabled="{Binding IsSearchView}"/>
+                                        <TextBlock Text=":"/>
+                                        <TextBox Width="40" Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsSearchView}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Толщина"/>
+                                <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
+                                <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}"  Height="500">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding NameWeldJoint}">Обозначение соединения</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding WeldingMethod}">Способ сварки</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding RangeThickness}">Толщины</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding ParamC}">c, притупление</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding ParamA}">a, угол</GridViewColumn>
+                                            <GridViewColumn DisplayMemberBinding="{Binding RangeUserAngle}">Углы</GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                                <Button Content="Test" Command="{Binding TestCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </TabItem>
                     <TabItem Header="Заказ">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -520,112 +626,6 @@
                             </StackPanel>
                         </Grid>
 
-                    </TabItem>
-                    <TabItem Header="Разделки">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName ="Loaded">
-                                <i:InvokeCommandAction Command ="{Binding LoadedTabCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <TabItem.DataContext>
-                            <Sundry:Welding/>
-                        </TabItem.DataContext>
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="ГОСТ"/>
-                                    <ListBox x:Name="WeldGOSTs" Height="100" Width="100" ItemsSource="{Binding WeldGOSTs}"
-                                         SelectedItem="{Binding SelectGOST}" SelectionChanged="WeldGOSTs_SelectionChanged"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Условное обозначение"/>
-                                    <ListBox x:Name="NameWeldJoints" Height="100" ItemsSource="{Binding NameWeldJoints}"
-                                         SelectedItem="{Binding SelectNameWeldJoints}" SelectionChanged="NameWeldJoints_SelectionChanged"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Способ сварки"/>
-                                    <ListBox x:Name="WeldingMethod" Height="100" ItemsSource="{Binding WeldingMethod}"
-                                         SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged"/>
-                                </StackPanel>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="Лево_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Лево_Верх}"/>
-                                <RadioButton Content="Лево_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Лево_Низ}"/>
-                                <RadioButton Content="Право_Верх" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Право_Верх}"/>
-                                <RadioButton Content="Право_Низ" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Право_Низ}"/>
-                                <RadioButton Content="Верх_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Верх_Лево}"/>
-                                <RadioButton Content="Верх_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Верх_Право}"/>
-                                <RadioButton Content="Низ_Лево" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Низ_Лево}"/>
-                                <RadioButton Content="Низ_Право" GroupName="LocationPart" IsChecked="{Binding IsLocationPart, Converter={StaticResource radioBoolConverterToLocationPart},
-                                    ConverterParameter=Низ_Право}"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="Первая деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
-                                <RadioButton Content="Вторая деталь" GroupName="Number part"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Верх второй детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Низ второй детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Верх первой детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstUP}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Низ первой детали"/>
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstBottom}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                                <CheckBox Content="Чертить размеры?" IsChecked="{Binding IsDrawingDimensions}"/>
-                                <CheckBox Content="Объединить в макроэлемент?" IsChecked="{Binding IsMacro}"/>
-                                <TextBox x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60"/>
-                                <Button x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click"/>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Вставить сечение в:"/>
-                                    <RadioButton Content="Активный вид" GroupName="WhichView"/>
-                                    <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Масштаб"/>
-                                        <TextBox x:Name="Tb_LeftScale" Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="20" PreviewTextInput="Tb_LeftScale_PreviewTextInput"/>
-                                        <TextBlock Text=":"/>
-                                        <TextBox Width="40" Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Толщина"/>
-                                <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="50" Padding="2" Margin="2"/>
-                                <ListView x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}"  Height="500">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding NameWeldJoint}">Обозначение соединения</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding WeldingMethod}">Способ сварки</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding RangeThickness}">Толщины</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding ParamC}">c, притупление</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding ParamA}">a, угол</GridViewColumn>
-                                            <GridViewColumn DisplayMemberBinding="{Binding RangeUserAngle}">Углы</GridViewColumn>
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
-                                <Button Content="Test" Command="{Binding TestCommand}"/>
-                            </StackPanel>
-                        </StackPanel>
                     </TabItem>
                 </TabControl>
             </TabItem>
