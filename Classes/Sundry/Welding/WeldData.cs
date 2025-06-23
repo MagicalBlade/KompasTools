@@ -287,6 +287,7 @@ namespace KompasTools.Classes.Sundry.Welding
                             //Без переходов
                             if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
                             {
+                                //Размер скоса
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
                                 //Чертим графику
                                 //Создаём основу разделки
@@ -327,7 +328,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, - 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, thickness + gapDimToPart + gapDim);
+                                    double r1 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart, 2) + Math.Pow(xangle, 2));
+                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDim, 2) + Math.Pow(xangle / 2, 2));
+                                    double angleDRadius = r1 > r2 ? r1 : r2;
+                                    angleDRadius *= view.Scale;
+                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                        xangle / 2, thickness + gapDimToPart + gapDim, angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
                                 }
                             }
@@ -443,7 +449,7 @@ namespace KompasTools.Classes.Sundry.Welding
         /// <param name="y3"></param>
         /// <returns></returns>
         private static IAngleDimension AngleDimension(IAngleDimensions angleDimensions, ILineSegment baseobjAngle1, ILineSegment baseobjAngle2,
-            double x3, double y3)
+            double x3, double y3, double r)
         {
             IAngleDimension angleDimension = angleDimensions.Add(DrawingObjectTypeEnum.ksDrADimension);
             IDimensionParams dimensionParams = (IDimensionParams)angleDimension;
@@ -452,6 +458,9 @@ namespace KompasTools.Classes.Sundry.Welding
             angleDimension.BaseObject2 = baseobjAngle2;
             angleDimension.X3 = x3;
             angleDimension.Y3 = y3;
+            angleDimension.DimensionType = ksAngleDimTypeEnum.ksADMinAngle;
+            angleDimension.Update();
+            angleDimension.Radius = r;
             angleDimension.Update();
             return angleDimension;
         }

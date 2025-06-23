@@ -575,6 +575,7 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Программа работает только в чертеже или фрагменте");
                 return;
             }
+            document2DAPI5.ksUndoContainer(true);
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
@@ -602,10 +603,10 @@ namespace KompasTools.ViewModels.Sundry
                     newview.Update();
                     newview.Name = $"Вид {newview.Number}";
                     newview.Update();
+                    view = newview;
                 }
             }
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
-            document2DAPI5.ksUndoContainer(true);
 
             double gapDim = 8; //Зазор размеров
             gapDim /= view.Scale;
@@ -658,6 +659,7 @@ namespace KompasTools.ViewModels.Sundry
             if (document2DAPI5.ksCursorEx(null, ref xpaste, ref ypaste, phantom, null) == 0)
             {
                 document2DAPI5.ksDeleteObj(type1.gr);
+                document2DAPI5.ksUndoContainer(false);
                 return;
             }
             document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
