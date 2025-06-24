@@ -612,19 +612,19 @@ namespace KompasTools.ViewModels.Sundry
             gapDim /= view.Scale;
             double gapDimToDim = gapDim; //Расстояние между размерами
             double extraLength = 20; //Длина детали от скоса
-
+            extraLength /= view.Scale;
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
             drawingGroup.Open();
             if (NumberPart)
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup, gapDim);
+                    drawingGroup, gapDim, extraLength);
             }
             else
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup, gapDim);
+                    drawingGroup, gapDim, extraLength);
             }
             //Создаём текст названия сечения
             if (NameCut.Trim() != "")

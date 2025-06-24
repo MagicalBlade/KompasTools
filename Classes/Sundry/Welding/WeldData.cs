@@ -204,7 +204,7 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
-            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDim, double extraLength = 20)
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDim, double extraLength)
         {
             double gapDimToPart = gapDim / 2; //Расстояние до детали находящейся снизу или справа
             double gapDimToDim = gapDim; //Расстояние между размерами
@@ -289,6 +289,7 @@ namespace KompasTools.Classes.Sundry.Welding
                             {
                                 //Размер скоса
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                extraLength = xangle;
                                 //Чертим графику
                                 //Создаём основу разделки
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
@@ -328,10 +329,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, - 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
-                                    double r1 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart, 2) + Math.Pow(xangle, 2));
+                                    double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
                                     double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDim, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;
+                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
                                         xangle / 2, thickness + gapDimToPart + gapDim, angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
