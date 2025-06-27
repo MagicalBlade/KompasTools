@@ -204,11 +204,9 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
-            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDim, double extraLength)
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim,
+            double gapDimToPartLeft, double extraLength)
         {
-            double gapDimToPart = gapDim / 2; //Расстояние до детали находящейся снизу или справа
-            double gapDimToDim = gapDim; //Расстояние между размерами
-            double gapDimToPartLeft = gapDim; //Расстояние до детали находящейся слева
             #region Проверка входящих данных
             if (view == null)
             {
@@ -330,11 +328,11 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
                                     double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDim, 2) + Math.Pow(xangle / 2, 2));
+                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        xangle / 2, thickness + gapDimToPart + gapDim, angleDRadius);
+                                        xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
                                 }
                             }

@@ -178,16 +178,31 @@ namespace KompasTools.ViewModels.Sundry
         [ObservableProperty]
         private bool _isSearchView = false;
 
+        /// <summary>
+        /// Левая часть масштаба
+        /// </summary>
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _leftScale = "1";
+        /// <summary>
+        /// Правая часть масштаба
+        /// </summary>
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _rightScale = "1";
+        /// <summary>
+        /// Расстояние между размерами
+        /// </summary>
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
+        private string _gapDim = "8";
+
 
         /// <summary>
         /// Действия при загрузке закладки
@@ -553,6 +568,11 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("В правую часть масштаба введено не число. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
+            if (!double.TryParse(GapDim, out double gapDim))
+            {
+                MessageBox.Show("Расстояние между размерами должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
+                return;
+            }
             KompasObject kompas = (KompasObject)ExMarshal.GetActiveObject("KOMPAS.Application.5");
             if (kompas == null)
             {
@@ -607,10 +627,11 @@ namespace KompasTools.ViewModels.Sundry
                 }
             }
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
-
-            double gapDim = 8; //Зазор размеров
             gapDim /= view.Scale;
+            double gapDimToPart = gapDim / 2; //Расстояние до детали находящейся снизу или справа
             double gapDimToDim = gapDim; //Расстояние между размерами
+            double gapDimToPartLeft = gapDim; //Расстояние до детали находящейся слева
+
             double extraLength = 20; //Длина детали от скоса
             extraLength /= view.Scale;
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
@@ -619,15 +640,15 @@ namespace KompasTools.ViewModels.Sundry
             if (NumberPart)
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup, gapDim, extraLength);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength);
             }
             else
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup, gapDim, extraLength);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength);
             }
             //Создаём текст названия сечения
-            if (NameCut.Trim() != "")
+            if (NameCut.Trim() != "" && IsDrawingDimensions)
             {
                 ksRectParam rectParam = (ksRectParam)kompas.GetParamStruct(15); //Параметры прямоугольника
                 document2DAPI5.ksGetObjGabaritRect(drawingGroup.Reference, rectParam); //Получение габаритного прямоугольника фигуры, полученной через площадь
