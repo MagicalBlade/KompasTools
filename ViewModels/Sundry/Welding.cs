@@ -612,6 +612,7 @@ namespace KompasTools.ViewModels.Sundry
                         view.Current = true;
                         view.Update();
                         isview = true;
+                        break;
                     }             
                 }
                 //Если вид не найден, создаём новый
