@@ -664,8 +664,10 @@ namespace KompasTools.ViewModels.Sundry
                 textItem.Update();
                 ksMathPointParam pointBot = (ksMathPointParam)rectParam.GetpBot();
                 ksMathPointParam pointTop = (ksMathPointParam)rectParam.GetpTop();
-                drawingText.X = (pointBot.x + pointTop.x) / 2 / view.Scale;
-                drawingText.Y = pointTop.y / view.Scale + gapDimToDim / 2;
+                document2DAPI5.ksSheetToView(pointBot.x, pointBot.y, out double xBot, out double yBot);
+                document2DAPI5.ksSheetToView(pointTop.x, pointTop.y, out double xTop, out double yTop);
+                drawingText.X = (xBot + xTop) / 2 / view.Scale;
+                drawingText.Y = yTop / view.Scale + gapDimToDim / 2;
                 drawingText.Update();
             }
             drawingGroup.Close();
