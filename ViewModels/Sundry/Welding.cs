@@ -1,8 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Irony.Parsing;
 using Kompas6API5;
 using Kompas6Constants;
 using KompasAPI7;
@@ -11,20 +8,9 @@ using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Forms;
-using System.Windows.Media;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.ViewModels.Sundry

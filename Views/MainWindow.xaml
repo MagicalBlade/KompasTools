@@ -409,7 +409,7 @@
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
                                     <TextBlock Text="Способ сварки" HorizontalAlignment="Center"/>
                                     <ListBox x:Name="WeldingMethod" Height="100" Width="90" ItemsSource="{Binding WeldingMethod}"
-                                        SelectedItem="{Binding SelectWeldingMethod}" SelectionChanged="WeldingMethod_SelectionChanged" HorizontalAlignment="Center"/>
+                                        SelectedItem="{Binding SelectWeldingMethod}" HorizontalAlignment="Center"/>
                                 </StackPanel>
                                 <!--Выбор расположения главной детали-->
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
@@ -569,9 +569,10 @@
                                     <Button Content="Начертить" Command="{Binding TestCommand}"/>
                                 </StackPanel>
                             </StackPanel>
+                            <!--Список сварных швов-->
                             <DockPanel Grid.Row="2">
                                 <TextBlock DockPanel.Dock="Top" Text="Список сварных швов:" Margin="0,2"/>
-                                <ListView DockPanel.Dock="Top" x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}">
+                                <ListView DockPanel.Dock="Top" x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}" SelectionMode="Single">
                                     <ListView.View>
                                         <GridView>
                                             <GridViewColumn DisplayMemberBinding="{Binding NameGost}">ГОСТ</GridViewColumn>

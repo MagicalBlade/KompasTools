@@ -1,11 +1,12 @@
-﻿using System.Globalization;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using KompasTools.Utils;
 using System;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using DocumentFormat.OpenXml.Wordprocessing;
-using KompasTools.Utils;
 
 namespace KompasTools
 {
@@ -14,6 +15,11 @@ namespace KompasTools
         public MainWindow()
         {
             InitializeComponent();
+            //Привязка события изменения списка сварных швов
+            if (WeldDates.Items is INotifyCollectionChanged WeldDatesNotifyCollectionChanged)
+            {
+                WeldDatesNotifyCollectionChanged.CollectionChanged += WeldDates_CollectionChanged;
+            }
         }
 
         private void Label_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -44,15 +50,14 @@ namespace KompasTools
             WeldingMethod.UnselectAll();
         }
 
-        private void WeldingMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            WeldDates.UnselectAll();
-        }
-
         private void B_CurTurned_Click(object sender, RoutedEventArgs e)
         {
             Tb_NameCut.Text += "@63~"; //Добавляем значёк повёрнуто
         }
 
+        private void WeldDates_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            WeldDates.SelectedIndex = 0;            
+        }
     }
 }
