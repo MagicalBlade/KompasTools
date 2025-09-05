@@ -189,6 +189,9 @@ namespace KompasTools.ViewModels.Sundry
         [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _gapDim = "8";
 
+        [ObservableProperty]
+        private bool _isCrossSection= true;
+
 
         /// <summary>
         /// Действия при загрузке закладки
@@ -629,12 +632,12 @@ namespace KompasTools.ViewModels.Sundry
             if (NumberPart)
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection);
             }
             else
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection);
             }
             //Создаём текст названия сечения
             if (NameCut.Trim() != "" && IsDrawingDimensions)

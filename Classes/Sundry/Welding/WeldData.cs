@@ -55,7 +55,7 @@ namespace KompasTools.Classes.Sundry.Welding
         /// </summary>
         public string NameGost { get => nameGost; set => nameGost = value; }
         /// <summary>
-        /// Услоавное обозначение сварного соединения
+        /// Условное обозначение сварного соединения
         /// </summary>
         public string NameWeldJoint { get => nameWeldJoint; set => nameWeldJoint = value; }
         /// <summary>
@@ -205,7 +205,7 @@ namespace KompasTools.Classes.Sundry.Welding
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
             TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim,
-            double gapDimToPartLeft, double extraLength)
+            double gapDimToPartLeft, double extraLength, bool isCrossSection)
         {
             #region Проверка входящих данных
             if (view == null)
@@ -302,7 +302,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                 waveLine.Y2 = thickness;
                                 waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
                                 waveLine.Update();
-
                                 //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
                                 IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                 IDrawingContour drawingContour = drawingContours.Add();
@@ -316,7 +315,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                 IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
                                 boundariesObject.AddBoundaries(drawingContour, true);
                                 hatch.Update(); 
-
+                                //Если разрез
+                                if (!isCrossSection)
+                                {
+                                    DrawLineSegment(lineSegments, 0 - ParamB, thickness, xangle, thickness);
+                                    DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, thickness);
+                                    if (ParamB != 0)
+                                    {
+                                        DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
+                                    }
+                                }
                                 //Чертим размеры
                                 if (drawDimensions)
                                 {
@@ -334,6 +342,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
                                         xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
+                                    if (!isCrossSection && ParamB != 0)
+                                    {
+                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness, 0, thickness, 0 - ParamB - 1, thickness + gapDimToPart,
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        SetDeviation(dtPatamB, paramBTolerance);
+                                        //Двигаем размер притупления на величину зазора если выбран разрез
+                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                        ld_ParamB.X3 -= ParamB;
+                                        ld_ParamB.Update();
+                                    }
                                 }
                             }
 

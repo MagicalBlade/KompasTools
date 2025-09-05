@@ -552,6 +552,10 @@
                                     <TextBlock Text="Расстояние между размерами"/>
                                     <TextBox Text="{Binding GapDim}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="0,5">
+                                    <RadioButton Content="Сечение" GroupName="Section" IsChecked="{Binding IsCrossSection}"/>
+                                    <RadioButton Content="Разрез" GroupName="Section"  IsChecked="False"/>
+                                </StackPanel>
                             </StackPanel>
                             <!--Список сварных швов-->
                             <DockPanel Grid.Row="2">
