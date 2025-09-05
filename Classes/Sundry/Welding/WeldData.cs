@@ -205,7 +205,7 @@ namespace KompasTools.Classes.Sundry.Welding
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
             TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim,
-            double gapDimToPartLeft, double extraLength, bool isCrossSection)
+            double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches)
         {
             #region Проверка входящих данных
             if (view == null)
@@ -302,19 +302,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                 waveLine.Y2 = thickness;
                                 waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
                                 waveLine.Update();
-                                //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                IDrawingContour drawingContour = drawingContours.Add();
-                                IContour contour = (IContour)drawingContour;
-                                //Добавляем в контур элементы из группы созданные до этой строки
-                                contour.CopySegments(drawingGroup.Objects[0], false);
-                                drawingContour.Update();
-                                //Штриховка
-                                IHatches hatches = drawingContainer.Hatches;
-                                IHatch hatch = hatches.Add();
-                                IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                boundariesObject.AddBoundaries(drawingContour, true);
-                                hatch.Update(); 
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы из группы созданные до этой строки
+                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }
                                 //Если разрез
                                 if (!isCrossSection)
                                 {
@@ -383,19 +386,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                 waveLine.Y2 = -thickness;
                                 waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
                                 waveLine.Update();
-                                //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                IDrawingContour drawingContour = drawingContours.Add();
-                                IContour contour = (IContour)drawingContour;
-                                //Добавляем в контур элементы из группы созданные до этой строки
-                                contour.CopySegments(drawingGroup.Objects[0], false);
-                                drawingContour.Update();
-                                //Штриховка
-                                IHatches hatches = drawingContainer.Hatches;
-                                IHatch hatch = hatches.Add();
-                                IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                boundariesObject.AddBoundaries(drawingContour, true);
-                                hatch.Update();
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы из группы созданные до этой строки
+                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }                                
                                 //Если разрез
                                 if (!isCrossSection)
                                 {

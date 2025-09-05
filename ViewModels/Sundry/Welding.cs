@@ -154,6 +154,11 @@ namespace KompasTools.ViewModels.Sundry
         [ObservableProperty]
         private bool _isMacro = true;
         /// <summary>
+        /// Чертить штриховку?
+        /// </summary>
+        [ObservableProperty]
+        private bool _isHatches = true;
+        /// <summary>
         /// Имя сечения
         /// </summary>
         [ObservableProperty]
@@ -163,7 +168,6 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]
         private bool _isSearchView = false;
-
         /// <summary>
         /// Левая часть масштаба
         /// </summary>
@@ -188,10 +192,11 @@ namespace KompasTools.ViewModels.Sundry
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _gapDim = "8";
-
+        /// <summary>
+        /// Создавать сечение?
+        /// </summary>
         [ObservableProperty]
         private bool _isCrossSection= true;
-
 
         /// <summary>
         /// Действия при загрузке закладки
@@ -632,12 +637,12 @@ namespace KompasTools.ViewModels.Sundry
             if (NumberPart)
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
             }
             else
             {
                 SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection);
+                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
             }
             //Создаём текст названия сечения
             if (NameCut.Trim() != "" && IsDrawingDimensions)
