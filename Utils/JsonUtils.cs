@@ -15,7 +15,7 @@ namespace KompasTools.Utils
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static T Deserialize<T>(string path)
+        public static T? Deserialize<T>(string path)
         {
             T? model = JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
             return model;

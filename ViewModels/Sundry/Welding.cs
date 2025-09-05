@@ -564,7 +564,7 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Расстояние между размерами должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
-            KompasObject kompas = (KompasObject)ExMarshal.GetActiveObject("KOMPAS.Application.5");
+            KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;
             if (kompas == null)
             {
                 MessageBox.Show("Запустите компас");

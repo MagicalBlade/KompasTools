@@ -15,9 +15,9 @@ namespace KompasTools.Utils
         internal const String OLE32 = "ole32.dll";
 
         [System.Security.SecurityCritical]  // auto-generated_required
-        public static Object GetActiveObject(String progID)
+        public static Object? GetActiveObject(String progID)
         {
-            Object obj = null;
+            Object? obj = null;
             Guid clsid;
 
             // Call CLSIDFromProgIDEx first then fall back on CLSIDFromProgID if

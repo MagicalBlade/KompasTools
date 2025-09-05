@@ -363,6 +363,85 @@ namespace KompasTools.Classes.Sundry.Welding
 
                             break;
                         case LocationPart.Право_Низ:
+                            //Без переходов
+                            if (transitionTypeBottom == TransitionTypeEnum.Без_перехода && transitionTypeUp == TransitionTypeEnum.Без_перехода)
+                            {
+                                //Размер скоса
+                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                extraLength = xangle;
+                                //Чертим графику
+                                //Создаём основу разделки
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
+                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, xangle, -thickness);
+                                DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
+                                DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                IWaveLines waveLines = symbols2DContainer.WaveLines; //Волнистая линия
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = xangle + extraLength;
+                                waveLine.Y1 = 0;
+                                waveLine.X2 = xangle + extraLength;
+                                waveLine.Y2 = -thickness;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                IDrawingContour drawingContour = drawingContours.Add();
+                                IContour contour = (IContour)drawingContour;
+                                //Добавляем в контур элементы из группы созданные до этой строки
+                                contour.CopySegments(drawingGroup.Objects[0], false);
+                                drawingContour.Update();
+                                //Штриховка
+                                IHatches hatches = drawingContainer.Hatches;
+                                IHatch hatch = hatches.Add();
+                                IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                boundariesObject.AddBoundaries(drawingContour, true);
+                                hatch.Update();
+                                //Если разрез
+                                if (!isCrossSection)
+                                {
+                                    DrawLineSegment(lineSegments, 0 - ParamB, -thickness, xangle, -thickness);
+                                    DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, -thickness);
+                                    if (ParamB != 0)
+                                    {
+                                        DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
+                                    }
+                                }
+                                //Чертим размеры
+                                if (drawDimensions)
+                                {
+                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, -thickness, xangle + extraLength + gapDimToPartLeft, -thickness / 2
+                                        , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, 1,
+                                        ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    SetDeviation(dtParamC, paramCTolerance);
+                                    double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                    double angleDRadius = r1 > r2 ? r1 : r2;
+                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                        xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
+                                    SetDeviation(dtParamA, ParamATolerance);
+                                    if (!isCrossSection && ParamB != 0)
+                                    {
+                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, -thickness, 0, -thickness, 0 - ParamB - 1, -(thickness + gapDimToPart * 2),
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        SetDeviation(dtPatamB, paramBTolerance);
+                                        //Двигаем размер притупления на величину зазора если выбран разрез
+                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                        ld_ParamB.X3 -= ParamB;
+                                        ld_ParamB.Update();
+                                    }
+                                }
+                            }
+
+                            //Обычный переход вверху
+
+                            //Обычный переход внизу
+
+                            //Обычный переход вверху и внизу
+
                             break;
                         case LocationPart.Верх_Лево:
                             break;
