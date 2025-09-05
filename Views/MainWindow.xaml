@@ -552,11 +552,14 @@
                                     <TextBlock Text="Расстояние между размерами"/>
                                     <TextBox Text="{Binding GapDim}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center">
-                                        <TextBlock Text="Толщина:"/>
-                                        <TextBox Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2"
-                                             HorizontalContentAlignment="Center">
+                            </StackPanel>
+                            <!--Список сварных швов-->
+                            <DockPanel Grid.Row="2">
+                                <!--Толщина-->
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  HorizontalAlignment="Center">
+                                        <TextBlock Text="Толщина:" FontSize="14"/>
+                                        <TextBox x:Name="tb_ThicknessStr" Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2,2,10,2"
+                                             HorizontalContentAlignment="Center" FontSize="14">
                                             <TextBox.ToolTip>
                                                 <TextBlock>
                                                 Толщина должна быть числом и оно должно быть больше нуля.
@@ -565,12 +568,9 @@
                                                 </TextBlock>
                                             </TextBox.ToolTip>
                                         </TextBox>
-                                    </StackPanel>
-                                    <Button Content="Начертить" Command="{Binding TestCommand}"/>
+                                        <!--Начертить-->
+                                    <Button Content="Начертить" Command="{Binding TestCommand}" Padding="5,2" FontSize="14"/>
                                 </StackPanel>
-                            </StackPanel>
-                            <!--Список сварных швов-->
-                            <DockPanel Grid.Row="2">
                                 <TextBlock DockPanel.Dock="Top" Text="Список сварных швов:" Margin="0,2"/>
                                 <ListView DockPanel.Dock="Top" x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}" SelectionMode="Single">
                                     <ListView.View>

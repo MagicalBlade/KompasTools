@@ -24,8 +24,8 @@ namespace KompasTools.ViewModels.Sundry
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
-        private string _thicknessStr = "20"; //TODO сделать равным "". с подумать про конвертацию в double
-        private double Thickness = 20; //TODO сделать равным "". с подумать про конвертацию в double
+        private string _thicknessStr = "0"; //TODO сделать равным "". с подумать про конвертацию в double
+        private double Thickness = 0; //TODO сделать равным "". с подумать про конвертацию в double
         partial void OnThicknessStrChanged(string value)
         {
             if (GetErrors(nameof(ThicknessStr)).Any())
@@ -527,8 +527,10 @@ namespace KompasTools.ViewModels.Sundry
             if (WeldDates != null)
             {
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
-            } 
+            }
             #endregion
+            ThicknessStr = "20";
+            Filter();
         }
 
         [RelayCommand]
