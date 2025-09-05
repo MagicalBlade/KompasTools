@@ -551,11 +551,15 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="0,5">
                                     <TextBlock Text="Расстояние между размерами"/>
-                                    <TextBox Text="{Binding GapDim}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
+                                    <TextBox Text="{Binding GapDim, UpdateSourceTrigger=PropertyChanged}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Margin="0,5">
                                     <RadioButton Content="Сечение" GroupName="Section" IsChecked="{Binding IsCrossSection}"/>
                                     <RadioButton Content="Разрез" GroupName="Section"  IsChecked="False"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="0,5">
+                                    <TextBlock Text="Изменение длины детали"/>
+                                    <TextBox Text="{Binding ExtraLength, UpdateSourceTrigger=PropertyChanged}"  Width="40" Height="25" HorizontalContentAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
                             <!--Список сварных швов-->

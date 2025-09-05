@@ -193,6 +193,14 @@ namespace KompasTools.ViewModels.Sundry
         [RegularExpression(@"^(\d+(,\d+)?)$")]
         private string _gapDim = "8";
         /// <summary>
+        /// Изменение длины детали
+        /// </summary>
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(-?\d+(,\d+)?)$")]
+        private string _extraLength = "0";
+        /// <summary>
         /// Создавать сечение?
         /// </summary>
         [ObservableProperty]
@@ -628,8 +636,10 @@ namespace KompasTools.ViewModels.Sundry
             double gapDimToPart = gapDim / 2; //Расстояние до детали находящейся снизу или справа
             double gapDimToDim = gapDim; //Расстояние между размерами
             double gapDimToPartLeft = gapDim; //Расстояние до детали находящейся слева
-
-            double extraLength = 20; //Длина детали от скоса
+            if (!Double.TryParse(ExtraLength, out double extraLength))//Длина детали от скоса
+            {
+                extraLength = 0;
+            }
             extraLength /= view.Scale;
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");

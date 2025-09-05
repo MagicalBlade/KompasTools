@@ -287,7 +287,8 @@ namespace KompasTools.Classes.Sundry.Welding
                             {
                                 //Размер скоса
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength = xangle;
+                                extraLength += xangle;
+                                extraLength = extraLength < 1 ? 1 : extraLength;
                                 //Чертим графику
                                 //Создаём основу разделки
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
@@ -371,7 +372,8 @@ namespace KompasTools.Classes.Sundry.Welding
                             {
                                 //Размер скоса
                                 double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength = xangle;
+                                extraLength += xangle;
+                                extraLength = extraLength < 1 ? 1 : extraLength;
                                 //Чертим графику
                                 //Создаём основу разделки
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
