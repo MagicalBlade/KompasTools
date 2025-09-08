@@ -340,9 +340,19 @@ namespace KompasTools.Classes.Sundry.Welding
                                     LineDimension(lineDimensions, 0, ParamC, -xangle, thickness, -xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, gapDimToPart * 3, ParamC + 1,
+                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, ParamC, 0, ParamC + 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    SetDeviation(dtParamC, paramCTolerance);
+                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                    //Только для "левых видов"
+                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                    {
+                                        ldParamC.X3 = gapDimToPart * 2;
+                                    }
+                                    else
+                                    {
+                                        ldParamC.X3 = gapDimToPart * 3;
+                                    }
+                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                     double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
                                     double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
@@ -358,7 +368,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
                                         //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                        ILineDimension ld_ParamB = ldParamC;
                                         ld_ParamB.X3 += ParamB;
                                         ld_ParamB.Update();
                                     }
@@ -435,9 +445,19 @@ namespace KompasTools.Classes.Sundry.Welding
                                     LineDimension(lineDimensions, 0, -ParamC, -xangle, -thickness, -xangle / 2, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, gapDimToPart * 3, -(ParamC + 1),
+                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, -ParamC, gapDimToPart * 3, -(ParamC + 1),
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    SetDeviation(dtParamC, paramCTolerance);
+                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                    //Только для "левых видов"
+                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                    {
+                                        ldParamC.X3 = gapDimToPart * 2;
+                                    }
+                                    else
+                                    {
+                                        ldParamC.X3 = gapDimToPart * 3;
+                                    }
+                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                     double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
                                     double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
@@ -453,7 +473,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
                                         //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                        ILineDimension ld_ParamB = ldParamC;
                                         ld_ParamB.X3 += ParamB;
                                         ld_ParamB.Update();
                                     }
