@@ -437,7 +437,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, - 1,
+                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, ParamC + 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
                                     double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
@@ -532,7 +532,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, 1,
+                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, -(ParamC + 1),
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
                                     double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
