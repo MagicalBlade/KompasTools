@@ -287,11 +287,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                 extraLength = extraLength < 1 ? 1 : extraLength;
                                 //Чертим графику
                                 //Создаём основу разделки
+                                //Притупление
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
+                                //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, -xangle, thickness);
+                                //От угла к краю детали
                                 DrawLineSegment(lineSegments, -xangle, thickness, -(xangle + extraLength), thickness);
+                                //От нуля к краю детали
                                 DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
-                                IWaveLines waveLines = symbols2DContainer.WaveLines; //Волнистая линия
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
                                 waveLine.X1 = -(xangle + extraLength);
                                 waveLine.Y1 = 0;
@@ -379,11 +384,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                 extraLength = extraLength < 1 ? 1 : extraLength;
                                 //Чертим графику
                                 //Создаём основу разделки
+                                //Притупление
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
+                                //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, xangle, thickness);
+                                //От угла к краю детали
                                 DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
+                                //От нуля к краю детали
                                 DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
-                                IWaveLines waveLines = symbols2DContainer.WaveLines; //Волнистая линия
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
                                 waveLine.X1 = xangle + extraLength;
                                 waveLine.Y1 = 0;
@@ -420,10 +430,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Чертим размеры
                                 if (drawDimensions)
                                 {
+                                    //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + gapDimToPartLeft, thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    //Линейный вертикальный угла
                                     LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    //Линейный вертикальный притупления
                                     IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, - 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
@@ -431,11 +444,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                    //Угол
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
                                         xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
                                     if (!isCrossSection && ParamB != 0)
                                     {
+                                        //Зазора в стыке
                                         IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness, 0, thickness, 0 - ParamB - 1, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
@@ -464,11 +479,16 @@ namespace KompasTools.Classes.Sundry.Welding
                                 extraLength = extraLength < 1 ? 1 : extraLength;
                                 //Чертим графику
                                 //Создаём основу разделки
+                                //Притупление
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
+                                //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, xangle, -thickness);
+                                //От угла к краю детали
                                 DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
+                                //От нуля к краю детали
                                 DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
-                                IWaveLines waveLines = symbols2DContainer.WaveLines; //Волнистая линия
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
                                 waveLine.X1 = xangle + extraLength;
                                 waveLine.Y1 = 0;
@@ -505,10 +525,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Чертим размеры
                                 if (drawDimensions)
                                 {
+                                    //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, -thickness, xangle + extraLength + gapDimToPartLeft, -thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    //Линейный вертикальный угла
                                     LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    //Линейный вертикальный притупления
                                     IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, 1,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation(dtParamC, paramCTolerance);
@@ -516,11 +539,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                    //Угол
                                     IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
                                         xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
                                     SetDeviation(dtParamA, ParamATolerance);
                                     if (!isCrossSection && ParamB != 0)
                                     {
+                                        //Зазора в стыке
                                         IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, -thickness, 0, -thickness, 0 - ParamB - 1, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
