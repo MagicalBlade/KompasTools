@@ -715,7 +715,6 @@ namespace KompasTools.ViewModels.Sundry
             drawingGroup?.Clear(true);
 
             document2DAPI5.ksUndoContainer(false);
-            application.MessageBoxEx("Работа со сварным швом завершена", "", 64);
         }        
     }
 }
