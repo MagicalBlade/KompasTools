@@ -1183,7 +1183,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     if (!isCrossSection && ParamB != 0)
                                     {
                                         //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, thickness / 2, 0, thickness / 2, ParamB + 1,
+                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, thickness / 2, 0, ParamC / 2, ParamB + 1,
                                             thickness / 2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
                                         //Двигаем размер притупления и линейный угла на величину зазора если выбран разрез
@@ -1290,7 +1290,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     if (!isCrossSection && ParamB != 0)
                                     {
                                         //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness / 2, 0, thickness / 2, 0 - ParamB - 1,
+                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness / 2, 0, ParamC / 2, 0 - ParamB - 1,
                                             thickness / 2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         SetDeviation(dtPatamB, paramBTolerance);
                                         //Двигаем размер притупления и линейный угла на величину зазора если выбран разрез
