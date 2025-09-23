@@ -1102,7 +1102,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, - ParamC / 2, 0, ParamC / 2);
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC / 2, xangle, thickness / 2);
-                                ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, 0, -ParamC / 2, xangle, -thickness / 2);
+                                DrawLineSegment(lineSegments, 0, -ParamC / 2, xangle, -thickness / 2);
                                 //От угла к краю детали
                                 DrawLineSegment(lineSegments, xangle, thickness / 2, xangle + extraLength, thickness / 2);
                                 DrawLineSegment(lineSegments, xangle, -thickness / 2, xangle + extraLength, -thickness / 2);                                
@@ -1145,10 +1145,19 @@ namespace KompasTools.Classes.Sundry.Welding
                                     LineDimension(lineDimensions, xangle + extraLength, -thickness / 2, xangle + extraLength, thickness / 2, xangle + extraLength + gapDimToPartLeft,
                                         0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Линейный горзонтальный угла
-                                    LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, xangle / 2, thickness / 2 + gapDimToPart,
+                                    ILineDimension dtLineHParamA = LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, xangle / 2, thickness / 2 + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    //Если угол равен 45 то оба размера угла делаем с десятыми
+                                    if (ParamA == 45)
+                                    {
+                                        ((IDimensionText)dtLineHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                        dtLineHParamA.Update();
+                                    }
                                     //Линейный вертикальный угла
-                                    ILineDimension dtLineParamA = LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, -gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ILineDimension dtLineVParamA = LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, -gapDimToPart, (thickness - ParamC) / 2,
+                                        ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                    dtLineVParamA.Update();
                                     //Линейный вертикальный притупления
                                     IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, -gapDimToPart, -ParamC,
                                         ksLineDimensionOrientationEnum.ksLinDVertical);
@@ -1171,8 +1180,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ILineDimension ld_ParamB = (ILineDimension)dtParamC;
                                         ld_ParamB.X3 -= ParamB;
                                         ld_ParamB.Update();
-                                        dtLineParamA.X3 -= ParamB;
-                                        dtLineParamA.Update();
+                                        dtLineVParamA.X3 -= ParamB;
+                                        dtLineVParamA.Update();
                                     }
                                 }
                             }
