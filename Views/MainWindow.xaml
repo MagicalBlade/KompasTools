@@ -578,7 +578,10 @@
                                             </TextBox.ToolTip>
                                         </TextBox>
                                         <!--Начертить-->
-                                    <Button Content="Начертить" Command="{Binding TestCommand}" Padding="5,2" FontSize="14"/>
+                                    <Button Content="Деталь" Command="{Binding DrawingCommand}" CommandParameter="Part" Padding="5,2" FontSize="14"/>
+                                    <Button Content="Стык" Command="{Binding DrawingCommand}" CommandParameter="Joint" Padding="5,2" FontSize="14"/>
+                                    <Button Content="Шов" Command="{Binding DrawingCommand}" CommandParameter="Seam" Padding="5,2" FontSize="14"/>
+                                    <Button Content="3D" Command="{Binding DrawingCommand}" CommandParameter="3D" Padding="5,2" FontSize="14"/>
                                 </StackPanel>
                                 <TextBlock DockPanel.Dock="Top" Text="Список сварных швов:" Margin="0,2"/>
                                 <ListView DockPanel.Dock="Top" x:Name="WeldDates" ItemsSource="{Binding WeldDates}" SelectedItem="{Binding SelectWeldDates}" SelectionMode="Single">

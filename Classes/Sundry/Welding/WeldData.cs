@@ -193,9 +193,38 @@ namespace KompasTools.Classes.Sundry.Welding
 
         
 
-        public void DrawingJoint()
+        public void DrawingJoint(IView view, double thickness, LocationPart locationPart, bool drawDimensions,
+            TransitionTypeEnum selectTransitionTypesFirstUP, TransitionTypeEnum selectTransitionTypesFirstBottom, TransitionTypeEnum SelectTransitionTypesSecondUP, TransitionTypeEnum SelectTransitionTypesSecondBottom,
+            IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim, double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches)
         {
-
+            switch (locationPart)
+            {
+                case LocationPart.Лево_Верх:
+                    break;
+                case LocationPart.Лево_Низ:
+                    break;
+                case LocationPart.Право_Верх:
+                    DrawingPart(view, thickness, locationPart, true, false,
+            selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
+            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                    DrawingPart(view, thickness, locationPart, false, false,
+           SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+           drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                    break;
+                case LocationPart.Право_Низ:
+                    break;
+                case LocationPart.Верх_Лево:
+                    break;
+                case LocationPart.Верх_Право:
+                    break;
+                case LocationPart.Низ_Лево:
+                    break;
+                case LocationPart.Низ_Право:
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
         public void DrawingSeam()

@@ -550,7 +550,7 @@ namespace KompasTools.ViewModels.Sundry
         }
 
         [RelayCommand]
-        public void Test()
+        public void Drawing(string TypeElement)
         {
             if (SelectWeldDates == null)
             {
@@ -644,15 +644,33 @@ namespace KompasTools.ViewModels.Sundry
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
             drawingGroup.Open();
-            if (NumberPart)
+            //Чертим
+            switch (TypeElement)
             {
-                SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
-            }
-            else
-            {
-                SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                    drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                case "Part":
+                    if (NumberPart)
+                    {
+                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                    }
+                    else
+                    {
+                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                    }
+                    break;
+                case "Joint":
+                    SelectWeldDates?.DrawingJoint(view, Thickness, IsLocationPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                        SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                    break;
+                case "Seam":
+                    MessageBox.Show("Шов");
+                    break;
+                case "3D":
+                    MessageBox.Show("3D");
+                    break;
+                default:
+                    break;
             }
             //Создаём текст названия сечения
             if (NameCut.Trim() != "" && IsDrawingDimensions)
