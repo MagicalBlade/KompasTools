@@ -660,7 +660,7 @@ namespace KompasTools.ViewModels.Sundry
                     }
                     break;
                 case "Joint":
-                    SelectWeldDates?.DrawingJoint(view, Thickness, IsLocationPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                    SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
                         SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
                     break;
                 case "Seam":

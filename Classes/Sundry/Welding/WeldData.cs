@@ -193,7 +193,7 @@ namespace KompasTools.Classes.Sundry.Welding
 
         
 
-        public void DrawingJoint(IView view, double thickness, LocationPart locationPart, bool drawDimensions,
+        public void DrawingJoint(KompasObject kompas, IView view, double thickness, LocationPart locationPart, bool drawDimensions,
             TransitionTypeEnum selectTransitionTypesFirstUP, TransitionTypeEnum selectTransitionTypesFirstBottom, TransitionTypeEnum SelectTransitionTypesSecondUP, TransitionTypeEnum SelectTransitionTypesSecondBottom,
             IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim, double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches)
         {
@@ -204,12 +204,15 @@ namespace KompasTools.Classes.Sundry.Welding
                 case LocationPart.Лево_Низ:
                     break;
                 case LocationPart.Право_Верх:
+                    if (kompas.ActiveDocument2D() is not ksDocument2D document2DAPI5) return;
                     DrawingPart(view, thickness, locationPart, true, false,
-            selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
-            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                                selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
+                                drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                    document2DAPI5.ksMoveObj(drawingGroup.Reference, ParamB, 0);
                     DrawingPart(view, thickness, locationPart, false, false,
-           SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-           drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                                SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                                drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                    document2DAPI5.ksMoveObj(drawingGroup.Reference, -ParamB / 2, 0);
                     break;
                 case LocationPart.Право_Низ:
                     break;
