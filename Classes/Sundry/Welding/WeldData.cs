@@ -197,6 +197,7 @@ namespace KompasTools.Classes.Sundry.Welding
             TransitionTypeEnum selectTransitionTypesFirstUP, TransitionTypeEnum selectTransitionTypesFirstBottom, TransitionTypeEnum SelectTransitionTypesSecondUP, TransitionTypeEnum SelectTransitionTypesSecondBottom,
             IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim, double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches)
         {
+            
             switch (locationPart)
             {
                 case LocationPart.Лево_Верх:
@@ -207,11 +208,11 @@ namespace KompasTools.Classes.Sundry.Welding
                     if (kompas.ActiveDocument2D() is not ksDocument2D document2DAPI5) return;
                     DrawingPart(view, thickness, locationPart, true, false,
                                 selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
-                                drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                                gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
                     document2DAPI5.ksMoveObj(drawingGroup.Reference, ParamB, 0);
                     DrawingPart(view, thickness, locationPart, false, false,
                                 SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                                drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
+                                gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
                     document2DAPI5.ksMoveObj(drawingGroup.Reference, -ParamB / 2, 0);
                     break;
                 case LocationPart.Право_Низ:
@@ -236,7 +237,7 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions,
-            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim,
+            TransitionTypeEnum transitionTypeUp, TransitionTypeEnum transitionTypeBottom, double gapDimToPart, double gapDimToDim,
             double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches)
         {
             #region Проверка входящих данных
@@ -324,9 +325,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, -xangle, thickness);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, -xangle, thickness, -(xangle + extraLength), thickness);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, thickness, -(xangle + extraLength), thickness);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -342,8 +343,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -429,9 +434,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, -xangle, -thickness);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, -xangle, -thickness, -(xangle + extraLength), -thickness);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, -thickness, -(xangle + extraLength), -thickness);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -447,8 +452,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -534,9 +543,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, xangle, thickness);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -552,8 +561,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -629,9 +642,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, xangle, -thickness);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -647,8 +660,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -724,9 +741,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, -thickness, xangle, -thickness, xangle + extraLength);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, xangle, -thickness, xangle + extraLength);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -742,8 +759,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -829,9 +850,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, thickness, xangle, thickness, xangle + extraLength);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, xangle, thickness, xangle + extraLength);
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -847,8 +868,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -934,9 +959,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, -xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, -thickness, -xangle, -thickness, -(xangle + extraLength));
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, -xangle, -thickness, -(xangle + extraLength));
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -952,8 +977,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -1029,9 +1058,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, -xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, thickness, -xangle, thickness, -(xangle + extraLength));
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, -xangle, thickness, -(xangle + extraLength));
                                 //От нуля к краю детали
-                                DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -1047,8 +1076,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -1130,10 +1163,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, -ParamC / 2, 0, ParamC / 2);
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC / 2, -xangle, thickness / 2);
-                                DrawLineSegment(lineSegments, 0, -ParamC / 2, -xangle, -thickness / 2);
+                                ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, 0, -ParamC / 2, -xangle, -thickness / 2);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, -xangle, thickness / 2, -(xangle + extraLength), thickness / 2);
-                                DrawLineSegment(lineSegments, -xangle, -thickness / 2, -(xangle + extraLength), -thickness / 2);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, thickness / 2, -(xangle + extraLength), thickness / 2);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, -xangle, -thickness / 2, -(xangle + extraLength), -thickness / 2);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -1149,8 +1182,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(baseobjAngle3, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -1251,10 +1289,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, - ParamC / 2, 0, ParamC / 2);
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC / 2, xangle, thickness / 2);
-                                DrawLineSegment(lineSegments, 0, -ParamC / 2, xangle, -thickness / 2);
+                                ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, 0, -ParamC / 2, xangle, -thickness / 2);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, xangle, thickness / 2, xangle + extraLength, thickness / 2);
-                                DrawLineSegment(lineSegments, xangle, -thickness / 2, xangle + extraLength, -thickness / 2);                                
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, thickness / 2, xangle + extraLength, thickness / 2);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, xangle, -thickness / 2, xangle + extraLength, -thickness / 2);                                
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -1270,8 +1308,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(baseobjAngle3, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -1360,10 +1403,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamC / 2, 0, ParamC / 2, 0);
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, 0, thickness / 2, xangle);
-                                DrawLineSegment(lineSegments, -ParamC / 2, 0, -thickness / 2, xangle);
+                                ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, -ParamC / 2, 0, -thickness / 2, xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, thickness / 2, xangle, thickness / 2, xangle + extraLength);
-                                DrawLineSegment(lineSegments, -thickness / 2, xangle, -thickness / 2, xangle + extraLength);
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness / 2, xangle, thickness / 2, xangle + extraLength);
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, -thickness / 2, xangle, -thickness / 2, xangle + extraLength);
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -1379,8 +1422,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(baseobjAngle3, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;
@@ -1481,10 +1529,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamC / 2, 0, ParamC / 2, 0);
                                 //Угла
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, 0, thickness / 2, -xangle);
-                                DrawLineSegment(lineSegments, -ParamC / 2, 0, -thickness / 2, -xangle);
+                                ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, -ParamC / 2, 0, -thickness / 2, -xangle);
                                 //От угла к краю детали
-                                DrawLineSegment(lineSegments, thickness / 2, -xangle, thickness / 2, -(xangle + extraLength));
-                                DrawLineSegment(lineSegments, -thickness / 2, -xangle, -thickness / 2, -(xangle + extraLength));
+                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness / 2, -xangle, thickness / 2, -(xangle + extraLength));
+                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, -thickness / 2, -xangle, -thickness / 2, -(xangle + extraLength));
                                 //Волнистая линия
                                 IWaveLines waveLines = symbols2DContainer.WaveLines;
                                 IWaveLine waveLine = waveLines.Add();
@@ -1500,8 +1548,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                     IDrawingContours drawingContours = drawingContainer.DrawingContours;
                                     IDrawingContour drawingContour = drawingContours.Add();
                                     IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы из группы созданные до этой строки
-                                    contour.CopySegments(drawingGroup.Objects[0], false);
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(baseobjAngle1, false);
+                                    contour.CopySegments(baseobjAngle2, false);
+                                    contour.CopySegments(baseobjAngle3, false);
+                                    contour.CopySegments(lsExtra1, false);
+                                    contour.CopySegments(lsExtra2, false);
+                                    contour.CopySegments(waveLine, false);
                                     drawingContour.Update();
                                     //Штриховка
                                     IHatches hatches = drawingContainer.Hatches;

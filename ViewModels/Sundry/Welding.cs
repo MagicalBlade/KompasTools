@@ -651,12 +651,12 @@ namespace KompasTools.ViewModels.Sundry
                     if (NumberPart)
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
                     }
                     else
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                            drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
                     }
                     break;
                 case "Joint":
