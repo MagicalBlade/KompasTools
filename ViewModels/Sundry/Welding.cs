@@ -100,7 +100,7 @@ namespace KompasTools.ViewModels.Sundry
                 if (SelectNameWeldJoints != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.NameWeldJoint == SelectNameWeldJoints).ToArray();
                 if (SelectWeldingMethod!= null && WeldDates != null) WeldDates = WeldDates.Where(n => n.WeldingMethod == SelectWeldingMethod).ToArray();
 
-                if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();                
+                if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();
             }
         }
         /// <summary>
