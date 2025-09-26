@@ -211,21 +211,36 @@ namespace KompasTools.Classes.Sundry.Welding
                 case ("8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами):
                     switch (locationPart)
                     {
-                        case LocationPart.Лево_Верх:
-                            break;
-                        case LocationPart.Лево_Низ:
-                            break;
-                        case LocationPart.Право_Верх:
+                        case LocationPart.Право_Верх or LocationPart.Право_Низ or LocationPart.Лево_Верх or LocationPart.Лево_Низ:
                             if (kompas.ActiveDocument2D() is not ksDocument2D document2DAPI5) return;
-                            DrawingPart(view, thickness, locationPart, true, false,
-                                        selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
+                            DrawingPart(view, thickness, locationPart, true, false, selectTransitionTypesFirstUP, selectTransitionTypesFirstBottom,
                                         gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
-                            document2DAPI5.ksMoveObj(drawingGroup.Reference, ParamB, 0);
-                            DrawingPart(view, thickness, locationPart, false, false,
-                                        SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                    document2DAPI5.ksMoveObj(drawingGroup.Reference, -ParamB, 0);
+                                    break;
+                                case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                    document2DAPI5.ksMoveObj(drawingGroup.Reference, ParamB, 0);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            DrawingPart(view, thickness, locationPart, false, false, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
                                         gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches);
-                            document2DAPI5.ksMoveObj(drawingGroup.Reference, -ParamB / 2, 0);
-                            if(drawDimensions)
+                            //Что бы не плодить код, делаю поправку смещения группы тут.
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                    document2DAPI5.ksMoveObj(drawingGroup.Reference, ParamB / 2, 0);
+                                    break;
+                                case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                    document2DAPI5.ksMoveObj(drawingGroup.Reference, -ParamB / 2, 0);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (drawDimensions)
                             {
                                 //Размер скоса
                                 double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
@@ -256,12 +271,14 @@ namespace KompasTools.Classes.Sundry.Welding
                                 ILineDimension ldParamCR = LineDimension(lineDimensions, ParamB / 2, ParamC / 2, ParamB / 2, -ParamC / 2,
                                     xangle + extraLength + gapDimToPart * 2 + ParamB / 2, -ParamC / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                 //Линейный вертикальный угла
-                                ILineDimension ldParamAHL = LineDimension(lineDimensions, -ParamB / 2 - xangle, thickness / 2, -ParamB / 2, ParamC / 2,
+                                ILineDimension ldParamAHL = LineDimension(lineDimensions, -ParamB / 2 - xangle - extraLength, thickness / 2, -ParamB / 2, ParamC / 2,
                                     ldParamCL.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                SetDeviation((IDimensionText)ldParamCL, paramCTolerance);
-                                ILineDimension ldParamAHR = LineDimension(lineDimensions, ParamB / 2 + xangle, thickness / 2, ParamB / 2, ParamC / 2,
+                                ((IDimensionText)ldParamAHL).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                ldParamAHL.Update();
+                                ILineDimension ldParamAHR = LineDimension(lineDimensions, ParamB / 2 + xangle + extraLength, thickness / 2, ParamB / 2, ParamC / 2,
                                     ldParamCR.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                SetDeviation((IDimensionText)ldParamCL, paramCTolerance);
+                                ((IDimensionText)ldParamAHR).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                ldParamAHL.Update();
                                 //Линейный вертикальный толщины
                                 ILineDimension ldThicknessL = LineDimension(lineDimensions, -ParamB / 2 - xangle - extraLength, thickness / 2, -ParamB / 2 - xangle - extraLength, -thickness / 2,
                                     ldParamCL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
@@ -310,15 +327,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                 SetDeviation((IDimensionText)adParamA, ParamATolerance);
                             }
                             break;
-                        case LocationPart.Право_Низ:
-                            break;
-                        case LocationPart.Верх_Лево:
-                            break;
-                        case LocationPart.Верх_Право:
-                            break;
-                        case LocationPart.Низ_Лево:
-                            break;
-                        case LocationPart.Низ_Право:
+                        case LocationPart.Верх_Лево or LocationPart.Верх_Право or LocationPart.Низ_Лево or LocationPart.Низ_Право:
+
                             break;
                         default:
                             break;
