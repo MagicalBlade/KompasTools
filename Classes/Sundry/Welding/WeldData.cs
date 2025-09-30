@@ -209,7 +209,7 @@ namespace KompasTools.Classes.Sundry.Welding
                     break;
                 case ("5264-80", ConnectionTypeEnum.Тавровое, ShapePreparedEdgesEnum.Со_скосом_одной_кромки, ShapePreparedEdgesEnum.Со_скосом_одной_кромки):
                     break;
-                case ("8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами):
+                case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами):
                     switch (locationPart)
                     {
                         case LocationPart.Право_Верх or LocationPart.Право_Низ or LocationPart.Лево_Верх or LocationPart.Лево_Низ:
