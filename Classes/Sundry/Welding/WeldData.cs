@@ -205,7 +205,7 @@ namespace KompasTools.Classes.Sundry.Welding
             IAngleDimensions angleDimensions = symbols2DContainer.AngleDimensions;
             switch (NameGost, ConnectionType, ShapePreparedEdgesPart1, ShapePreparedEdgesPart2)
             {
-                case ("5264-80", ConnectionTypeEnum.Тавровое, ShapePreparedEdgesEnum.Без_скоса, ShapePreparedEdgesEnum.Со_скосом_одной_кромки):
+                case ("5264-80", ConnectionTypeEnum.Тавровое, ShapePreparedEdgesEnum.Без_скоса_стыковое, ShapePreparedEdgesEnum.Со_скосом_одной_кромки):
                     break;
                 case ("5264-80", ConnectionTypeEnum.Тавровое, ShapePreparedEdgesEnum.Со_скосом_одной_кромки, ShapePreparedEdgesEnum.Со_скосом_одной_кромки):
                     break;
@@ -515,7 +515,9 @@ namespace KompasTools.Classes.Sundry.Welding
             {
                 case ShapePreparedEdgesEnum.НЕ_УКАЗАНО:
                     break;
-                case ShapePreparedEdgesEnum.Без_скоса:
+                case ShapePreparedEdgesEnum.Без_скоса_стыковое:
+                    break;
+                case ShapePreparedEdgesEnum.Без_скоса_тавровое:
                     break;
                 case ShapePreparedEdgesEnum.Без_притупления:
                     break;

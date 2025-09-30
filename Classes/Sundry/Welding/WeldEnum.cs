@@ -25,7 +25,8 @@ namespace KompasTools.Classes.Sundry.Welding
         public enum ShapePreparedEdgesEnum
         {
             НЕ_УКАЗАНО,
-            Без_скоса,
+            Без_скоса_стыковое,
+            Без_скоса_тавровое,
             Без_притупления,
             Со_скосом_одной_кромки,
             С_двумя_симметричными_скосами,
