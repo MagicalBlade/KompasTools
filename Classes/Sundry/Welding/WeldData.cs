@@ -749,50 +749,172 @@ namespace KompasTools.Classes.Sundry.Welding
                     switch (locationPart)
                     {
                         case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
-                            ILineSegment ls1 = DrawLineSegment(lineSegments, 0, -thickness / 2, 0, thickness / 2);
-                            ILineSegment ls2 = DrawLineSegment(lineSegments, 0, -thickness / 2, -extraLength, -thickness / 2);
-                            ILineSegment ls3 = DrawLineSegment(lineSegments, 0, thickness / 2, -extraLength, thickness / 2);
-                            //Волнистая линия
-                            IWaveLines waveLines = symbols2DContainer.WaveLines;
-                            IWaveLine waveLine = waveLines.Add();
-                            waveLine.X1 = -extraLength;
-                            waveLine.Y1 = -thickness / 2;
-                            waveLine.X2 = -extraLength;
-                            waveLine.Y2 = thickness / 2;
-                            waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                            waveLine.Update();
-                            if (isHatches)
                             {
-                                //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                IDrawingContour drawingContour = drawingContours.Add();
-                                IContour contour = (IContour)drawingContour;
-                                //Добавляем в контур элементы которые ограничивают штриховку
-                                contour.CopySegments(ls1, false);
-                                contour.CopySegments(ls2, false);
-                                contour.CopySegments(ls3, false);
-                                contour.CopySegments(waveLine, false);
-                                drawingContour.Update();
-                                //Штриховка
-                                IHatches hatches = drawingContainer.Hatches;
-                                IHatch hatch = hatches.Add();
-                                IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                boundariesObject.AddBoundaries(drawingContour, true);
-                                hatch.Update();
-                            }
-                            //Чертим размеры
-                            if (drawDimensions)
-                            {
-                                //Линейный вертикальный толщины
-                                LineDimension(lineDimensions, -extraLength, -thickness / 2, -extraLength, thickness / 2, -extraLength - gapDimToPartLeft,
-                                    0, ksLineDimensionOrientationEnum.ksLinDVertical);                                
+                                ILineSegment ls1 = DrawLineSegment(lineSegments, 0, -thickness / 2, 0, thickness / 2);
+                                ILineSegment ls2 = DrawLineSegment(lineSegments, 0, -thickness / 2, -extraLength, -thickness / 2);
+                                ILineSegment ls3 = DrawLineSegment(lineSegments, 0, thickness / 2, -extraLength, thickness / 2);
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = -extraLength;
+                                waveLine.Y1 = -thickness / 2;
+                                waveLine.X2 = -extraLength;
+                                waveLine.Y2 = thickness / 2;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(ls1, false);
+                                    contour.CopySegments(ls2, false);
+                                    contour.CopySegments(ls3, false);
+                                    contour.CopySegments(waveLine, false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }
+                                //Чертим размеры
+                                if (drawDimensions)
+                                {
+                                    //Линейный вертикальный толщины
+                                    LineDimension(lineDimensions, -extraLength, -thickness / 2, -extraLength, thickness / 2, -extraLength - gapDimToPartLeft,
+                                        0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                }
                             }
                             break;
                         case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                            {
+                                ILineSegment ls1 = DrawLineSegment(lineSegments, 0, -thickness / 2, 0, thickness / 2);
+                                ILineSegment ls2 = DrawLineSegment(lineSegments, 0, -thickness / 2, extraLength, -thickness / 2);
+                                ILineSegment ls3 = DrawLineSegment(lineSegments, 0, thickness / 2, extraLength, thickness / 2);
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = extraLength;
+                                waveLine.Y1 = -thickness / 2;
+                                waveLine.X2 = extraLength;
+                                waveLine.Y2 = thickness / 2;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(ls1, false);
+                                    contour.CopySegments(ls2, false);
+                                    contour.CopySegments(ls3, false);
+                                    contour.CopySegments(waveLine, false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }
+                                //Чертим размеры
+                                if (drawDimensions)
+                                {
+                                    //Линейный вертикальный толщины
+                                    LineDimension(lineDimensions, extraLength, -thickness / 2, extraLength, thickness / 2, extraLength + gapDimToPartLeft,0,
+                                        ksLineDimensionOrientationEnum.ksLinDVertical);
+                                }
+                            }
                             break;
                         case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                            {
+                                ILineSegment ls1 = DrawLineSegment(lineSegments, -thickness / 2, 0, thickness / 2, 0);
+                                ILineSegment ls2 = DrawLineSegment(lineSegments, -thickness / 2, 0, -thickness / 2, extraLength);
+                                ILineSegment ls3 = DrawLineSegment(lineSegments, thickness / 2, 0, thickness / 2 , extraLength);
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = -thickness / 2;
+                                waveLine.Y1 = extraLength ;
+                                waveLine.X2 = thickness / 2 ;
+                                waveLine.Y2 = extraLength;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(ls1, false);
+                                    contour.CopySegments(ls2, false);
+                                    contour.CopySegments(ls3, false);
+                                    contour.CopySegments(waveLine, false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }
+                                //Чертим размеры
+                                if (drawDimensions)
+                                {
+                                    //Линейный горизонтальный толщины
+                                    LineDimension(lineDimensions, -thickness / 2 , extraLength, thickness / 2 , extraLength, 0, extraLength + gapDimToPartLeft,
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                }
+                            }
                             break;
                         case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                            {
+                                ILineSegment ls1 = DrawLineSegment(lineSegments, -thickness / 2, 0, thickness / 2, 0);
+                                ILineSegment ls2 = DrawLineSegment(lineSegments, -thickness / 2, 0, -thickness / 2, -extraLength);
+                                ILineSegment ls3 = DrawLineSegment(lineSegments, thickness / 2, 0, thickness / 2, -extraLength);
+                                //Волнистая линия
+                                IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                IWaveLine waveLine = waveLines.Add();
+                                waveLine.X1 = -thickness / 2;
+                                waveLine.Y1 = -extraLength;
+                                waveLine.X2 = thickness / 2;
+                                waveLine.Y2 = -extraLength;
+                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                waveLine.Update();
+                                if (isHatches)
+                                {
+                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                    IDrawingContour drawingContour = drawingContours.Add();
+                                    IContour contour = (IContour)drawingContour;
+                                    //Добавляем в контур элементы которые ограничивают штриховку
+                                    contour.CopySegments(ls1, false);
+                                    contour.CopySegments(ls2, false);
+                                    contour.CopySegments(ls3, false);
+                                    contour.CopySegments(waveLine, false);
+                                    drawingContour.Update();
+                                    //Штриховка
+                                    IHatches hatches = drawingContainer.Hatches;
+                                    IHatch hatch = hatches.Add();
+                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                    boundariesObject.AddBoundaries(drawingContour, true);
+                                    hatch.Update();
+                                }
+                                //Чертим размеры
+                                if (drawDimensions)
+                                {
+                                    //Линейный горизонтальный толщины
+                                    LineDimension(lineDimensions, -thickness / 2, -extraLength, thickness / 2, -extraLength, 0, -extraLength - gapDimToPartLeft,
+                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                }
+                            }
                             break;
                         default:
                             break;
