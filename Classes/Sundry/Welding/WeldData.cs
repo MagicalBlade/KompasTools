@@ -499,7 +499,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, -thickness / 2, -ParamB / 2, thickness / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, -ParamC / 2, ParamB / 2, ParamC / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamB / 2, ParamC / 2, ParamB / 2 + xangle, thickness / 2);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -578,7 +578,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, -thickness / 2, ParamB / 2, thickness / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, -ParamC / 2, -ParamB / 2, ParamC / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamB / 2, ParamC / 2, -ParamB / 2 - xangle, thickness / 2);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -645,7 +645,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -thickness / 2, -ParamB / 2, thickness / 2, -ParamB / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamC / 2, ParamB / 2, ParamC / 2, ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, ParamB / 2, thickness / 2, ParamB / 2 + xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -716,7 +716,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -thickness / 2, ParamB / 2, thickness / 2, ParamB / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamC / 2, -ParamB / 2, ParamC / 2, -ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, -ParamB / 2, thickness / 2, -ParamB / 2 - xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1439,7 +1439,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, 0, -ParamB / 2, thickness);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, 0, ParamB / 2, ParamC);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamB / 2, ParamC, ParamB / 2 + xangle, thickness);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1503,7 +1503,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, -thickness, -ParamB / 2, 0 );
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, 0, ParamB / 2, -ParamC);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamB / 2, -ParamC, ParamB / 2 + xangle, -thickness);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1560,7 +1560,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, 0, ParamB / 2, thickness);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, 0, -ParamB / 2, ParamC);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamB / 2, ParamC, -ParamB / 2 - xangle, thickness);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1622,7 +1622,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamB / 2, -thickness, ParamB / 2, 0);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -ParamB / 2, 0, -ParamB / 2, -ParamC );
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamB / 2, -ParamC, -ParamB / 2 - xangle, -thickness);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1684,7 +1684,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, -ParamB / 2, thickness, -ParamB / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, ParamB / 2, ParamC, ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, ParamB / 2, thickness, ParamB / 2 + xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1741,7 +1741,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -thickness, -ParamB / 2, 0, -ParamB / 2 );
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, ParamB / 2, -ParamC, ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, ParamB / 2, -thickness, ParamB / 2 + xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1803,7 +1803,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, ParamB / 2, thickness, ParamB / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, -ParamB / 2, ParamC, -ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, -ParamB / 2, thickness, -ParamB / 2 - xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
@@ -1860,7 +1860,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                 double angleDRadius = r1 > r2 ? r1 : r2;
                                 angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                 //Линии нужны для построения размера угла
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -thickness, ParamB / 2, 0, ParamB / 2);
+                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, -ParamB / 2, -ParamC, -ParamB / 2);
                                 ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, -ParamB / 2, -thickness, -ParamB / 2 - xangle);
                                 //Эти линии удалять нельзя. Компас вылетает с ошибкой.
                                 //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
