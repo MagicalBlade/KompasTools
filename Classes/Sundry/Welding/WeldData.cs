@@ -2224,7 +2224,6 @@ namespace KompasTools.Classes.Sundry.Welding
                             break;
                     }
                     break;
-
                 case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Тавровое, ShapePreparedEdgesEnum.Со_скосом_одной_кромки, ShapePreparedEdgesEnum.Без_скоса_тавровое):
                     switch (locationPart)
                     {
@@ -2253,21 +2252,21 @@ namespace KompasTools.Classes.Sundry.Welding
                                     ILineDimension ldParamA = LineDimension(lineDimensions, xangle + paramBManual / 2, thickness, paramBManual / 2, ParamC,
                                         xangle / 2 + paramBManual / 2, thickness + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный горизонтальный зазора в стыке
-                                    ILineDimension ldparamB = LineDimension(lineDimensions, -paramBManual / 2, 0, paramBManual / 2, 0,
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, 0, paramBManual / 2, 0,
                                         paramBManual / 2 + 1, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    SetDeviation((IDimensionText)ldparamB, paramBTolerance);
+                                    SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
                                     if (ParamB == 0)
                                     {
-                                        IDimensionText dtparamB = (IDimensionText)ldparamB;
+                                        IDimensionText dtparamB = (IDimensionText)ldParamB;
                                         dtparamB.NominalValue = 0;
-                                        ldparamB.Update();
+                                        ldParamB.Update();
                                     }
                                     if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
                                     {
-                                        ldparamB.Y3 = -gapDimToPart * 3;
-                                        ldparamB.Update();
+                                        ldParamB.Y3 = -gapDimToPart * 3;
+                                        ldParamB.Update();
                                     }
                                     //Линейный вертикальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, paramBManual / 2, ParamC, paramBManual / 2, 0,
@@ -2307,7 +2306,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                 }
                             }
                             break;
-
                         case LocationPart.Право_Низ:
                             {
                                 //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
@@ -2333,8 +2331,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                     ILineDimension ldParamA = LineDimension(lineDimensions, xangle + paramBManual / 2, -thickness, paramBManual / 2, -ParamC,
                                         xangle / 2 + paramBManual / 2, -thickness - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный горизонтальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, -thickness, paramBManual / 2, -ParamC,
-                                        -paramBManual / 2 - 1, ldParamA.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, 0, paramBManual / 2, 0,
+                                        paramBManual / 2 + 1, gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2344,24 +2342,17 @@ namespace KompasTools.Classes.Sundry.Welding
                                         dtparamB.NominalValue = 0;
                                         ldParamB.Update();
                                     }
-                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
-                                    {
-                                        ldParamA.Y3 = -thickness - gapDimToPart * 3;
-                                        ldParamA.Update();
-                                        ldParamB.Y3 = ldParamA.Y3;
-                                        ldParamB.Update();
-                                    }
                                     //Линейный вертикальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, paramBManual / 2, -ParamC, paramBManual / 2, 0,
-                                        gapDimToPart * 3 + paramBManual / 2, ParamC + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                        gapDimToPart * 5 + paramBManual / 2, ParamC + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный вертикальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, paramBManual / 2 + xangle + extraLength, -thickness, paramBManual / 2 + xangle + extraLength, 0,
                                         paramBManual / 2 + xangle + extraLength + gapDimToPart * 2, -thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.Y3 - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.Y3 - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.Y3 - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2384,7 +2375,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        paramBManual / 2 + xangle / 2, ldParamB.Y3 - gapDimToDim * 1.5, angleDRadius);
+                                        paramBManual / 2 + xangle / 2, ldParamA.Y3 - gapDimToDim * 1.5, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2414,8 +2405,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                     ILineDimension ldParamA = LineDimension(lineDimensions, -xangle - paramBManual / 2, thickness, -paramBManual / 2, ParamC,
                                         -xangle / 2 - paramBManual / 2, thickness + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный горизонтальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, thickness, -paramBManual / 2, ParamC,
-                                        paramBManual / 2 + 1, ldParamA.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, 0, -paramBManual / 2, 0,
+                                        -paramBManual / 2 - 1, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2425,17 +2416,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                         dtparamB.NominalValue = 0;
                                         ldParamB.Update();
                                     }
+                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                    {
+                                        ldParamB.Y3 = -gapDimToPart * 3;
+                                        ldParamB.Update();
+                                    }
                                     //Линейный вертикальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, -paramBManual / 2, ParamC, -paramBManual / 2, 0,
-                                        -gapDimToPart * 2 - paramBManual / 2, -ParamC - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                        -gapDimToPart * 3 - paramBManual / 2, -ParamC - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный вертикальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, -paramBManual / 2 - xangle - extraLength, thickness, -paramBManual / 2 - xangle - extraLength, 0,
                                         -paramBManual / 2 - xangle - extraLength - gapDimToPart, thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.Y3 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.Y3 + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.Y3 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2458,7 +2454,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -paramBManual / 2 - xangle / 2, ldParamB.Y3, angleDRadius);
+                                        -paramBManual / 2 - xangle / 2, ldParamA.Y3, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2493,8 +2489,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ldParamA.Update();
                                     }
                                     //Линейный горизонтальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, -thickness, -paramBManual / 2, -ParamC,
-                                        paramBManual / 2 + 1, ldParamA.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, 0, -paramBManual / 2, 0,
+                                        -paramBManual / 2 - 1, gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2506,15 +2502,15 @@ namespace KompasTools.Classes.Sundry.Welding
                                     }
                                     //Линейный вертикальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, -paramBManual / 2, -ParamC, -paramBManual / 2, 0,
-                                        -gapDimToPart * 2 - paramBManual / 2, ParamC + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                        -gapDimToPart * 3 - paramBManual / 2, ParamC + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный вертикальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, -paramBManual / 2 - xangle - extraLength, -thickness, -paramBManual / 2 - xangle - extraLength, 0,
                                         -paramBManual / 2 - xangle - extraLength - gapDimToPart, -thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.Y3 - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.Y3 - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.Y3 - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2537,7 +2533,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -paramBManual / 2 - xangle / 2, ldParamB.Y3 - gapDimToDim * 1.5, angleDRadius);
+                                        -paramBManual / 2 - xangle / 2, ldParamA.Y3 - gapDimToDim * 1.5, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2566,14 +2562,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Вертикальный угла
                                     ILineDimension ldParamA = LineDimension(lineDimensions, thickness, xangle + paramBManual / 2, ParamC, paramBManual / 2,
                                         thickness + gapDimToPart * 2, xangle / 2 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
-                                    {
-                                        ldParamA.X3 = thickness + gapDimToPart * 3;
-                                        ldParamA.Update();
-                                    }
                                     //Линейный вертикальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, thickness, -paramBManual / 2, ParamC, paramBManual / 2,
-                                        ldParamA.X3, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, 0, -paramBManual / 2, 0, paramBManual / 2,
+                                        -gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2585,15 +2576,15 @@ namespace KompasTools.Classes.Sundry.Welding
                                     }
                                     //Линейный горизонтальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, ParamC, paramBManual / 2, 0, paramBManual / 2,
-                                        -ParamC - 1, gapDimToPart * 2 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        -ParamC - 1, gapDimToPart * 3 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный горизонтальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, thickness, paramBManual / 2 + xangle + extraLength, 0, paramBManual / 2 + xangle + extraLength,
                                         thickness / 2, paramBManual / 2 + xangle + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.X3) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.X3, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.X3) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.X3, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2616,7 +2607,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        ldParamB.X3, paramBManual / 2 + xangle / 2, angleDRadius);
+                                        ldParamA.X3, paramBManual / 2 + xangle / 2, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2646,8 +2637,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                     ILineDimension ldParamA = LineDimension(lineDimensions, -thickness, xangle + paramBManual / 2, -ParamC, paramBManual / 2,
                                         -thickness - gapDimToPart, xangle / 2 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Линейный вертикальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, -thickness, -paramBManual / 2, -ParamC, paramBManual / 2,
-                                        ldParamA.X3, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, 0, -paramBManual / 2, 0, paramBManual / 2,
+                                        gapDimToPart * 2, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2657,17 +2648,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                         dtparamB.NominalValue = 0;
                                         ldParamB.Update();
                                     }
+                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                    {
+                                        ldParamB.X3 = gapDimToPart * 3;
+                                        ldParamB.Update();
+                                    }
                                     //Линейный горизонтальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, -ParamC, paramBManual / 2, 0, paramBManual / 2,
-                                        ParamC + 1, gapDimToPart * 2 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        ParamC + 1, gapDimToPart * 3 + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный горизонтальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness, paramBManual / 2 + xangle + extraLength, 0, paramBManual / 2 + xangle + extraLength,
                                         -thickness / 2, paramBManual / 2 + xangle + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.X3 - gapDimToDim * 1.2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.X3 - gapDimToDim * 1.2, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.X3 - gapDimToDim * 1.2) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 - gapDimToDim * 1.2, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2690,7 +2686,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        ldParamB.X3 - gapDimToDim * 1.2, paramBManual / 2 + xangle / 2, angleDRadius);
+                                        ldParamA.X3 - gapDimToDim * 1.2, paramBManual / 2 + xangle / 2, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2719,14 +2715,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Вертикальный угла
                                     ILineDimension ldParamA = LineDimension(lineDimensions, thickness, -xangle - paramBManual / 2, ParamC, -paramBManual / 2,
                                         thickness + gapDimToPart * 2, -xangle / 2 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
-                                    {
-                                        ldParamA.X3 = thickness + gapDimToPart * 3;
-                                        ldParamA.Update();
-                                    }
                                     //Линейный вертикальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, thickness, paramBManual / 2, ParamC, -paramBManual / 2,
-                                        ldParamA.X3, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, 0, paramBManual / 2, 0, -paramBManual / 2,
+                                        -gapDimToPart, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2738,15 +2729,15 @@ namespace KompasTools.Classes.Sundry.Welding
                                     }
                                     //Линейный горизонтальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, ParamC, -paramBManual / 2, 0, -paramBManual / 2,
-                                        -ParamC - 1, -gapDimToPart * 3 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        -ParamC - 1, -gapDimToPart * 5 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный горизонтальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, thickness, -paramBManual / 2 - xangle - extraLength, 0, -paramBManual / 2 - xangle - extraLength,
                                         thickness / 2, -paramBManual / 2 - xangle - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.X3 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.X3 + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.X3 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2769,7 +2760,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        ldParamB.X3 + gapDimToDim / 2, -paramBManual / 2 - xangle / 2, angleDRadius);
+                                        ldParamA.X3 + gapDimToDim / 2, -paramBManual / 2 - xangle / 2, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
@@ -2799,8 +2790,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                     ILineDimension ldParamA = LineDimension(lineDimensions, -thickness, -xangle - paramBManual / 2, -ParamC, -paramBManual / 2,
                                         -thickness - gapDimToPart, -xangle / 2 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     //Линейный вертикальный зазора в стыке
-                                    ILineDimension ldParamB = LineDimension(lineDimensions, -thickness, paramBManual / 2, -ParamC, -paramBManual / 2,
-                                        ldParamA.X3, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                    ILineDimension ldParamB = LineDimension(lineDimensions, 0, paramBManual / 2, 0, -paramBManual / 2,
+                                        gapDimToPart * 2, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                     SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                     //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                     //При это в размер забиваем вручную ноль
@@ -2810,17 +2801,22 @@ namespace KompasTools.Classes.Sundry.Welding
                                         dtparamB.NominalValue = 0;
                                         ldParamB.Update();
                                     }
+                                    if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                    {
+                                        ldParamB.X3 = gapDimToPart * 3;
+                                        ldParamB.Update();
+                                    }
                                     //Линейный горизонтальный притупления
                                     ILineDimension ldParamCR = LineDimension(lineDimensions, -ParamC, -paramBManual / 2, 0, -paramBManual / 2,
-                                        ParamC + 1, -gapDimToPart * 3 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        ParamC + 1, -gapDimToPart * 5 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                     //Линейный горизонтальный толщины
                                     ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness, -paramBManual / 2 - xangle - extraLength, 0, -paramBManual / 2 - xangle - extraLength,
                                         -thickness / 2, -paramBManual / 2 - xangle - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Угол
                                     //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
-                                    double r1 = (ldParamB.X3 - gapDimToDim * 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(ldParamB.X3 - gapDimToDim * 2, 2) + Math.Pow(xangle / 2, 2));
+                                    double r1 = (ldParamA.X3 - gapDimToDim * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                    double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 - gapDimToDim * 2, 2) + Math.Pow(xangle / 2, 2));
                                     double angleDRadius = r1 > r2 ? r1 : r2;
                                     angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                                                //Линии нужны для построения размера угла
@@ -2843,15 +2839,17 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        ldParamB.X3 - gapDimToDim * 2, -paramBManual / 2 - xangle / 2, angleDRadius);
+                                        ldParamA.X3 - gapDimToDim * 2, -paramBManual / 2 - xangle / 2, angleDRadius);
                                     SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                 }
                             }
                             break;
+
                         default:
                             break;
                     }
                     break;
+
 
 
 
