@@ -8,8 +8,11 @@ using KompasTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
@@ -205,6 +208,8 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]
         private bool _isCrossSection= true;
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         /// <summary>
         /// Действия при загрузке закладки
@@ -548,7 +553,6 @@ namespace KompasTools.ViewModels.Sundry
             ThicknessStr = "20";
             Filter();
         }
-
         [RelayCommand]
         public void Drawing(string TypeElement)
         {
@@ -577,7 +581,7 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Расстояние между размерами должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
-            KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;
+            KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;            
             if (kompas == null)
             {
                 MessageBox.Show("Запустите компас");
@@ -599,7 +603,11 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Программа работает только в чертеже или фрагменте");
                 return;
             }
-            document2DAPI5.ksUndoContainer(true);
+            //Переключиться на компас
+            Process[] processes = Process.GetProcessesByName("KOMPAS");
+            IntPtr handle = processes[0].MainWindowHandle;
+            SetForegroundWindow(handle);
+
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
