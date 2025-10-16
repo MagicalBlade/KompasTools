@@ -5,6 +5,7 @@ using Kompas6Constants;
 using KompasAPI7;
 using KompasTools.Classes.Sundry.Welding;
 using KompasTools.Utils;
+using Microsoft.WindowsAPICodePack.Shell;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
 
 namespace KompasTools.ViewModels.Sundry
@@ -105,6 +107,11 @@ namespace KompasTools.ViewModels.Sundry
 
                 if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();
             }
+        }
+        partial void OnSelectWeldDatesChanged(WeldData? value)
+        {
+            string path = $"Resources\\Sundry\\Welding\\DataWeld\\{SelectWeldDates?.ConnectionType}.frw";
+            if(File.Exists(path)) PathImage = ShellFile.FromFilePath(path).Thumbnail.BitmapSource;
         }
         /// <summary>
         /// Тип расположения деталей сварного шва
@@ -208,6 +215,12 @@ namespace KompasTools.ViewModels.Sundry
         /// </summary>
         [ObservableProperty]
         private bool _isCrossSection= true;
+        /// <summary>
+        /// Путь к файлу для получения миниатюры
+        /// </summary>
+        [ObservableProperty]
+        private BitmapSource? _pathImage;
+
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -607,7 +620,7 @@ namespace KompasTools.ViewModels.Sundry
             Process[] processes = Process.GetProcessesByName("KOMPAS");
             IntPtr handle = processes[0].MainWindowHandle;
             SetForegroundWindow(handle);
-
+            document2DAPI5.ksUndoContainer(true);
             IViewsAndLayersManager viewsAndLayersManager = kompasDocument2D.ViewsAndLayersManager;
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;

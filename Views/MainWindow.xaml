@@ -499,68 +499,71 @@
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5,0,0,0">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="Какую деталь чертить:"/>
-                                    <RadioButton Content="Главную деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
-                                    <RadioButton Content="Второстепенную деталь" GroupName="Number part"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <CheckBox Content="Чертить размеры" IsChecked="{Binding IsDrawingDimensions}"/>
-                                    <CheckBox Content="Объединить в макроэлемент" IsChecked="{Binding IsMacro}"/>
-                                    <CheckBox Content="Штриховка" IsChecked="{Binding IsHatches}"/>
-                                </StackPanel>
-                                <DockPanel Margin="5,0,0,0" VerticalAlignment="Top">
-                                    <TextBlock DockPanel.Dock="Top" Text="Наименование сечения/узла"/>
-                                    <TextBox DockPanel.Dock="Left" x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60" Height="25"/>
-                                    <Button DockPanel.Dock="Left" x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click" Width="80" Height="25">
-                                        <Button.ToolTip>
-                                            <TextBlock Text="Добавляет значёк повернуто в наименование сечения/узла"/>
-                                        </Button.ToolTip>
-                                    </Button>
-                                </DockPanel>
-                                <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <TextBlock Text="Вставить сечение в:"/>
-                                    <RadioButton Content="Активный вид" GroupName="WhichView" IsChecked="True"/>
-                                    <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
-                                    <!--Масштаб-->
-                                    <StackPanel Orientation="Horizontal" Margin="0,5">
-                                        <TextBlock Text="Масштаб" Margin="0,0,5,0"/>
-                                        <TextBox Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
+                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" Margin="5,0,0,0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Какую деталь чертить:"/>
+                                        <RadioButton Content="Главную деталь" GroupName="Number part" IsChecked="{Binding NumberPart}"/>
+                                        <RadioButton Content="Второстепенную деталь" GroupName="Number part"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                        <CheckBox Content="Чертить размеры" IsChecked="{Binding IsDrawingDimensions}"/>
+                                        <CheckBox Content="Объединить в макроэлемент" IsChecked="{Binding IsMacro}"/>
+                                        <CheckBox Content="Штриховка" IsChecked="{Binding IsHatches}"/>
+                                    </StackPanel>
+                                    <DockPanel Margin="5,0,0,0" VerticalAlignment="Top">
+                                        <TextBlock DockPanel.Dock="Top" Text="Наименование сечения/узла"/>
+                                        <TextBox DockPanel.Dock="Left" x:Name="Tb_NameCut" Text="{Binding NameCut, UpdateSourceTrigger=PropertyChanged}" Width="60" Height="25"/>
+                                        <Button DockPanel.Dock="Left" x:Name="B_CurTurned" Content="Повёрнуто" Click="B_CurTurned_Click" Width="80" Height="25">
+                                            <Button.ToolTip>
+                                                <TextBlock Text="Добавляет значёк повернуто в наименование сечения/узла"/>
+                                            </Button.ToolTip>
+                                        </Button>
+                                    </DockPanel>
+                                    <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                        <TextBlock Text="Вставить сечение в:"/>
+                                        <RadioButton Content="Активный вид" GroupName="WhichView" IsChecked="True"/>
+                                        <RadioButton Content="Подобрать по масштабу" GroupName="WhichView"  IsChecked="{Binding IsSearchView}"/>
+                                        <!--Масштаб-->
+                                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                                            <TextBlock Text="Масштаб" Margin="0,0,5,0"/>
+                                            <TextBox Text="{Binding LeftScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
                                                  HorizontalContentAlignment="Center">
-                                            <TextBox.ToolTip>
-                                                <TextBlock>
+                                                <TextBox.ToolTip>
+                                                    <TextBlock>
                                                    Масштаб должен быть числом и оно должно быть больше нуля.
                                                    <LineBreak/>
                                                    Дробная часть должна разделяться запятой.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
-                                        <TextBlock Text=":" Margin="5,0"/>
-                                        <TextBox Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
+                                                    </TextBlock>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
+                                            <TextBlock Text=":" Margin="5,0"/>
+                                            <TextBox Text="{Binding RightScale, UpdateSourceTrigger=PropertyChanged}" Width="30" Height="25" IsEnabled="{Binding IsSearchView}"
                                                  HorizontalContentAlignment="Center">
-                                            <TextBox.ToolTip>
-                                                <TextBlock>
+                                                <TextBox.ToolTip>
+                                                    <TextBlock>
                                                     Масштаб должен быть числом и оно должно быть больше нуля.
                                                     <LineBreak/>
                                                     Дробная часть должна разделяться запятой.
-                                                </TextBlock>
-                                            </TextBox.ToolTip>
-                                        </TextBox>
+                                                    </TextBlock>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0,5">
+                                        <TextBlock Text="Расстояние между размерами"/>
+                                        <TextBox Text="{Binding GapDim, UpdateSourceTrigger=PropertyChanged}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0,5">
+                                        <RadioButton Content="Сечение" GroupName="Section" IsChecked="{Binding IsCrossSection}"/>
+                                        <RadioButton Content="Разрез" GroupName="Section"  IsChecked="False"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="0,5">
+                                        <TextBlock Text="Изменение длины детали"/>
+                                        <TextBox Text="{Binding ExtraLength, UpdateSourceTrigger=PropertyChanged}"  Width="40" Height="25" HorizontalContentAlignment="Center"/>
                                     </StackPanel>
                                 </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="0,5">
-                                    <TextBlock Text="Расстояние между размерами"/>
-                                    <TextBox Text="{Binding GapDim, UpdateSourceTrigger=PropertyChanged}"  Width="30" Height="25" HorizontalContentAlignment="Center"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="0,5">
-                                    <RadioButton Content="Сечение" GroupName="Section" IsChecked="{Binding IsCrossSection}"/>
-                                    <RadioButton Content="Разрез" GroupName="Section"  IsChecked="False"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical" Margin="0,5">
-                                    <TextBlock Text="Изменение длины детали"/>
-                                    <TextBox Text="{Binding ExtraLength, UpdateSourceTrigger=PropertyChanged}"  Width="40" Height="25" HorizontalContentAlignment="Center"/>
-                                </StackPanel>
+                                <Image Source="{Binding PathImage}" Width="250" Height="250" HorizontalAlignment="Left"/>
                             </StackPanel>
                             <!--Список сварных швов-->
                             <DockPanel Grid.Row="2">
