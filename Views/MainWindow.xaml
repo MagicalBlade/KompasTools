@@ -476,6 +476,12 @@
 
                                 <!--Выбор типа перехода деталей-->
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                    <TextBlock Text="Деталь с переходом" />
+                                    <ListBox SelectedValue="{Binding NumberPartTransition}">
+                                        <TextBlock Text="№1"/>
+                                        <TextBlock Text="№2"/>
+                                        <TextBlock Text="Другое"/>
+                                    </ListBox>
                                     <TextBlock Text="Выбор типа перехода деталей:"/>
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox Content="длина перехода = высота перехода умноженная на К" VerticalAlignment="Center"/>

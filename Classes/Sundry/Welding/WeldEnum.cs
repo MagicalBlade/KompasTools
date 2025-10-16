@@ -52,15 +52,7 @@ namespace KompasTools.Classes.Sundry.Welding
             Низ_Лево,
             Низ_Право
         }
-        /// <summary>
-        /// Тип перехода
-        /// </summary>
-        public enum TransitionTypeEnum
-        {
-            Без_перехода,
-            Обычный,
-            Занижение
-        }
+
 
         /// <summary>
         /// Способ сварки
@@ -123,6 +115,18 @@ namespace KompasTools.Classes.Sundry.Welding
             Зависит_только_e,
             Зависит_только_g,
             Зависят_оба
+        }
+        /// <summary>
+        /// Тип перехода детали
+        /// </summary>
+        public enum TransitionTypeEnum
+        {
+            Без_перехода,
+            Симметричный,
+            Вверх,
+            Вниз,
+            Занижение,
+            Указать_место
         }
     }
 }

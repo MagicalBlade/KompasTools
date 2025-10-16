@@ -17,6 +17,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
+using static System.TimeZoneInfo;
 
 namespace KompasTools.ViewModels.Sundry
 {
@@ -124,13 +125,17 @@ namespace KompasTools.ViewModels.Sundry
         [ObservableProperty]
         private bool _numberPart = true;
         /// <summary>
+        /// Номер детали с переходом
+        /// </summary>
+        [ObservableProperty]
+        private string _numberPartTransition = "";
+        /// <summary>
         /// Тип перехода
         /// </summary>
         [ObservableProperty]
         private TransitionTypeEnum[] _transitionTypes = new TransitionTypeEnum[]
         {
             TransitionTypeEnum.Без_перехода,
-            TransitionTypeEnum.Обычный,
             TransitionTypeEnum.Занижение
         };
         /// <summary>
@@ -665,6 +670,19 @@ namespace KompasTools.ViewModels.Sundry
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
             drawingGroup.Open();
+            TransitionTypeEnum transitionType = TransitionTypeEnum.Без_перехода;
+            switch (NumberPartTransition, NumberPart)
+            {
+                case ("№1", true):
+                    transitionType = TransitionTypeEnum.Без_перехода;
+                        break;
+                default:
+                    break;
+            }
+            if (NumberPart)
+            {
+
+            }
             //Чертим
             switch (TypeElement)
             {
@@ -672,17 +690,17 @@ namespace KompasTools.ViewModels.Sundry
                     if (NumberPart)
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     }
                     else
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
-                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     }
                     break;
                 case "Joint":
                     SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                        SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches);
+                        SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     break;
                 case "Seam":
                     MessageBox.Show("Шов");
