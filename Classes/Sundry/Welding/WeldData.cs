@@ -173,7 +173,6 @@ namespace KompasTools.Classes.Sundry.Welding
         public DependenceSeamThicknessEnum DependenceSeamThickness { get => dependenceSeamThickness; set => dependenceSeamThickness = value; }
 
 
-
         /// <summary>
         /// Проверка вхождения толщины детали в диапазон толщин
         /// </summary>
@@ -190,11 +189,11 @@ namespace KompasTools.Classes.Sundry.Welding
                 return false;
             }
         }
-
         
 
         public void DrawingJoint(KompasObject kompas, IView view, double thickness, LocationPart locationPart, bool drawDimensions,            
-            IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim, double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches, TransitionTypeEnum transitionType)
+            IDrawingGroup drawingGroup, double gapDimToPart, double gapDimToDim, double gapDimToPartLeft, double extraLength, bool isCrossSection,
+            bool isHatches, TransitionData transitionData)
         {
             if (kompas.ActiveDocument2D() is not ksDocument2D document2DAPI5) return;
             IDrawingContainer drawingContainer = (IDrawingContainer)view;
@@ -217,7 +216,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -231,7 +230,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -346,7 +345,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -360,7 +359,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -475,10 +474,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -565,10 +564,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -655,10 +654,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -739,10 +738,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -830,10 +829,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -920,10 +919,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -1010,10 +1009,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1094,10 +1093,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1186,10 +1185,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -1276,10 +1275,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -1366,10 +1365,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -1456,10 +1455,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -1546,10 +1545,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1630,10 +1629,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1714,10 +1713,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1798,10 +1797,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -1891,7 +1890,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -1905,7 +1904,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -1996,7 +1995,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -2010,7 +2009,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 switch (locationPart)
                                 {
                                     case LocationPart.Право_Низ:
@@ -2099,7 +2098,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -2113,7 +2112,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -2203,7 +2202,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -2217,7 +2216,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         break;
                                 }
                                 DrawingPart(view, thickness, locationPart, false, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 //Что бы не плодить код, делаю поправку смещения группы тут.
                                 switch (locationPart)
                                 {
@@ -2315,10 +2314,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -2389,10 +2388,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -2470,10 +2469,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -2544,10 +2543,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -2623,10 +2622,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -2702,10 +2701,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -2776,10 +2775,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -2855,10 +2854,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -2936,10 +2935,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -3015,10 +3014,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -3089,10 +3088,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, -thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -3168,10 +3167,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, thickness / 2);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, -thickness / 2);
                                 if (drawDimensions)
                                 {
@@ -3247,10 +3246,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -3321,10 +3320,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -3400,10 +3399,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -3474,10 +3473,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, thickness / 2, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -thickness / 2, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -3561,10 +3560,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -3640,10 +3639,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -3714,10 +3713,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -3793,10 +3792,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
                                 if (drawDimensions)
                                 {
@@ -3872,10 +3871,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -3946,10 +3945,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -4025,10 +4024,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -4099,10 +4098,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                     paramBManual = ParamB;
                                 }
                                 DrawingPart(view, thickness, locationPart, true, false,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
                                 DrawingPart(view, thickness, locationPart, false, true,
-                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionType);
+                                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
                                 document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
                                 if (drawDimensions)
                                 {
@@ -4188,7 +4187,7 @@ namespace KompasTools.Classes.Sundry.Welding
         }
 
         public void DrawingPart(IView view, double thickness, LocationPart locationPart, bool numberPar, bool drawDimensions, double gapDimToPart, double gapDimToDim,
-            double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches, TransitionTypeEnum transitionType)
+            double gapDimToPartLeft, double extraLength, bool isCrossSection, bool isHatches, TransitionData transitionData)
         {
             #region Проверка входящих данных
             if (view == null)
@@ -4241,13 +4240,16 @@ namespace KompasTools.Classes.Sundry.Welding
                 }
             }
             ShapePreparedEdgesEnum shapePreparedEdges;
+            TransitionTypeEnum transitionType;
             if (numberPar)
             {
                 shapePreparedEdges = ShapePreparedEdgesPart1;
+                transitionType = transitionData.TransitionTypePart1;
             }
             else
             {
                 shapePreparedEdges = ShapePreparedEdgesPart2;
+                transitionType = transitionData.TransitionTypePart2;
             }
             switch (shapePreparedEdges)
             {
@@ -4440,8 +4442,6 @@ namespace KompasTools.Classes.Sundry.Welding
                         case TransitionTypeEnum.Вниз:
                             break;
                         case TransitionTypeEnum.Занижение:
-                            break;
-                        case TransitionTypeEnum.Указать_место:
                             break;
                         default:
                             break;

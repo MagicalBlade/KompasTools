@@ -479,8 +479,8 @@
                                     <ComboBox x:Name="cb_transitionTypes" ItemsSource="{Binding TransitionTypes}" SelectedValue="{Binding SelectTransitionTypes}" SelectionChanged="cb_transitionTypes_SelectionChanged"/>
                                     <TextBlock Text="Выбор типа перехода деталей:"/>
                                     <StackPanel Orientation="Horizontal">
-                                        <CheckBox Content="длина перехода = высота перехода умноженная на К" VerticalAlignment="Center"/>
-                                        <TextBox Text="" Width="25" Height="25" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="5,0"/>
+                                        <CheckBox IsChecked="{Binding IstransitionDimL}" Content="длина перехода = высота перехода умноженная на К" VerticalAlignment="Center"/>
+                                        <TextBox Text="{Binding TransitionDimLorK}" Width="25" Height="25" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="5,0"/>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>

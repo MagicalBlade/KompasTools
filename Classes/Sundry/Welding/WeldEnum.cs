@@ -125,8 +125,7 @@ namespace KompasTools.Classes.Sundry.Welding
             Симметричный,
             Вверх,
             Вниз,
-            Занижение,
-            Указать_место
+            Занижение
         }
     }
 }

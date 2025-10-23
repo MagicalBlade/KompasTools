@@ -155,6 +155,19 @@ namespace KompasTools.ViewModels.Sundry
             ComparisonThicknesses();
         }
         /// <summary>
+        /// Длина или кофициент длины перехода
+        /// </summary>
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
+        private string _transitionDimLorK = "0";
+        /// <summary>
+        /// Ввод длины перехода
+        /// </summary>
+        [ObservableProperty]
+        private bool _istransitionDimL = false;
+        /// <summary>
         /// Чертить размеры?
         /// </summary>
         [ObservableProperty]
@@ -641,6 +654,11 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Расстояние между размерами должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
+            if (!double.TryParse(TransitionDimLorK, out double transitionDimLorK) && (SelectTransitionTypes != TransitionTypeEnum.Без_перехода))
+            {
+                MessageBox.Show("Длина/коффициент перехода должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
+                return;
+            }
             KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;
             if (kompas == null)
             {
@@ -712,11 +730,7 @@ namespace KompasTools.ViewModels.Sundry
             IDrawingGroups drawingGroups = kompasDocument2D1.DrawingGroups;
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
             drawingGroup.Open();
-            TransitionTypeEnum transitionType = TransitionTypeEnum.Без_перехода;
-            if (NumberPart)
-            {
-
-            }
+            TransitionData transitionData = new TransitionData(SelectTransitionTypes, Thickness1, Thickness2, transitionDimLorK, IstransitionDimL);
             //Чертим
             switch (TypeElement)
             {
@@ -724,16 +738,17 @@ namespace KompasTools.ViewModels.Sundry
                     if (NumberPart)
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions,
-                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionData);
                     }
                     else
                     {
                         SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions,
-                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
+                            gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionData);
                     }
                     break;
                 case "Joint":
-                    SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
+                    SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, drawingGroup, gapDimToPart,
+                        gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionData);
                     break;
                 case "Seam":
                     MessageBox.Show("Шов");
