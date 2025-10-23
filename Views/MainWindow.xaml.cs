@@ -65,10 +65,14 @@ namespace KompasTools
             if (tb_thickness2Str == null) return;
             if (cb_transitionTypes.SelectedIndex == 0)
             {
+                tb_TransitionDimLorK.IsEnabled = false;
+                cb_IstransitionDimL.IsEnabled = false;
                 tb_thickness2Str.IsEnabled = false;
             }
             else
             {
+                tb_TransitionDimLorK.IsEnabled = true;
+                cb_IstransitionDimL.IsEnabled = true;
                 tb_thickness2Str.IsEnabled = true;
             }
         }
