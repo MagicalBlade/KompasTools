@@ -161,7 +161,7 @@ namespace KompasTools.ViewModels.Sundry
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
-        private string _transitionDimLorK = "0";
+        private string _transitionDimLorK = "8";
         /// <summary>
         /// Ввод длины перехода
         /// </summary>
@@ -619,7 +619,9 @@ namespace KompasTools.ViewModels.Sundry
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
             }
             #endregion
-            Thickness1Str = "20"; //TODO Удалить
+            Thickness1Str = "16"; //TODO Удалить
+            Thickness2Str = "10"; //TODO Удалить
+            SelectTransitionTypes = TransitionTypeEnum.Симметричный;
             Filter();
         }
         /// <summary>
