@@ -59,5 +59,18 @@ namespace KompasTools
         {
             WeldDates.SelectedIndex = 0;            
         }
+
+        private void cb_transitionTypes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (tb_thickness2Str == null) return;
+            if (cb_transitionTypes.SelectedIndex == 0)
+            {
+                tb_thickness2Str.IsEnabled = false;
+            }
+            else
+            {
+                tb_thickness2Str.IsEnabled = true;
+            }
+        }
     }
 }

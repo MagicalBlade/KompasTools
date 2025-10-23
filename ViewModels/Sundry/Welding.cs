@@ -24,26 +24,57 @@ namespace KompasTools.ViewModels.Sundry
     public partial class Welding : ObservableValidator
     {
         /// <summary>
-        /// Толщина
+        /// Толщина t1
         /// </summary>
         [ObservableProperty]
         [NotifyDataErrorInfo]
         [Required]
         [RegularExpression(@"^(\d+(,\d+)?)$")]
-        private string _thicknessStr = "0"; //TODO сделать равным "". с подумать про конвертацию в double
-        private double Thickness = 0; //TODO сделать равным "". с подумать про конвертацию в double
-        partial void OnThicknessStrChanged(string value)
+        private string _thickness1Str = "0";
+        partial void OnThickness1StrChanged(string value)
         {
-            if (GetErrors(nameof(ThicknessStr)).Any())
+            if (GetErrors(nameof(Thickness1Str)).Any())
             {
-                Thickness = 0;
+                Thickness1 = 0;
             }
-            else if(!double.TryParse(ThicknessStr, out Thickness))
+            else if(!double.TryParse(Thickness1Str, out Thickness1))
             {
-                Thickness = 0;
+                Thickness1 = 0;
             }
-            Filter();
+            ComparisonThicknesses();
         }
+        /// <summary>
+        /// Толщина t2
+        /// </summary>
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Required]
+        [RegularExpression(@"^(\d+(,\d+)?)$")]
+        private string _thickness2Str = "0";
+        partial void OnThickness2StrChanged(string value)
+        {
+            if (GetErrors(nameof(Thickness2Str)).Any())
+            {
+                Thickness2 = 0;
+            }
+            else if (!double.TryParse(Thickness2Str, out Thickness2))
+            {
+                Thickness2 = 0;
+            }
+            ComparisonThicknesses();
+        }
+        /// <summary>
+        /// Толщина в стыке
+        /// </summary>
+        private double Thickness = 0;
+        /// <summary>
+        /// Толщина первой детали
+        /// </summary>
+        private double Thickness1 = 0;
+        /// <summary>
+        /// Толщина второй детали
+        /// </summary>
+        private double Thickness2 = 0;
         /// <summary>
         /// Отображаемый список сварных швов. Отфильтрован
         /// </summary>
@@ -94,21 +125,6 @@ namespace KompasTools.ViewModels.Sundry
         {
             Filter();
         }
-        /// <summary>
-        /// Фильтр списка сварных швов
-        /// </summary>
-        public void Filter()
-        {
-            if (OrigWeldDates != null)
-            {
-                WeldDates = OrigWeldDates;
-                if (SelectGOST != null) WeldDates = WeldDates.Where(n => n.NameGost == SelectGOST).ToArray();
-                if (SelectNameWeldJoints != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.NameWeldJoint == SelectNameWeldJoints).ToArray();
-                if (SelectWeldingMethod!= null && WeldDates != null) WeldDates = WeldDates.Where(n => n.WeldingMethod == SelectWeldingMethod).ToArray();
-
-                if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();
-            }
-        }
         partial void OnSelectWeldDatesChanged(WeldData? value)
         {
             string path = $"Resources\\Sundry\\Welding\\DataWeld\\{SelectWeldDates?.ConnectionType}.frw";
@@ -125,39 +141,19 @@ namespace KompasTools.ViewModels.Sundry
         [ObservableProperty]
         private bool _numberPart = true;
         /// <summary>
-        /// Номер детали с переходом
-        /// </summary>
-        [ObservableProperty]
-        private string _numberPartTransition = "";
-        /// <summary>
         /// Тип перехода
         /// </summary>
         [ObservableProperty]
-        private TransitionTypeEnum[] _transitionTypes = new TransitionTypeEnum[]
+        private TransitionTypeEnum[] _transitionTypes = (TransitionTypeEnum[])Enum.GetValues(typeof(TransitionTypeEnum));
+        /// <summary>
+        /// Выбранный тип перехода
+        /// </summary>
+        [ObservableProperty]
+        private TransitionTypeEnum _selectTransitionTypes = TransitionTypeEnum.Без_перехода;
+        partial void OnSelectTransitionTypesChanged(TransitionTypeEnum value)
         {
-            TransitionTypeEnum.Без_перехода,
-            TransitionTypeEnum.Занижение
-        };
-        /// <summary>
-        /// Тип перехода верхней части первой детали
-        /// </summary>
-        [ObservableProperty]
-        private TransitionTypeEnum _selectTransitionTypesFirstUP = TransitionTypeEnum.Без_перехода;
-        /// <summary>
-        /// Тип перехода нижней части первой детали
-        /// </summary>
-        [ObservableProperty]
-        private TransitionTypeEnum _selectTransitionTypesFirstBottom = TransitionTypeEnum.Без_перехода;
-        /// <summary>
-        /// Тип перехода верхней части второй детали
-        /// </summary>
-        [ObservableProperty]
-        private TransitionTypeEnum _selectTransitionTypesSecondUP = TransitionTypeEnum.Без_перехода;
-        /// <summary>
-        /// Тип перехода нижней части второй детали
-        /// </summary>
-        [ObservableProperty]
-        private TransitionTypeEnum _selectTransitionTypesSecondBottom = TransitionTypeEnum.Без_перехода;        
+            ComparisonThicknesses();
+        }
         /// <summary>
         /// Чертить размеры?
         /// </summary>
@@ -229,6 +225,48 @@ namespace KompasTools.ViewModels.Sundry
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        #region Методы
+        /// <summary>
+        /// Фильтр списка сварных швов
+        /// </summary>
+        public void Filter()
+        {
+            if (OrigWeldDates != null)
+            {
+                WeldDates = OrigWeldDates;
+                if (SelectGOST != null) WeldDates = WeldDates.Where(n => n.NameGost == SelectGOST).ToArray();
+                if (SelectNameWeldJoints != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.NameWeldJoint == SelectNameWeldJoints).ToArray();
+                if (SelectWeldingMethod != null && WeldDates != null) WeldDates = WeldDates.Where(n => n.WeldingMethod == SelectWeldingMethod).ToArray();
+
+                if (Thickness > 0 && WeldDates != null) WeldDates = WeldDates.Where(n => n.CheckThickness(Thickness)).ToArray();
+            }
+        }
+        /// <summary>
+        /// Сравнение толщин и запись наименьшей в толщину стыка
+        /// </summary>
+        private void ComparisonThicknesses()
+        {
+            if (SelectTransitionTypes != TransitionTypeEnum.Без_перехода)
+            {
+                if (Thickness1 < Thickness2)
+                {
+                    Thickness = Thickness1;
+                }
+                else
+                {
+                    Thickness = Thickness2;
+                }
+            }
+            else
+            {
+                Thickness = Thickness1;
+            }
+        Filter();
+        }
+        #endregion
+
+
+        #region Команды
         /// <summary>
         /// Действия при загрузке закладки
         /// </summary>
@@ -568,9 +606,13 @@ namespace KompasTools.ViewModels.Sundry
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
             }
             #endregion
-            ThicknessStr = "20";
+            Thickness1Str = "20"; //TODO Удалить
             Filter();
         }
+        /// <summary>
+        /// Чертим
+        /// </summary>
+        /// <param name="TypeElement"></param>
         [RelayCommand]
         public void Drawing(string TypeElement)
         {
@@ -579,7 +621,7 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Выберите сварной шов");
                 return;
             }
-            if (GetErrors(nameof(ThicknessStr)).Any() || Thickness <= 0)
+            if (GetErrors(nameof(Thickness1Str)).Any() || Thickness <= 0)
             {
                 MessageBox.Show("Толщина должна быть числом и оно должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
@@ -599,7 +641,7 @@ namespace KompasTools.ViewModels.Sundry
                 MessageBox.Show("Расстояние между размерами должно быть числом. Число должно быть больше нуля. Дробная часть должна разделяться запятой.");
                 return;
             }
-            KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;            
+            KompasObject? kompas = ExMarshal.GetActiveObject("KOMPAS.Application.5") as KompasObject;
             if (kompas == null)
             {
                 MessageBox.Show("Запустите компас");
@@ -643,7 +685,7 @@ namespace KompasTools.ViewModels.Sundry
                         view.Update();
                         isview = true;
                         break;
-                    }             
+                    }
                 }
                 //Если вид не найден, создаём новый
                 if (!isview)
@@ -671,14 +713,6 @@ namespace KompasTools.ViewModels.Sundry
             IDrawingGroup drawingGroup = drawingGroups.Add(true, "Сварка");
             drawingGroup.Open();
             TransitionTypeEnum transitionType = TransitionTypeEnum.Без_перехода;
-            switch (NumberPartTransition, NumberPart)
-            {
-                case ("№1", true):
-                    transitionType = TransitionTypeEnum.Без_перехода;
-                        break;
-                default:
-                    break;
-            }
             if (NumberPart)
             {
 
@@ -689,18 +723,17 @@ namespace KompasTools.ViewModels.Sundry
                 case "Part":
                     if (NumberPart)
                     {
-                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
+                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions,
                             gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     }
                     else
                     {
-                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions, SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom,
+                        SelectWeldDates?.DrawingPart(view, Thickness, IsLocationPart, NumberPart, IsDrawingDimensions,
                             gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     }
                     break;
                 case "Joint":
-                    SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, SelectTransitionTypesFirstUP, SelectTransitionTypesFirstBottom,
-                        SelectTransitionTypesSecondUP, SelectTransitionTypesSecondBottom, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
+                    SelectWeldDates?.DrawingJoint(kompas, view, Thickness, IsLocationPart, IsDrawingDimensions, drawingGroup, gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, IsCrossSection, IsHatches, transitionType);
                     break;
                 case "Seam":
                     MessageBox.Show("Шов");
@@ -730,13 +763,13 @@ namespace KompasTools.ViewModels.Sundry
                 ksMathPointParam pointTop = (ksMathPointParam)rectParam.GetpTop();
                 document2DAPI5.ksSheetToView(pointBot.x, pointBot.y, out double xBot, out _);
                 document2DAPI5.ksSheetToView(pointTop.x, pointTop.y, out double xTop, out double yTop);
-                drawingText.X = (xBot + xTop) / 2 ;
+                drawingText.X = (xBot + xTop) / 2;
                 drawingText.Y = yTop + gapDimToDim / 2;
                 drawingText.Update();
             }
             drawingGroup.Close();
 
-            
+
             double xpaste = 0; double ypaste = 0;
             ksPhantom phantom = (ksPhantom)kompas.GetParamStruct(6);
             phantom.phantom = 1; //Указываем тип фантом "Фантом для сдвига группы"
@@ -752,7 +785,7 @@ namespace KompasTools.ViewModels.Sundry
             document2DAPI5.ksMoveObj(drawingGroup.Reference, xpaste, ypaste);
             drawingGroup.Store();
             //Создаём макроэлемент
-            if(IsMacro)
+            if (IsMacro)
             {
                 document2DAPI5.ksMacro(0);
                 int macro = document2DAPI5.ksEndObj();
@@ -768,10 +801,11 @@ namespace KompasTools.ViewModels.Sundry
                 //MessageBox.Show($"{macroObject.AddObjects(drawingGroup)}");
                 //macroObject.Update(); 
                 #endregion
-             }
+            }
             drawingGroup?.Clear(true);
 
             document2DAPI5.ksUndoContainer(false);
-        }        
+        }         
+        #endregion
     }
 }

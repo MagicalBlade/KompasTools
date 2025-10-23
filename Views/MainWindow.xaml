@@ -476,32 +476,11 @@
 
                                 <!--Выбор типа перехода деталей-->
                                 <StackPanel Orientation="Vertical" Margin="5,0,0,0">
-                                    <TextBlock Text="Деталь с переходом" />
-                                    <ListBox SelectedValue="{Binding NumberPartTransition}">
-                                        <TextBlock Text="№1"/>
-                                        <TextBlock Text="№2"/>
-                                        <TextBlock Text="Другое"/>
-                                    </ListBox>
+                                    <ComboBox x:Name="cb_transitionTypes" ItemsSource="{Binding TransitionTypes}" SelectedValue="{Binding SelectTransitionTypes}" SelectionChanged="cb_transitionTypes_SelectionChanged"/>
                                     <TextBlock Text="Выбор типа перехода деталей:"/>
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox Content="длина перехода = высота перехода умноженная на К" VerticalAlignment="Center"/>
                                         <TextBox Text="" Width="25" Height="25" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="5,0"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstUP}"/>
-                                        <TextBlock Text="- верх главной детали" Margin="5,0,0,0"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesFirstBottom}"/>
-                                        <TextBlock Text="- низ главной детали" Margin="5,0,0,0"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondUP}"/>
-                                        <TextBlock Text="- верх второстепенной детали" Margin="5,0,0,0"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                        <ComboBox ItemsSource="{Binding TransitionTypes}" SelectedItem="{Binding SelectTransitionTypesSecondBottom}"/>
-                                        <TextBlock Text="- низ второстепенной детали" Margin="5,0,0,0"/>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
@@ -575,8 +554,8 @@
                             <DockPanel Grid.Row="2">
                                 <!--Толщина-->
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  HorizontalAlignment="Center">
-                                        <TextBlock Text="Толщина:" FontSize="14"/>
-                                        <TextBox x:Name="tb_ThicknessStr" Text="{Binding ThicknessStr, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2,2,10,2"
+                                        <TextBlock Text="Толщина t1:" FontSize="14"/>
+                                        <TextBox Text="{Binding Thickness1Str, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2,2,10,2"
                                              HorizontalContentAlignment="Center" FontSize="14">
                                             <TextBox.ToolTip>
                                                 <TextBlock>
@@ -586,7 +565,18 @@
                                                 </TextBlock>
                                             </TextBox.ToolTip>
                                         </TextBox>
-                                        <!--Начертить-->
+                                    <TextBlock Text="Толщина t2:" FontSize="14"/>
+                                    <TextBox x:Name="tb_thickness2Str" Text="{Binding Thickness2Str, UpdateSourceTrigger=PropertyChanged}" Width="40" Height="25" Padding="2" Margin="2,2,10,2"
+                                             HorizontalContentAlignment="Center" FontSize="14" IsEnabled="False">
+                                            <TextBox.ToolTip>
+                                                <TextBlock>
+                                                Толщина должна быть числом и оно должно быть больше нуля.
+                                                <LineBreak/>
+                                                Дробная часть должна разделяться запятой.
+                                            </TextBlock>
+                                        </TextBox.ToolTip>
+                                    </TextBox>
+                                    <!--Начертить-->
                                     <Button Content="Деталь" Command="{Binding DrawingCommand}" CommandParameter="Part" Padding="5,2" FontSize="14"/>
                                     <Button Content="Стык" Command="{Binding DrawingCommand}" CommandParameter="Joint" Padding="5,2" FontSize="14"/>
                                     <Button Content="Шов" Command="{Binding DrawingCommand}" CommandParameter="Seam" Padding="5,2" FontSize="14"/>
