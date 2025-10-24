@@ -4660,6 +4660,130 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                             break;
                         case TransitionTypeEnum.Вверх:
+                            extraLength += 10 / view.Scale;
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх:
+                                    {
+                                        ILineSegment ls1 = DrawLineSegment(lineSegments, 0, -thickness / 2, 0, thickness / 2);//Толщина в стыке
+                                        ILineSegment ls2 = DrawLineSegment(lineSegments, ls1.X2, ls1.Y2, -transitionData.DimL, ls1.Y2 + transitionData.DimH);//Верхний скос
+                                        ILineSegment ls3 = DrawLineSegment(lineSegments, ls2.X2, ls2.Y2, ls2.X2 - extraLength, ls2.Y2);//Верхнее удлинение
+                                        ILineSegment ls4 = DrawLineSegment(lineSegments, ls1.X1, ls1.Y1, ls3.X2, ls1.Y1);//Нижняя линия
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = ls3.X2;
+                                        waveLine.Y1 = ls3.Y2;
+                                        waveLine.X2 = ls4.X2;
+                                        waveLine.Y2 = ls4.Y2;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(ls1, false);
+                                            contour.CopySegments(ls2, false);
+                                            contour.CopySegments(ls3, false);
+                                            contour.CopySegments(ls4, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, ls3.X2, ls3.Y2, ls4.X2, ls4.Y2, ls3.X2 - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный перехода
+                                            ILineDimension ldH = LineDimension(lineDimensions, ls2.X2, ls2.Y2, ls2.X1, ls2.Y1, gapDimToPart * 2, ls2.Y2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);                                            
+                                            //Линейный вертикальный толщины в стыке
+                                            LineDimension(lineDimensions, ls1.X1, ls1.Y1, ls1.X2, ls1.Y2, ldH.X3, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный перехода
+                                            LineDimension(lineDimensions, ls2.X1, ls2.Y1, ls2.X2, ls2.Y2,
+                                                -transitionData.DimL / 2, ls2.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        }
+                                    }
+                                    break;
+                                case LocationPart.Лево_Низ:
+                                    {
+                                        ILineSegment ls1 = DrawLineSegment(lineSegments, 0, -thickness / 2, 0, thickness / 2);//Толщина в стыке
+                                        ILineSegment ls2 = DrawLineSegment(lineSegments, ls1.X1, ls1.Y1, -transitionData.DimL, ls1.Y1 - transitionData.DimH);//Нижний скос
+                                        ILineSegment ls3 = DrawLineSegment(lineSegments, ls2.X2, ls2.Y2, ls2.X2 - extraLength, ls2.Y2);//Нижнее удлинение
+                                        ILineSegment ls4 = DrawLineSegment(lineSegments, ls1.X2, ls1.Y2, ls3.X2, ls1.Y2);//Верхняя линия
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = ls3.X2;
+                                        waveLine.Y1 = ls3.Y2;
+                                        waveLine.X2 = ls4.X2;
+                                        waveLine.Y2 = ls4.Y2;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(ls1, false);
+                                            contour.CopySegments(ls2, false);
+                                            contour.CopySegments(ls3, false);
+                                            contour.CopySegments(ls4, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, ls3.X2, ls3.Y2, ls4.X2, ls4.Y2, ls3.X2 - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный перехода
+                                            ILineDimension ldH = LineDimension(lineDimensions, ls2.X2, ls2.Y2, ls2.X1, ls2.Y1, gapDimToPart * 2, ls2.Y2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный толщины в стыке
+                                            LineDimension(lineDimensions, ls1.X1, ls1.Y1, ls1.X2, ls1.Y2, ldH.X3, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный перехода
+                                            LineDimension(lineDimensions, ls2.X1, ls2.Y1, ls2.X2, ls2.Y2,
+                                                -transitionData.DimL / 2, ls2.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        }
+                                    }
+                                    break;
+
+
+
+                                case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                    {
+                                        
+                                    }
+                                    break;
+                                case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                    {
+                                        
+                                    }
+                                    break;
+                                case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                    {
+                                        
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         case TransitionTypeEnum.Вниз:
                             break;
