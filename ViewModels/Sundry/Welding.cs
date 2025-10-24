@@ -692,7 +692,7 @@ namespace KompasTools.ViewModels.Sundry
             IViews views = viewsAndLayersManager.Views;
             IView view = views.ActiveView;
             //Подбираем вид в зависимости от масштаба
-            if (IsSearchView)
+            if (IsSearchView && kompasDocument2D.DocumentType == DocumentTypeEnum.ksDocumentDrawing)
             {
                 double scale = leftScale / rightScale;
                 bool isview = false;
