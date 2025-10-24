@@ -5068,7 +5068,34 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                             break;
                         case TransitionTypeEnum.Вниз:
-                            break;
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх:
+                                    locationPart = LocationPart.Лево_Низ;
+                                    break;
+                                case LocationPart.Лево_Низ:
+                                    locationPart = LocationPart.Лево_Верх;
+                                    break;
+                                case LocationPart.Право_Верх:
+                                    locationPart = LocationPart.Право_Низ;
+                                    break;
+                                case LocationPart.Право_Низ:
+                                    locationPart = LocationPart.Право_Верх;
+                                    break;
+                                case LocationPart.Верх_Лево:
+                                    locationPart = LocationPart.Верх_Право;
+                                    break;
+                                case LocationPart.Верх_Право:
+                                    locationPart = LocationPart.Верх_Лево;
+                                    break;
+                                case LocationPart.Низ_Лево:
+                                    locationPart = LocationPart.Низ_Право;
+                                    break;
+                                case LocationPart.Низ_Право:
+                                    locationPart = LocationPart.Низ_Лево;
+                                    break;
+                            }
+                            goto case TransitionTypeEnum.Вверх;
                         case TransitionTypeEnum.Занижение:
                             break;
                         default:
