@@ -4659,10 +4659,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                     break;
                             }
                             break;
-
-
-
-                            break;
                         case TransitionTypeEnum.Вверх:
                             break;
                         case TransitionTypeEnum.Вниз:
@@ -6465,12 +6461,6 @@ namespace KompasTools.Classes.Sundry.Welding
                 default:
                     break;
             }
-
-
-
-
-
-
         }
 
         public void DrawingPart3D()

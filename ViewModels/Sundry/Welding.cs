@@ -761,6 +761,13 @@ namespace KompasTools.ViewModels.Sundry
                 default:
                     break;
             }
+            if (drawingGroup.ObjectsCount == 0)
+            {
+                drawingGroup.Close();
+                drawingGroup.Delete();
+                document2DAPI5.ksUndoContainer(false);
+                return;
+            }
             //Создаём текст названия сечения
             if (NameCut.Trim() != "" && IsDrawingDimensions)
             {
