@@ -758,8 +758,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
-
                                 case LocationPart.Низ_Лево or LocationPart.Низ_Право:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
@@ -801,14 +799,14 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, ldThicknessR.Y1,
                                                 ldTransitionL.X1 - 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, -ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X2, ldThicknessR.Y2,
-                                                -ldTransitionL.X1 + 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, -ldTransitionL.X1, ldTransitionL.Y1 - extraLength,
+                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, ldThicknessR.X2, ldTransitionL.Y1 - extraLength,
                                                 0, ldTransitionL.Y1 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         }
                                     }
                                     break;
+
+
                             }
                             break;
                     }
