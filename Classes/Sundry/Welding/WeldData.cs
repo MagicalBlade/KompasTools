@@ -666,7 +666,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                     break;
 
 
-
                                 case LocationPart.Право_Верх or LocationPart.Право_Низ:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
