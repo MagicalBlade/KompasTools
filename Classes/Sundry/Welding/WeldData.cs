@@ -10,9 +10,11 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows.Forms;
 using System.Windows.Media;
 using static KompasTools.Classes.Sundry.Welding.WeldEnum;
+using static System.TimeZoneInfo;
 
 namespace KompasTools.Classes.Sundry.Welding
 {
@@ -171,7 +173,10 @@ namespace KompasTools.Classes.Sundry.Welding
         /// Зависимость параметров шва от толщины
         /// </summary>        
         public DependenceSeamThicknessEnum DependenceSeamThickness { get => dependenceSeamThickness; set => dependenceSeamThickness = value; }
-
+        /// <summary>
+        /// Удлинение для деталей без разделки
+        /// </summary>
+        private const double extraLengthNotChamfer = 10;
 
         /// <summary>
         /// Проверка вхождения толщины детали в диапазон толщин
@@ -203,6 +208,95 @@ namespace KompasTools.Classes.Sundry.Welding
             IAngleDimensions angleDimensions = symbols2DContainer.AngleDimensions;
             switch (NameGost, ConnectionType, ShapePreparedEdgesPart1, ShapePreparedEdgesPart2)
             {
+                case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.Без_скоса_стыковое, ShapePreparedEdgesEnum.Без_скоса_стыковое):
+                    switch (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2)
+                    {
+                        case (TransitionTypeEnum.Симметричный, TransitionTypeEnum.Без_перехода):
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            extraLength += extraLengthNotChamfer / view.Scale;
+                                            //Линейный горизонтальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, thickness / 2, paramBManual / 2, thickness / 2,
+                                                paramBManual / 2 + 1, thickness / 2 + transitionData.DimH + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);                                            
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный горизонтальный перехода
+                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, -paramBManual / 2 - transitionData.DimL, -thickness / 2 - transitionData.DimH, -paramBManual / 2, thickness / 2,
+                                                -paramBManual / 2 - transitionData.DimL / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный толщины в стыке
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, paramBManual / 2 + extraLength, -thickness / 2, paramBManual / 2 + extraLength, thickness / 2,
+                                                paramBManual / 2 + extraLength +  gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный перехода
+                                            LineDimension(lineDimensions, ldTransitionL.X1, -ldTransitionL.Y1, ldThicknessR.X1, ldTransitionL.Y2,
+                                                ldThicknessR.X3, -ldTransitionL.Y1 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, -ldTransitionL.Y2,
+                                                ldThicknessR.X3, ldTransitionL.Y1 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, ldTransitionL.X1 - extraLength, -ldTransitionL.Y1, ldTransitionL.X1 - extraLength, ldTransitionL.Y1,
+                                                ldTransitionL.X1 - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                        }
+                                    }
+                                    break;
+
+                                case LocationPart.Право_Верх or LocationPart.Право_Низ or LocationPart.Верх_Лево or LocationPart.Верх_Право or LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                    {
+                                        
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+
+
                 case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами):
                     switch (locationPart)
                     {
@@ -4256,11 +4350,10 @@ namespace KompasTools.Classes.Sundry.Welding
                 case ShapePreparedEdgesEnum.НЕ_УКАЗАНО:
                     break;
                 case ShapePreparedEdgesEnum.Без_скоса_стыковое:
-                    //Делаем минимальное удлинение детали
+                    extraLength += extraLengthNotChamfer / view.Scale;
                     switch (transitionType)
                     {
                         case TransitionTypeEnum.Без_перехода:
-                            extraLength += 15 / view.Scale;
                             switch (locationPart)
                             {
                                 case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
@@ -4436,7 +4529,6 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                             break;
                         case TransitionTypeEnum.Симметричный:
-                            extraLength += 10 / view.Scale;
                             switch (locationPart)
                             {
                                 case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
@@ -4660,7 +4752,6 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                             break;
                         case TransitionTypeEnum.Вверх:
-                            extraLength += 10 / view.Scale;
                             switch (locationPart)
                             {
                                 case LocationPart.Лево_Верх:
@@ -5104,7 +5195,7 @@ namespace KompasTools.Classes.Sundry.Welding
                     break;
                 case ShapePreparedEdgesEnum.Без_скоса_угловое:
                     //Делаем минимальное удлинение детали
-                    extraLength += 15 / view.Scale;
+                    extraLength += extraLengthNotChamfer / view.Scale;
                     switch (locationPart)
                     {
                         case LocationPart.Лево_Верх:
@@ -5393,7 +5484,7 @@ namespace KompasTools.Classes.Sundry.Welding
                     break;
                 case ShapePreparedEdgesEnum.Без_скоса_тавровое:
                     //Делаем минимальное удлинение детали
-                    extraLength += 10 / view.Scale;
+                    extraLength += extraLengthNotChamfer / view.Scale;
                     switch (locationPart)
                     {
                         case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
