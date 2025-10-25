@@ -211,7 +211,40 @@ namespace KompasTools.Classes.Sundry.Welding
                 case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.Без_скоса_стыковое, ShapePreparedEdgesEnum.Без_скоса_стыковое):
                     switch (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2)
                     {                       
-                        case (TransitionTypeEnum.Симметричный, TransitionTypeEnum.Без_перехода):
+                        case (TransitionTypeEnum.Симметричный, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Симметричный):
+                            #region Чтобы не плодить код, меняю положение детали на противоположное.
+                            if (transitionData.TransitionTypePart1 == TransitionTypeEnum.Без_перехода && transitionData.TransitionTypePart2 == TransitionTypeEnum.Симметричный)
+                            {
+                                (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2) = (transitionData.TransitionTypePart2, transitionData.TransitionTypePart1);
+                                switch (locationPart)
+                                {
+                                    case LocationPart.Лево_Верх:
+                                        locationPart = LocationPart.Право_Верх;
+                                        break;
+                                    case LocationPart.Лево_Низ:
+                                        locationPart = LocationPart.Право_Низ;
+                                        break;
+                                    case LocationPart.Право_Верх:
+                                        locationPart = LocationPart.Лево_Верх;
+                                        break;
+                                    case LocationPart.Право_Низ:
+                                        locationPart = LocationPart.Лево_Низ;
+                                        break;
+                                    case LocationPart.Верх_Лево:
+                                        locationPart = LocationPart.Низ_Лево;
+                                        break;
+                                    case LocationPart.Верх_Право:
+                                        locationPart = LocationPart.Низ_Право;
+                                        break;
+                                    case LocationPart.Низ_Лево:
+                                        locationPart = LocationPart.Верх_Лево;
+                                        break;
+                                    case LocationPart.Низ_Право:
+                                        locationPart = LocationPart.Верх_Право;
+                                        break;
+                                }
+                            } 
+                            #endregion
                             switch (locationPart)
                             {
                                 case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
@@ -407,207 +440,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, -ldTransitionL.X1, ldTransitionL.Y1 - extraLength,
                                                 0, ldTransitionL.Y1 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        }
-                                    }
-                                    break;
-                            }
-                        break;
-                        case (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Симметричный):
-                            switch (locationPart)
-                            {
-                                case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
-                                    {
-                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                        //При это в размер забиваем вручную ноль
-                                        double paramBManual = 2;
-                                        if (ParamB != 0)
-                                        {
-                                            paramBManual = ParamB;
-                                        }
-                                        DrawingPart(view, thickness, locationPart, true, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
-                                        DrawingPart(view, thickness, locationPart, false, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
-                                        if (drawDimensions)
-                                        {
-                                            extraLength += extraLengthNotChamfer / view.Scale;
-                                            //Линейный горизонтальный зазора в стыке
-                                            ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, thickness / 2, -paramBManual / 2, thickness / 2,
-                                                -paramBManual / 2 - 1, thickness / 2 + transitionData.DimH + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
-                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                            //При это в размер забиваем вручную ноль
-                                            if (ParamB == 0)
-                                            {
-                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
-                                                dtparamB.NominalValue = 0;
-                                                ldParamB.Update();
-                                            }
-                                            //Линейный горизонтальный перехода
-                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, ldParamB.X1 + transitionData.DimL, -thickness / 2 - transitionData.DimH, paramBManual / 2, thickness / 2,
-                                                ldParamB.X2 + transitionData.DimL / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный вертикальный толщины в стыке
-                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -paramBManual / 2 - extraLength, -thickness / 2, -paramBManual / 2 - extraLength, thickness / 2,
-                                                -paramBManual / 2 - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный вертикальный перехода
-                                            LineDimension(lineDimensions, ldTransitionL.X1, -ldTransitionL.Y1, ldThicknessR.X1, ldTransitionL.Y2,
-                                                ldThicknessR.X3, -ldTransitionL.Y1 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, -ldTransitionL.Y2,
-                                                ldThicknessR.X3, ldTransitionL.Y1 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный вертикальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1 + extraLength, -ldTransitionL.Y1, ldTransitionL.X1 + extraLength, ldTransitionL.Y1,
-                                                ldTransitionL.X1 + extraLength + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        }
-                                    }
-                                    break;
-                                case LocationPart.Право_Верх or LocationPart.Право_Низ:
-                                    {
-                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                        //При это в размер забиваем вручную ноль
-                                        double paramBManual = 2;
-                                        if (ParamB != 0)
-                                        {
-                                            paramBManual = ParamB;
-                                        }
-                                        DrawingPart(view, thickness, locationPart, true, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
-                                        DrawingPart(view, thickness, locationPart, false, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
-                                        if (drawDimensions)
-                                        {
-                                            extraLength += extraLengthNotChamfer / view.Scale;
-                                            //Линейный горизонтальный зазора в стыке
-                                            ILineDimension ldParamB = LineDimension(lineDimensions, paramBManual / 2, thickness / 2, -paramBManual / 2, thickness / 2,
-                                                paramBManual / 2 + 1, thickness / 2 + transitionData.DimH + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
-                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                            //При это в размер забиваем вручную ноль
-                                            if (ParamB == 0)
-                                            {
-                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
-                                                dtparamB.NominalValue = 0;
-                                                ldParamB.Update();
-                                            }
-                                            //Линейный горизонтальный перехода
-                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, ldParamB.X2 - transitionData.DimL, -thickness / 2 - transitionData.DimH, ldParamB.X2, thickness / 2,
-                                                ldParamB.X1 - transitionData.DimL / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный вертикальный толщины в стыке
-                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, paramBManual / 2 + extraLength, -thickness / 2, paramBManual / 2 + extraLength, thickness / 2,
-                                                paramBManual / 2 + extraLength + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный вертикальный перехода
-                                            LineDimension(lineDimensions, ldTransitionL.X1, -ldTransitionL.Y1, ldThicknessR.X1, ldTransitionL.Y2,
-                                                ldThicknessR.X3, -ldTransitionL.Y1 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, -ldTransitionL.Y2,
-                                                ldThicknessR.X3, ldTransitionL.Y1 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный вертикальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1 - extraLength, -ldTransitionL.Y1, ldTransitionL.X1 - extraLength, ldTransitionL.Y1,
-                                                ldTransitionL.X1 - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        }
-                                    }
-                                    break;
-                                case LocationPart.Верх_Лево or LocationPart.Верх_Право:
-                                    {
-                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                        //При это в размер забиваем вручную ноль
-                                        double paramBManual = 2;
-                                        if (ParamB != 0)
-                                        {
-                                            paramBManual = ParamB;
-                                        }
-                                        DrawingPart(view, thickness, locationPart, true, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
-                                        DrawingPart(view, thickness, locationPart, false, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
-                                        if (drawDimensions)
-                                        {
-                                            extraLength += extraLengthNotChamfer / view.Scale;
-                                            //Линейный вертикальный зазора в стыке
-                                            ILineDimension ldParamB = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2, -thickness / 2, -paramBManual / 2,
-                                                -thickness / 2 - transitionData.DimH - gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
-                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                            //При это в размер забиваем вручную ноль
-                                            if (ParamB == 0)
-                                            {
-                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
-                                                dtparamB.NominalValue = 0;
-                                                ldParamB.Update();
-                                            }
-                                            //Линейный вертикальный перехода
-                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, -ldParamB.X1 + transitionData.DimH, ldParamB.Y2 - transitionData.DimL, ldParamB.X2, ldParamB.Y2,
-                                                ldParamB.X3, ldParamB.Y2 - transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горизонтальный толщины в стыке
-                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2 + extraLength, thickness / 2, paramBManual / 2 + extraLength,
-                                                0, paramBManual / 2 + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горизонтальный перехода
-                                            LineDimension(lineDimensions, -ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, ldThicknessR.Y1,
-                                                -ldTransitionL.X1 - 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X2, ldThicknessR.Y2,
-                                                ldTransitionL.X1 + 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горизонтальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, -ldTransitionL.X1, ldTransitionL.Y1 - extraLength,
-                                                0, ldTransitionL.Y1 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        }
-                                    }
-                                    break;
-                                case LocationPart.Низ_Лево or LocationPart.Низ_Право:
-                                    {
-                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                        //При это в размер забиваем вручную ноль
-                                        double paramBManual = 2;
-                                        if (ParamB != 0)
-                                        {
-                                            paramBManual = ParamB;
-                                        }
-                                        DrawingPart(view, thickness, locationPart, true, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
-                                        DrawingPart(view, thickness, locationPart, false, false,
-                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
-                                        //Что бы не плодить код, делаю поправку смещения группы тут.
-                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
-                                        if (drawDimensions)
-                                        {
-                                            extraLength += extraLengthNotChamfer / view.Scale;
-                                            //Линейный вертикальный зазора в стыке
-                                            ILineDimension ldParamB = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2, -thickness / 2, -paramBManual / 2,
-                                                -thickness / 2 - transitionData.DimH - gapDimToPart, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
-                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
-                                            //При это в размер забиваем вручную ноль
-                                            if (ParamB == 0)
-                                            {
-                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
-                                                dtparamB.NominalValue = 0;
-                                                ldParamB.Update();
-                                            }
-                                            //Линейный вертикальный перехода
-                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, -ldParamB.X1 + transitionData.DimH, ldParamB.Y1 + transitionData.DimL, ldParamB.X1, ldParamB.Y1,
-                                                ldParamB.X3, ldParamB.Y1 + transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горизонтальный толщины в стыке
-                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness / 2, -paramBManual / 2 - extraLength, thickness / 2, -paramBManual / 2 - extraLength,
-                                                0, -paramBManual / 2 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горизонтальный перехода
-                                            LineDimension(lineDimensions, -ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, ldThicknessR.Y1,
-                                                -ldTransitionL.X1 - 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X2, ldThicknessR.Y2,
-                                                ldTransitionL.X1 + 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горизонтальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 + extraLength, -ldTransitionL.X1, ldTransitionL.Y1 + extraLength,
-                                                0, ldTransitionL.Y1 + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         }
                                     }
                                     break;
