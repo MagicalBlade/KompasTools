@@ -361,12 +361,53 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
-
-
-                                case  LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                case LocationPart.Низ_Лево or LocationPart.Низ_Право:
                                     {
-                                        
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
+                                        if (drawDimensions)
+                                        {
+                                            extraLength += extraLengthNotChamfer / view.Scale;
+                                            //Линейный вертикальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions, -thickness / 2, -paramBManual / 2, -thickness / 2, paramBManual / 2,
+                                                -thickness / 2 - transitionData.DimH - gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный вертикальный перехода
+                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL, ldParamB.X1, ldParamB.Y1,
+                                                ldParamB.X3, -paramBManual / 2 - transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный толщины в стыке
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2 + extraLength, thickness / 2, paramBManual / 2 + extraLength,
+                                                0, paramBManual / 2 + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный перехода
+                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, ldThicknessR.Y1,
+                                                ldTransitionL.X1 - 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions, -ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X2, ldThicknessR.Y2,
+                                                -ldTransitionL.X1 + 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный толщины
+                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, -ldTransitionL.X1, ldTransitionL.Y1 - extraLength,
+                                                0, ldTransitionL.Y1 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                        }
                                     }
                                     break;
                                 default:
