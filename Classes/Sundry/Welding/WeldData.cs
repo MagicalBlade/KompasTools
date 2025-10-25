@@ -536,8 +536,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         {
                                             extraLength += extraLengthNotChamfer / view.Scale;
                                             //Линейный вертикальный зазора в стыке
-                                            ILineDimension ldParamB = LineDimension(lineDimensions, -thickness / 2, -paramBManual / 2, -thickness / 2, paramBManual / 2,
-                                                -thickness / 2 - transitionData.DimH - gapDimToPart, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension ldParamB = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2, -thickness / 2, -paramBManual / 2,
+                                                -thickness / 2 - transitionData.DimH - gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                             //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                             //При это в размер забиваем вручную ноль
@@ -548,19 +548,19 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldParamB.Update();
                                             }
                                             //Линейный вертикальный перехода
-                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, -thickness / 2 - transitionData.DimH, paramBManual / 2 + transitionData.DimL, ldParamB.X2, ldParamB.Y2,
-                                                ldParamB.X3, paramBManual / 2 + transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension ldTransitionL = LineDimension(lineDimensions, ldParamB.X1 - transitionData.DimH, ldParamB.Y2 - transitionData.DimL, ldParamB.X2, ldParamB.Y2,
+                                                ldParamB.X3, ldParamB.Y2 - transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный горизонтальный толщины в стыке
-                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness / 2, -paramBManual / 2 - extraLength, thickness / 2, -paramBManual / 2 - extraLength,
-                                                0, -paramBManual / 2 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, -thickness / 2, paramBManual / 2 + extraLength, thickness / 2, paramBManual / 2 + extraLength,
+                                                0, paramBManual / 2 + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X1, ldThicknessR.Y1,
                                                 ldTransitionL.X1 - 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             LineDimension(lineDimensions, -ldTransitionL.X1, ldTransitionL.Y1, ldThicknessR.X2, ldThicknessR.Y2,
                                                 -ldTransitionL.X1 + 1, ldThicknessR.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный толщины
-                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 + extraLength, -ldTransitionL.X1, ldTransitionL.Y1 + extraLength,
-                                                0, ldTransitionL.Y1 + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions, ldTransitionL.X1, ldTransitionL.Y1 - extraLength, -ldTransitionL.X1, ldTransitionL.Y1 - extraLength,
+                                                0, ldTransitionL.Y1 - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                         }
                                     }
                                     break;
