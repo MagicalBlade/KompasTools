@@ -8431,10 +8431,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ILineSegment baseobjAngle3 = DrawLineSegment(lineSegments, baseobjAngle1.X1, baseobjAngle1.Y1, -baseobjAngle2.X2, baseobjAngle2.Y2);
                                         //Переход
                                         ILineSegment lsTransition1 = DrawLineSegment(lineSegments, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle2.X2 + transitionData.DimH, -transitionData.DimL);
-                                        ILineSegment lsTransition2 = DrawLineSegment(lineSegments, -lsTransition1.X1, lsTransition1.Y1, -lsTransition1.X2, lsTransition1.Y2);
                                         //От угла к краю детали
                                         ILineSegment lsExtra1 = DrawLineSegment(lineSegments, lsTransition1.X2, lsTransition1.Y2, lsTransition1.X2, lsTransition1.Y2 - extraLength);
-                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, -lsTransition1.X2, lsTransition1.Y2, -lsTransition1.X2, lsExtra1.Y2);
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, baseobjAngle3.X2, baseobjAngle3.Y2, baseobjAngle3.X2, lsExtra1.Y2);
                                         //Волнистая линия
                                         IWaveLines waveLines = symbols2DContainer.WaveLines;
                                         IWaveLine waveLine = waveLines.Add();
@@ -8455,7 +8454,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                             contour.CopySegments(baseobjAngle2, false);
                                             contour.CopySegments(baseobjAngle3, false);
                                             contour.CopySegments(lsTransition1, false);
-                                            contour.CopySegments(lsTransition2, false);
                                             contour.CopySegments(lsExtra2, false);
                                             contour.CopySegments(lsExtra1, false);
                                             contour.CopySegments(waveLine, false);
@@ -8471,8 +8469,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         if (!isCrossSection)
                                         {
                                             DrawLineSegment(lineSegments, lsTransition1.X2, ParamB, lsTransition1.X2, lsTransition1.Y2);
-                                            DrawLineSegment(lineSegments, -lsTransition1.X2, ParamB, -lsTransition1.X2, lsTransition1.Y2);
-                                            DrawLineSegment(lineSegments, -lsTransition1.X2, ParamB, lsTransition1.X2, ParamB);
+                                            DrawLineSegment(lineSegments, baseobjAngle3.X2, ParamB, baseobjAngle3.X2, baseobjAngle3.Y2);
+                                            DrawLineSegment(lineSegments, baseobjAngle3.X2, ParamB, lsTransition1.X2, ParamB);
                                         }
                                         //Чертим размеры
                                         if (drawDimensions)
@@ -8480,10 +8478,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный горзонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
-                                            ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, lsExtra1.X2 + gapDimToPart * 2, -xangle / 2,
+                                            ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, baseobjAngle3.X2, baseobjAngle3.Y2, baseobjAngle3.X2 - gapDimToPart, -xangle / 2,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный вертикальный перехода
-                                            LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, -lsTransition2.X2, lsTransition2.Y2, lsTransition2.X2 - gapDimToPart, -transitionData.DimL / 2,
+                                            LineDimension(lineDimensions, lsTransition1.X2, lsTransition1.Y2, baseobjAngle2.X1, baseobjAngle2.Y1, lsTransition1.X2 + gapDimToPart * 2, -transitionData.DimL / 2,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
                                             if (ParamA == 45)
@@ -8500,8 +8498,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                             if (!isCrossSection && ParamB != 0)
                                             {
                                                 //Зазора в стыке
-                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, -lsTransition1.X2, ParamB, -baseobjAngle1.X2, baseobjAngle1.Y2,
-                                                    lsTransition2.X2 - gapDimToPart, ParamB + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, baseobjAngle3.X2, ParamB, -baseobjAngle1.X2, baseobjAngle1.Y2,
+                                                    dtHParamA.X3, ParamB + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                                 SetDeviation(dtPatamB, paramBTolerance);
                                                 //Двигаем размер притупления и линейный угла на величину зазора если выбран разрез
                                                 dtVParamA.Y3 += ParamB;
@@ -8522,16 +8520,14 @@ namespace KompasTools.Classes.Sundry.Welding
                                             }
                                             //Линейный горзонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
-                                                (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
-                                                -(thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);                                            
                                             //Расчёты для угла
-                                            double r1 = (dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow((dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2), 2) + Math.Pow(xangle / 2, 2));
+                                            double r1 = (dtHParamA.X3 + ParamC / 2 - gapDimToDim * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((dtHParamA.X3 + ParamC / 2 - gapDimToDim * 2), 2) + Math.Pow(xangle / 2, 2));
                                             double angleDRadius = r1 > r2 ? r1 : r2;
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
-                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2, 10, -xangle / 2, angleDRadius);
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle3, -10, -xangle / 2, angleDRadius);
                                             SetDeviation(dtParamA, ParamATolerance);
                                         }
                                     }
