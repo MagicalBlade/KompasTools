@@ -6366,7 +6366,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), thickness, -(xangle + extraLength + gapDimToPart), thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горзонтальный угла
+                                    //Линейный горизонтальный угла
                                     LineDimension(lineDimensions, 0, ParamC, -xangle, thickness, -xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
@@ -6475,7 +6475,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), -thickness, -(xangle + extraLength + gapDimToPartLeft), -thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горзонтальный угла
+                                    //Линейный горизонтальный угла
                                     LineDimension(lineDimensions, 0, -ParamC, -xangle, -thickness, -xangle / 2, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
@@ -6584,7 +6584,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + gapDimToPartLeft, thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горзонтальный угла
+                                    //Линейный горизонтальный угла
                                     LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
@@ -6683,7 +6683,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                     //Линейный вертикальный толщины
                                     LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, -thickness, xangle + extraLength + gapDimToPartLeft, -thickness / 2
                                         , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горзонтальный угла
+                                    //Линейный горизонтальный угла
                                     LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
                                         ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                     //Линейный вертикальный притупления
@@ -7204,7 +7204,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, -(xangle + extraLength), -thickness / 2, -(xangle + extraLength), thickness / 2, -(xangle + extraLength + gapDimToPartLeft),
                                                 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtLineHParamA = LineDimension(lineDimensions, 0, ParamC / 2, -xangle, thickness / 2, -xangle / 2, thickness / 2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -7319,7 +7319,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, xangle + extraLength, -thickness / 2, xangle + extraLength, thickness / 2, xangle + extraLength + gapDimToPartLeft,
                                                 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtLineHParamA = LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, xangle / 2, thickness / 2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -7645,10 +7645,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                         {
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra1.X2, lsExtra2.Y2, lsExtra1.X2 - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, -xangle / 2, lsExtra1.Y2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, lsTransition2.X2, -lsTransition2.Y2, -transitionData.DimL / 2, lsTransition2.Y2 - gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -7687,10 +7687,26 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
                                                 dtVParamA.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный вертикальный перехода
-                                            LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
+                                            ILineDimension ldVTransition1 = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 ldThicknessJoint.X3, (thickness + transitionData.DimH) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
+                                            ((IDimensionText)ldVTransition1).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldVTransition1.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldVTransition1.Y3 < ldVTransition1.Y1)
+                                            {
+                                                ldVTransition1.Y3 = ldVTransition1.Y2 + 1;
+                                                ldVTransition1.Update();
+                                            }
+                                            ILineDimension ldVTransition2 = LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
                                                 ldThicknessJoint.X3, -(thickness + transitionData.DimH) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldVTransition2).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldVTransition2.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldVTransition2.Y3 > ldVTransition2.Y1)
+                                            {
+                                                ldVTransition2.Y3 = ldVTransition2.Y2 - 1;
+                                                ldVTransition2.Update();
+                                            }
                                             //Расчёты для угла
                                             double r1 = (dtHParamA.Y3 - ParamC / 2 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((dtHParamA.Y3 - ParamC / 2 + gapDimToDim / 2), 2) + Math.Pow(xangle / 2, 2));
@@ -7765,10 +7781,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                         {
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra1.X2, lsExtra2.Y2, lsExtra1.X2 + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, xangle / 2, lsExtra1.Y2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, lsTransition2.X2, -lsTransition2.Y2, transitionData.DimL / 2, lsTransition2.Y2 - gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -7807,10 +7823,26 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessJoint.Update();
                                             }
                                             //Линейный вертикальный перехода
-                                            LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
+                                            ILineDimension ldVTransition1 = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 ldThicknessJoint.X3, (thickness + transitionData.DimH) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
+                                            ((IDimensionText)ldVTransition1).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldVTransition1.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldVTransition1.Y3 < ldVTransition1.Y1)
+                                            {
+                                                ldVTransition1.Y3 = ldVTransition1.Y2 + 1;
+                                                ldVTransition1.Update();
+                                            }
+                                            ILineDimension ldVTransition2 = LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
                                                 ldThicknessJoint.X3, -(thickness + transitionData.DimH) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldVTransition2).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldVTransition2.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldVTransition2.Y3 > ldVTransition2.Y1)
+                                            {
+                                                ldVTransition2.Y3 = ldVTransition2.Y2 - 1;
+                                                ldVTransition2.Update();
+                                            }
                                             //Расчёты для угла
                                             double r1 = (dtHParamA.Y3 - ParamC / 2 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((dtHParamA.Y3 - ParamC / 2 + gapDimToDim / 2), 2) + Math.Pow(xangle / 2, 2));
@@ -7883,7 +7915,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         //Чертим размеры
                                         if (drawDimensions)
                                         {
-                                            //Линейный горзонтальный толщины
+                                            //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, lsExtra1.X2 + gapDimToPart * 2, xangle / 2,
@@ -7897,7 +7929,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ((IDimensionText)dtHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                                 dtHParamA.Update();
                                             }
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, -gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -7919,18 +7951,34 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 -= ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                            //Линейный горзонтальный толщины в стыке
+                                            //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
-                                                0, dtVParamA.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);                               
-                                            //Линейный горзонтальный перехода
-                                            LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
+                                                0, dtVParamA.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный перехода
+                                            ILineDimension ldHTransition1 = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
+                                            ((IDimensionText)ldHTransition1).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldHTransition1.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldHTransition1.X3 < ldHTransition1.X1)
+                                            {
+                                                ldHTransition1.X3 = ldHTransition1.X2 + 1;
+                                                ldHTransition1.Update();
+                                            }
+                                            ILineDimension ldHTransition2 = LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
                                                 -(thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldHTransition2).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldHTransition2.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldHTransition2.X3 > ldHTransition2.X1)
+                                            {
+                                                ldHTransition2.X3 = ldHTransition2.X2 - 1;
+                                                ldHTransition2.Update();
+                                            }
                                             //Расчёты для угла
                                             double r1 = (dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2), 2) + Math.Pow(xangle / 2, 2));
@@ -8003,7 +8051,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         //Чертим размеры
                                         if (drawDimensions)
                                         {
-                                            //Линейный горзонтальный толщины
+                                            //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, lsExtra1.X2 + gapDimToPart * 2, -xangle / 2,
@@ -8017,7 +8065,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ((IDimensionText)dtHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                                 dtHParamA.Update();
                                             }
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -8033,11 +8081,11 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 += ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                            //Линейный горзонтальный толщины в стыке
+                                            //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
                                                 0, dtVParamA.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -8046,11 +8094,27 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessJoint.Y3 = dtVParamA.Y3 + gapDimToDim * 1.5;
                                                 ldThicknessJoint.Update();
                                             }
-                                            //Линейный горзонтальный перехода
-                                            LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
+                                            //Линейный горизонтальный перехода
+                                            ILineDimension ldHTransition1 = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
+                                            ((IDimensionText)ldHTransition1).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldHTransition1.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldHTransition1.X3 < ldHTransition1.X1)
+                                            {
+                                                ldHTransition1.X3 = ldHTransition1.X2 + 1;
+                                                ldHTransition1.Update();
+                                            }
+                                            ILineDimension ldHTransition2 = LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition2.X2, lsTransition2.Y2,
                                                 -(thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldHTransition2).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldHTransition2.Update();
+                                            //Если размерный текст налазит на соседний размер
+                                            if (ldHTransition2.X3 > ldHTransition2.X1)
+                                            {
+                                                ldHTransition2.X3 = ldHTransition2.X2 - 1;
+                                                ldHTransition2.Update();
+                                            }
                                             //Расчёты для угла
                                             double r1 = (dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((dtHParamA.X3 - ParamC / 2 + gapDimToDim / 2), 2) + Math.Pow(xangle / 2, 2));
@@ -8131,7 +8195,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный горизонтальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, baseobjAngle3.X2, baseobjAngle3.Y2, -xangle / 2, baseobjAngle3.Y2 - gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             ILineDimension ldTransition = LineDimension(lineDimensions, baseobjAngle1.X2, baseobjAngle1.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 -transitionData.DimL / 2, lsTransition1.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -8360,10 +8424,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                         {
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra1.X2, lsExtra2.Y2, lsExtra1.X2 + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, baseobjAngle3.X2, baseobjAngle3.Y2, xangle / 2, baseobjAngle3.Y2 - gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             ILineDimension ldTransition = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, lsTransition1.X2, lsTransition1.Y2, transitionData.DimL / 2, lsTransition1.Y2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -8476,10 +8540,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                         {
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra1.X2, lsExtra2.Y2, lsExtra1.X2 + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, xangle / 2, baseobjAngle2.Y2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             ILineDimension ldTransition = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, lsTransition1.X2, lsTransition1.Y2,
                                                 transitionData.DimL / 2, lsTransition1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
@@ -8591,7 +8655,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         //Чертим размеры
                                         if (drawDimensions)
                                         {
-                                            //Линейный горзонтальный толщины
+                                            //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, baseobjAngle3.X2, baseobjAngle3.Y2,
@@ -8605,7 +8669,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ((IDimensionText)dtHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                                 dtHParamA.Update();
                                             }
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, -gapDimToPart * 2,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -8627,14 +8691,14 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 -= ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                            //Линейный горзонтальный толщины в стыке
+                                            //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
                                                 0, dtVParamA.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Расчёты для угла
@@ -8743,14 +8807,14 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 -= ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                            //Линейный горзонтальный толщины в стыке
+                                            //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
                                                 0, dtVParamA.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 -(thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Расчёты для угла
@@ -8823,7 +8887,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         //Чертим размеры
                                         if (drawDimensions)
                                         {
-                                            //Линейный горзонтальный толщины
+                                            //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle3.X1, baseobjAngle3.Y1, baseobjAngle3.X2, baseobjAngle3.Y2, baseobjAngle3.X2 - gapDimToPart, -xangle / 2,
@@ -8837,7 +8901,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ((IDimensionText)dtHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                                 dtHParamA.Update();
                                             }
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -8853,11 +8917,11 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 += ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                            //Линейный горзонтальный толщины в стыке
+                                            //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, baseobjAngle3.X2, baseobjAngle3.Y2,
                                                 0, dtVParamA.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -8866,9 +8930,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessJoint.Y3 = dtVParamA.Y3 + gapDimToDim * 1.5;
                                                 ldThicknessJoint.Update();
                                             }
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle2.X2, baseobjAngle2.Y2, lsTransition1.X2, lsTransition1.Y2,
-                                                (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);                                            
+                                                (thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Расчёты для угла
                                             double r1 = (dtHParamA.X3 + ParamC / 2 - gapDimToDim * 2) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((dtHParamA.X3 + ParamC / 2 - gapDimToDim * 2), 2) + Math.Pow(xangle / 2, 2));
@@ -8939,7 +9003,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                         //Чертим размеры
                                         if (drawDimensions)
                                         {
-                                            //Линейный горзонтальный толщины
+                                            //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions, lsExtra1.X2, lsExtra1.Y2, lsExtra2.X2, lsExtra1.Y2, 0, lsExtra1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный угла
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2,
@@ -8953,7 +9017,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ((IDimensionText)dtHParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                                 dtHParamA.Update();
                                             }
-                                            //Линейный горзонтальный угла
+                                            //Линейный горизонтальный угла
                                             ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -8969,7 +9033,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Y3 += ParamB;
                                                 dtVParamA.Update();
                                             }
-                                            //Линейный горзонтальный притупления
+                                            //Линейный горизонтальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
@@ -8982,7 +9046,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessJoint.Y3 = dtVParamA.Y3 + gapDimToDim * 1.5;
                                                 ldThicknessJoint.Update();
                                             }
-                                            //Линейный горзонтальный перехода
+                                            //Линейный горизонтальный перехода
                                             LineDimension(lineDimensions, baseobjAngle3.X2, baseobjAngle3.Y2, lsTransition1.X2, lsTransition1.Y2,
                                                 -(thickness + transitionData.DimH) / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Расчёты для угла
