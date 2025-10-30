@@ -619,8 +619,8 @@ namespace KompasTools.ViewModels.Sundry
                 WeldGOSTs = OrigWeldDates.Select(n => n.NameGost).Distinct().ToArray();
             }
             #endregion
-            Thickness1Str = "18"; //TODO Удалить
-            Thickness2Str = "15"; //TODO Удалить
+            Thickness1Str = "32"; //TODO Удалить
+            Thickness2Str = "25"; //TODO Удалить
             SelectTransitionTypes = TransitionTypeEnum.Вверх;
             Filter();
         }
