@@ -7247,7 +7247,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, gapDimToPart, -ParamC,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, gapDimToPart, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
                                             //Только для "левых видов"
@@ -7362,7 +7362,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный вертикальный притупления
-                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, -gapDimToPart, -ParamC,
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, -gapDimToPart, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation(dtParamC, paramCTolerance);
                                             double r1 = ((thickness - ParamC) / 2 + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
@@ -7463,7 +7463,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, -ParamC / 2, 0, ParamC / 2, 0, -ParamC, -gapDimToPart,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, -ParamC / 2, 0, ParamC / 2, 0, 0, -gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
                                             //Только для "верхних видов"
@@ -7578,7 +7578,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный горизонтальный притупления
-                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, -ParamC / 2, 0, ParamC / 2, 0, -ParamC , gapDimToPart,
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, -ParamC / 2, 0, ParamC / 2, 0, 0 , gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation(dtParamC, paramCTolerance);
                                             double r1 = ((thickness - ParamC) / 2 + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
@@ -7708,7 +7708,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -7826,7 +7826,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -7956,7 +7956,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
@@ -8074,7 +8074,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
@@ -8207,7 +8207,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -8323,7 +8323,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -8433,7 +8433,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -8549,7 +8549,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный вертикальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, -ParamC / 2 - 1,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, dtVParamA.X3, 0,
                                                 ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный вертикальный толщины в стыке
@@ -8672,7 +8672,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
@@ -8788,7 +8788,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
@@ -8898,7 +8898,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
@@ -9014,7 +9014,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtVParamA.Update();
                                             }
                                             //Линейный горизонтальный притупления
-                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, -ParamC / 2 - 1, dtVParamA.Y3,
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, baseobjAngle1.X2, baseobjAngle1.Y2, 0, dtVParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamC, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
