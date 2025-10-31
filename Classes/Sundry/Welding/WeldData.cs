@@ -6327,768 +6327,768 @@ namespace KompasTools.Classes.Sundry.Welding
                     {
                         case TransitionTypeEnum.Без_перехода:
                             switch (locationPart)
-                    {
-                        case LocationPart.Лево_Верх:
                             {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, -xangle, thickness);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, thickness, -(xangle + extraLength), thickness);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = -(xangle + extraLength);
-                                waveLine.Y1 = 0;
-                                waveLine.X2 = -(xangle + extraLength);
-                                waveLine.Y2 = thickness;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, ParamB, thickness, -xangle, thickness);
-                                    DrawLineSegment(lineSegments, ParamB, 0, ParamB, thickness);
-                                    if (ParamB != 0)
+                                case LocationPart.Лево_Верх:
                                     {
-                                        DrawLineSegment(lineSegments, ParamB, 0, 0, 0);
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, -xangle, thickness);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, thickness, -(xangle + extraLength), thickness);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = -(xangle + extraLength);
+                                        waveLine.Y1 = 0;
+                                        waveLine.X2 = -(xangle + extraLength);
+                                        waveLine.Y2 = thickness;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, ParamB, thickness, -xangle, thickness);
+                                            DrawLineSegment(lineSegments, ParamB, 0, ParamB, thickness);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, ParamB, 0, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), thickness, -(xangle + extraLength + gapDimToPart), thickness / 2
+                                                , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный угла
+                                            LineDimension(lineDimensions, 0, ParamC, -xangle, thickness, -xangle / 2, thickness + gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, ParamC, 0, ParamC + 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            //Только для "левых видов"
+                                            if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.X3 = gapDimToPart * 2;
+                                            }
+                                            else
+                                            {
+                                                ldParamC.X3 = gapDimToPart * 3;
+                                            }
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                -xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, thickness, 0, thickness, ParamB + 1, thickness + gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = ldParamC;
+                                                ld_ParamB.X3 += ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный вертикальный толщины
-                                    LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), thickness, -(xangle + extraLength + gapDimToPart), thickness / 2
-                                        , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный угла
-                                    LineDimension(lineDimensions, 0, ParamC, -xangle, thickness, -xangle / 2, thickness + gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный притупления
-                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, ParamC, 0, ParamC + 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
-                                    //Только для "левых видов"
-                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                    break;
+                                case LocationPart.Лево_Низ:
                                     {
-                                        ldParamC.X3 = gapDimToPart * 2;
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, -xangle, -thickness);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, -thickness, -(xangle + extraLength), -thickness);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = -(xangle + extraLength);
+                                        waveLine.Y1 = 0;
+                                        waveLine.X2 = -(xangle + extraLength);
+                                        waveLine.Y2 = -thickness;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, ParamB, -thickness, -xangle, -thickness);
+                                            DrawLineSegment(lineSegments, ParamB, 0, ParamB, -thickness);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, ParamB, 0, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), -thickness, -(xangle + extraLength + gapDimToPartLeft), -thickness / 2
+                                                , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный угла
+                                            LineDimension(lineDimensions, 0, -ParamC, -xangle, -thickness, -xangle / 2, -(thickness + gapDimToPart * 2),
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, -ParamC, gapDimToPart * 3, -(ParamC + 1),
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            //Только для "левых видов"
+                                            if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.X3 = gapDimToPart * 2;
+                                            }
+                                            else
+                                            {
+                                                ldParamC.X3 = gapDimToPart * 3;
+                                            }
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                -xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, -thickness, 0, -thickness, ParamB + 1, -(thickness + gapDimToPart * 2),
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = ldParamC;
+                                                ld_ParamB.X3 += ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                    else
+                                    break;
+                                case LocationPart.Право_Верх:
                                     {
-                                        ldParamC.X3 = gapDimToPart * 3;
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, xangle, thickness);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = xangle + extraLength;
+                                        waveLine.Y1 = 0;
+                                        waveLine.X2 = xangle + extraLength;
+                                        waveLine.Y2 = thickness;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, 0 - ParamB, thickness, xangle, thickness);
+                                            DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, thickness);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + gapDimToPartLeft, thickness / 2
+                                                , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный угла
+                                            LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный притупления
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, ParamC + 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation(dtParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness, 0, thickness, 0 - ParamB - 1, thickness + gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                                ld_ParamB.X3 -= ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
+                                    break;
+                                case LocationPart.Право_Низ:
                                     {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, thickness, 0, thickness, ParamB + 1, thickness + gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = ldParamC;
-                                        ld_ParamB.X3 += ParamB;
-                                        ld_ParamB.Update();
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, xangle, -thickness);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = xangle + extraLength;
+                                        waveLine.Y1 = 0;
+                                        waveLine.X2 = xangle + extraLength;
+                                        waveLine.Y2 = -thickness;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }                                
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, 0 - ParamB, -thickness, xangle, -thickness);
+                                            DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, -thickness);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, -thickness, xangle + extraLength + gapDimToPartLeft, -thickness / 2
+                                                , ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный угла
+                                            LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный притупления
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, -(ParamC + 1),
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation(dtParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, -thickness, 0, -thickness, 0 - ParamB - 1, -(thickness + gapDimToPart * 2),
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                                ld_ParamB.X3 -= ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            break;
-                        case LocationPart.Лево_Низ:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, -xangle, -thickness);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -xangle, -thickness, -(xangle + extraLength), -thickness);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, -(xangle + extraLength), 0);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = -(xangle + extraLength);
-                                waveLine.Y1 = 0;
-                                waveLine.X2 = -(xangle + extraLength);
-                                waveLine.Y2 = -thickness;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, ParamB, -thickness, -xangle, -thickness);
-                                    DrawLineSegment(lineSegments, ParamB, 0, ParamB, -thickness);
-                                    if (ParamB != 0)
+                                    break;
+                                case LocationPart.Верх_Лево:
                                     {
-                                        DrawLineSegment(lineSegments, ParamB, 0, 0, 0);
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, -ParamC, 0);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, xangle);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, xangle, -thickness, xangle + extraLength);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = 0;
+                                        waveLine.Y1 = xangle + extraLength;
+                                        waveLine.X2 = -thickness;
+                                        waveLine.Y2 = xangle + extraLength;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, -thickness, -ParamB, -thickness, xangle);
+                                            DrawLineSegment(lineSegments, 0, -ParamB, -thickness, -ParamB);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0, -ParamB, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            LineDimension(lineDimensions, 0, xangle + extraLength, -thickness, xangle + extraLength, -thickness / 2, xangle + extraLength + gapDimToPartLeft
+                                                , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            LineDimension(lineDimensions, -ParamC, 0, -thickness, xangle, -(thickness + gapDimToPart), xangle / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, -ParamC, 0, -ParamC - 1, -gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            //Только для "верхних видов"
+                                            if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 2;
+                                            }
+                                            else
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 3;
+                                            }
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                -(thickness + gapDimToPart + gapDimToDim), xangle / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, -thickness, -ParamB, -thickness, 0, -(thickness + gapDimToPart), -ParamB - 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = ldParamC;
+                                                ld_ParamB.Y3 -= ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный вертикальный толщины
-                                    LineDimension(lineDimensions, -(xangle + extraLength), 0, -(xangle + extraLength), -thickness, -(xangle + extraLength + gapDimToPartLeft), -thickness / 2
-                                        , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный угла
-                                    LineDimension(lineDimensions, 0, -ParamC, -xangle, -thickness, -xangle / 2, -(thickness + gapDimToPart * 2),
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный притупления
-                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, 0, -ParamC, gapDimToPart * 3, -(ParamC + 1),
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
-                                    //Только для "левых видов"
-                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                    break;
+                                case LocationPart.Верх_Право:
                                     {
-                                        ldParamC.X3 = gapDimToPart * 2;
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, ParamC, 0);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, xangle);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, xangle, thickness, xangle + extraLength);
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = 0;
+                                        waveLine.Y1 = xangle + extraLength;
+                                        waveLine.X2 = thickness;
+                                        waveLine.Y2 = xangle + extraLength;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, thickness, -ParamB, thickness, xangle);
+                                            DrawLineSegment(lineSegments, 0, -ParamB, thickness, -ParamB);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0, -ParamB, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            LineDimension(lineDimensions, 0, xangle + extraLength, thickness, xangle + extraLength, thickness / 2, xangle + extraLength + gapDimToPartLeft
+                                                , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            LineDimension(lineDimensions, ParamC, 0, thickness, xangle, thickness + gapDimToPart * 2, xangle / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, ParamC, 0, ParamC + 1, -gapDimToPart * 2,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            //Только для "верхних видов"
+                                            if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 2;
+                                            }
+                                            else
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 3;
+                                            }
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                thickness + gapDimToPart * 2 + gapDimToDim, xangle / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, thickness, -ParamB, thickness, 0, thickness + gapDimToPart * 2, - ParamB - 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = ldParamC;
+                                                ld_ParamB.Y3 -= ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                    else
+                                    break;
+                                case LocationPart.Низ_Лево:
                                     {
-                                        ldParamC.X3 = gapDimToPart * 3;
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, -ParamC, 0);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, -xangle);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, -xangle, -thickness, -(xangle + extraLength));
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = 0;
+                                        waveLine.Y1 = -(xangle + extraLength);
+                                        waveLine.X2 = -thickness;
+                                        waveLine.Y2 = -(xangle + extraLength);
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, -thickness, ParamB, -thickness, -xangle);
+                                            DrawLineSegment(lineSegments, 0, ParamB, -thickness, ParamB);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0, ParamB, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            LineDimension(lineDimensions, 0, -(xangle + extraLength), -thickness, -(xangle + extraLength), -thickness / 2, -(xangle + extraLength + gapDimToPartLeft)
+                                                , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            LineDimension(lineDimensions, -ParamC, 0, -thickness, -xangle, -(thickness + gapDimToPart), -xangle / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, -ParamC, 0, -ParamC - 1, gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation(dtParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                -(thickness + gapDimToPart + gapDimToDim - 1.5), -xangle / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, -thickness, ParamB, -thickness, 0, -(thickness + gapDimToPart), ParamB + 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                                ld_ParamB.Y3 += ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
+                                    break;
+                                case LocationPart.Низ_Право:
                                     {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, ParamB, -thickness, 0, -thickness, ParamB + 1, -(thickness + gapDimToPart * 2),
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = ldParamC;
-                                        ld_ParamB.X3 += ParamB;
-                                        ld_ParamB.Update();
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Создаём основу разделки
+                                        //Притупление
+                                        ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, ParamC, 0);
+                                        //Угла
+                                        ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, -xangle);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, -xangle, thickness, -(xangle + extraLength));
+                                        //От нуля к краю детали
+                                        ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = 0;
+                                        waveLine.Y1 = -(xangle + extraLength);
+                                        waveLine.X2 = thickness;
+                                        waveLine.Y2 = -(xangle + extraLength);
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(baseobjAngle1, false);
+                                            contour.CopySegments(baseobjAngle2, false);
+                                            contour.CopySegments(lsExtra1, false);
+                                            contour.CopySegments(lsExtra2, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, thickness, ParamB, thickness, -xangle);
+                                            DrawLineSegment(lineSegments, 0, ParamB, thickness, ParamB);
+                                            if (ParamB != 0)
+                                            {
+                                                DrawLineSegment(lineSegments, 0, ParamB, 0, 0);
+                                            }
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            LineDimension(lineDimensions, 0, -(xangle + extraLength), thickness, -(xangle + extraLength), thickness / 2, -(xangle + extraLength + gapDimToPartLeft)
+                                                , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            LineDimension(lineDimensions, ParamC, 0, thickness, -xangle, thickness + gapDimToPart * 2, -xangle / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, ParamC, 0, ParamC + 1, gapDimToPart,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation(dtParamC, paramCTolerance);
+                                            double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                thickness + gapDimToPart * 2 + gapDimToDim * 1.5, -xangle / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);
+                                            if (!isCrossSection && ParamB != 0)
+                                            {
+                                                //Зазора в стыке
+                                                IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, thickness, ParamB, thickness, 0, thickness + gapDimToPart * 2, ParamB + 1,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation(dtPatamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ILineDimension ld_ParamB = (ILineDimension)dtParamC;
+                                                ld_ParamB.Y3 += ParamB;
+                                                ld_ParamB.Update();
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            break;
-                        case LocationPart.Право_Верх:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, ParamC, xangle, thickness);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, thickness, xangle + extraLength, thickness);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = xangle + extraLength;
-                                waveLine.Y1 = 0;
-                                waveLine.X2 = xangle + extraLength;
-                                waveLine.Y2 = thickness;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, 0 - ParamB, thickness, xangle, thickness);
-                                    DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, thickness);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный вертикальный толщины
-                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, thickness, xangle + extraLength + gapDimToPartLeft, thickness / 2
-                                        , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный угла
-                                    LineDimension(lineDimensions, 0, ParamC, xangle, thickness, xangle / 2, thickness + gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, ParamC, - gapDimToPart, ParamC + 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    SetDeviation(dtParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        xangle / 2, thickness + gapDimToPart + gapDimToDim, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, thickness, 0, thickness, 0 - ParamB - 1, thickness + gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
-                                        ld_ParamB.X3 -= ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                        case LocationPart.Право_Низ:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, 0, -ParamC);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, 0, -ParamC, xangle, -thickness);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, xangle, -thickness, xangle + extraLength, -thickness);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, xangle + extraLength, 0);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = xangle + extraLength;
-                                waveLine.Y1 = 0;
-                                waveLine.X2 = xangle + extraLength;
-                                waveLine.Y2 = -thickness;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }                                
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, 0 - ParamB, -thickness, xangle, -thickness);
-                                    DrawLineSegment(lineSegments, 0 - ParamB, 0, 0 - ParamB, -thickness);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0 - ParamB, 0, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный вертикальный толщины
-                                    LineDimension(lineDimensions, xangle + extraLength, 0, xangle + extraLength, -thickness, xangle + extraLength + gapDimToPartLeft, -thickness / 2
-                                        , ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный угла
-                                    LineDimension(lineDimensions, 0, -ParamC, xangle, -thickness, xangle / 2, -(thickness + gapDimToPart * 2),
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, 0, -ParamC, -gapDimToPart, -(ParamC + 1),
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    SetDeviation(dtParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        xangle / 2, -(thickness + gapDimToPart * 2 + gapDimToDim * 1.5), angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, 0 - ParamB, -thickness, 0, -thickness, 0 - ParamB - 1, -(thickness + gapDimToPart * 2),
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
-                                        ld_ParamB.X3 -= ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                        case LocationPart.Верх_Лево:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, -ParamC, 0);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, xangle);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, xangle, -thickness, xangle + extraLength);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = 0;
-                                waveLine.Y1 = xangle + extraLength;
-                                waveLine.X2 = -thickness;
-                                waveLine.Y2 = xangle + extraLength;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, -thickness, -ParamB, -thickness, xangle);
-                                    DrawLineSegment(lineSegments, 0, -ParamB, -thickness, -ParamB);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0, -ParamB, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный горизонтальный толщины
-                                    LineDimension(lineDimensions, 0, xangle + extraLength, -thickness, xangle + extraLength, -thickness / 2, xangle + extraLength + gapDimToPartLeft
-                                        , ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный угла
-                                    LineDimension(lineDimensions, -ParamC, 0, -thickness, xangle, -(thickness + gapDimToPart), xangle / 2,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный притупления
-                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, -ParamC, 0, -ParamC - 1, -gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
-                                    //Только для "верхних видов"
-                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
-                                    {
-                                        ldParamC.Y3 = -gapDimToPart * 2;
-                                    }
-                                    else
-                                    {
-                                        ldParamC.Y3 = -gapDimToPart * 3;
-                                    }
-                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -(thickness + gapDimToPart + gapDimToDim), xangle / 2, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, -thickness, -ParamB, -thickness, 0, -(thickness + gapDimToPart), -ParamB - 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = ldParamC;
-                                        ld_ParamB.Y3 -= ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                        case LocationPart.Верх_Право:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, ParamC, 0);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, xangle);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, xangle, thickness, xangle + extraLength);
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, xangle + extraLength);
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = 0;
-                                waveLine.Y1 = xangle + extraLength;
-                                waveLine.X2 = thickness;
-                                waveLine.Y2 = xangle + extraLength;
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, thickness, -ParamB, thickness, xangle);
-                                    DrawLineSegment(lineSegments, 0, -ParamB, thickness, -ParamB);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0, -ParamB, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный горизонтальный толщины
-                                    LineDimension(lineDimensions, 0, xangle + extraLength, thickness, xangle + extraLength, thickness / 2, xangle + extraLength + gapDimToPartLeft
-                                        , ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный угла
-                                    LineDimension(lineDimensions, ParamC, 0, thickness, xangle, thickness + gapDimToPart * 2, xangle / 2,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный притупления
-                                    ILineDimension ldParamC = LineDimension(lineDimensions, 0, 0, ParamC, 0, ParamC + 1, -gapDimToPart * 2,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
-                                    //Только для "верхних видов"
-                                    if (Math.Abs(ParamCTolerance[0]) == Math.Abs(ParamCTolerance[1]))
-                                    {
-                                        ldParamC.Y3 = -gapDimToPart * 2;
-                                    }
-                                    else
-                                    {
-                                        ldParamC.Y3 = -gapDimToPart * 3;
-                                    }
-                                    SetDeviation((IDimensionText)ldParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        thickness + gapDimToPart * 2 + gapDimToDim, xangle / 2, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, thickness, -ParamB, thickness, 0, thickness + gapDimToPart * 2, - ParamB - 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = ldParamC;
-                                        ld_ParamB.Y3 -= ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                        case LocationPart.Низ_Лево:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, -ParamC, 0);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, -ParamC, 0, -thickness, -xangle);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, -thickness, -xangle, -thickness, -(xangle + extraLength));
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = 0;
-                                waveLine.Y1 = -(xangle + extraLength);
-                                waveLine.X2 = -thickness;
-                                waveLine.Y2 = -(xangle + extraLength);
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, -thickness, ParamB, -thickness, -xangle);
-                                    DrawLineSegment(lineSegments, 0, ParamB, -thickness, ParamB);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0, ParamB, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный горизонтальный толщины
-                                    LineDimension(lineDimensions, 0, -(xangle + extraLength), -thickness, -(xangle + extraLength), -thickness / 2, -(xangle + extraLength + gapDimToPartLeft)
-                                        , ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный угла
-                                    LineDimension(lineDimensions, -ParamC, 0, -thickness, -xangle, -(thickness + gapDimToPart), -xangle / 2,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, -ParamC, 0, -ParamC - 1, gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    SetDeviation(dtParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        -(thickness + gapDimToPart + gapDimToDim - 1.5), -xangle / 2, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, -thickness, ParamB, -thickness, 0, -(thickness + gapDimToPart), ParamB + 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
-                                        ld_ParamB.Y3 += ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                        case LocationPart.Низ_Право:
-                            {
-                                //Размер скоса
-                                double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
-                                extraLength += xangle;
-                                extraLength = extraLength < 1 ? 1 : extraLength;
-                                //Чертим графику
-                                //Создаём основу разделки
-                                //Притупление
-                                ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, 0, 0, ParamC, 0);
-                                //Угла
-                                ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC, 0, thickness, -xangle);
-                                //От угла к краю детали
-                                ILineSegment lsExtra1 = DrawLineSegment(lineSegments, thickness, -xangle, thickness, -(xangle + extraLength));
-                                //От нуля к краю детали
-                                ILineSegment lsExtra2 = DrawLineSegment(lineSegments, 0, 0, 0, -(xangle + extraLength));
-                                //Волнистая линия
-                                IWaveLines waveLines = symbols2DContainer.WaveLines;
-                                IWaveLine waveLine = waveLines.Add();
-                                waveLine.X1 = 0;
-                                waveLine.Y1 = -(xangle + extraLength);
-                                waveLine.X2 = thickness;
-                                waveLine.Y2 = -(xangle + extraLength);
-                                waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
-                                waveLine.Update();
-                                if (isHatches)
-                                {
-                                    //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
-                                    IDrawingContours drawingContours = drawingContainer.DrawingContours;
-                                    IDrawingContour drawingContour = drawingContours.Add();
-                                    IContour contour = (IContour)drawingContour;
-                                    //Добавляем в контур элементы которые ограничивают штриховку
-                                    contour.CopySegments(baseobjAngle1, false);
-                                    contour.CopySegments(baseobjAngle2, false);
-                                    contour.CopySegments(lsExtra1, false);
-                                    contour.CopySegments(lsExtra2, false);
-                                    contour.CopySegments(waveLine, false);
-                                    drawingContour.Update();
-                                    //Штриховка
-                                    IHatches hatches = drawingContainer.Hatches;
-                                    IHatch hatch = hatches.Add();
-                                    IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
-                                    boundariesObject.AddBoundaries(drawingContour, true);
-                                    hatch.Update();
-                                }
-                                //Если разрез
-                                if (!isCrossSection)
-                                {
-                                    DrawLineSegment(lineSegments, thickness, ParamB, thickness, -xangle);
-                                    DrawLineSegment(lineSegments, 0, ParamB, thickness, ParamB);
-                                    if (ParamB != 0)
-                                    {
-                                        DrawLineSegment(lineSegments, 0, ParamB, 0, 0);
-                                    }
-                                }
-                                //Чертим размеры
-                                if (drawDimensions)
-                                {
-                                    //Линейный горизонтальный толщины
-                                    LineDimension(lineDimensions, 0, -(xangle + extraLength), thickness, -(xangle + extraLength), thickness / 2, -(xangle + extraLength + gapDimToPartLeft)
-                                        , ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    //Линейный вертикальный угла
-                                    LineDimension(lineDimensions, ParamC, 0, thickness, -xangle, thickness + gapDimToPart * 2, -xangle / 2,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                    //Линейный горизонтальный притупления
-                                    IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, 0, ParamC, 0, ParamC + 1, gapDimToPart,
-                                        ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                    SetDeviation(dtParamC, paramCTolerance);
-                                    double r1 = (thickness - ParamC + gapDimToPart * 2) / Math.Cos(ParamA * Math.PI / 180);
-                                    double r2 = Math.Sqrt(Math.Pow(thickness - ParamC + gapDimToPart * 2 + gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                    double angleDRadius = r1 > r2 ? r1 : r2;
-                                    angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
-                                    //Угол
-                                    IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                        thickness + gapDimToPart * 2 + gapDimToDim * 1.5, -xangle / 2, angleDRadius);
-                                    SetDeviation(dtParamA, ParamATolerance);
-                                    if (!isCrossSection && ParamB != 0)
-                                    {
-                                        //Зазора в стыке
-                                        IDimensionText dtPatamB = (IDimensionText)LineDimension(lineDimensions, thickness, ParamB, thickness, 0, thickness + gapDimToPart * 2, ParamB + 1,
-                                        ksLineDimensionOrientationEnum.ksLinDVertical);
-                                        SetDeviation(dtPatamB, paramBTolerance);
-                                        //Двигаем размер притупления на величину зазора если выбран разрез
-                                        ILineDimension ld_ParamB = (ILineDimension)dtParamC;
-                                        ld_ParamB.Y3 += ParamB;
-                                        ld_ParamB.Update();
-                                    }
-                                }
-                            }
-                            break;
-                    }                    
+                                    break;
+                            }                    
                             break;
                         case TransitionTypeEnum.Симметричный:
                             switch (locationPart)
@@ -7608,10 +7608,259 @@ namespace KompasTools.Classes.Sundry.Welding
 
                                     break;
                                 case LocationPart.Верх_Лево:
-                                    
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Притупление
+                                        ILineSegment lsParamC = DrawLineSegment(lineSegments, 0, 0, -ParamC, 0);
+                                        //Угла
+                                        ILineSegment lsAngle = DrawLineSegment(lineSegments, lsParamC.X2, lsParamC.Y2, -thickness, xangle);
+                                        //Переход от угла
+                                        ILineSegment lsTransitionAngle = DrawLineSegment(lineSegments, lsAngle.X2, lsAngle.Y2, lsAngle.X2 - transitionData.DimH, transitionData.DimL);
+                                        //От перехода к краю детали
+                                        ILineSegment lsExtraTransition = DrawLineSegment(lineSegments, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X2, lsTransitionAngle.Y2 + extraLength);
+                                        //Переход от нуля
+                                        ILineSegment lsTransition0= DrawLineSegment(lineSegments, 0, 0, transitionData.DimH, lsTransitionAngle.Y2);
+                                        //От перехода к краю детали
+                                        ILineSegment lsExtraTransition0 = DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, lsTransition0.X2, lsExtraTransition.Y2);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = lsExtraTransition0.X2;
+                                        waveLine.Y1 = lsExtraTransition0.Y2;
+                                        waveLine.X2 = lsExtraTransition.X2;
+                                        waveLine.Y2 = lsExtraTransition.Y2;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(lsParamC, false);
+                                            contour.CopySegments(lsAngle, false);
+                                            contour.CopySegments(lsTransitionAngle, false);
+                                            contour.CopySegments(lsExtraTransition, false);
+                                            contour.CopySegments(lsTransition0, false);
+                                            contour.CopySegments(lsExtraTransition0, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, lsTransition0.X2, -paramBManual);
+                                            DrawLineSegment(lineSegments, lsTransition0.X2, -paramBManual, lsTransitionAngle.X2, -paramBManual);
+                                            DrawLineSegment(lineSegments, lsTransitionAngle.X2, -paramBManual, lsTransitionAngle.X2, lsTransitionAngle.Y2);
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            ILineDimension ldThickness = LineDimension(lineDimensions, lsExtraTransition0.X2, lsExtraTransition0.Y2, lsExtraTransition.X2, lsExtraTransition.Y2,
+                                                -thickness / 2, lsExtraTransition.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamA = LineDimension(lineDimensions, lsAngle.X2, lsAngle.Y2, lsAngle.X1, lsAngle.Y1, lsTransitionAngle.X2 - gapDimToPart, lsAngle.Y2 / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный перехода
+                                            ILineDimension ldTransitionH = LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, 0, 0,
+                                                lsTransition0.X2 + gapDimToPart * 2, lsTransition0.Y2 / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, lsParamC.X2, lsParamC.Y2, lsParamC.X1, lsParamC.Y1, lsParamC.X2 / 2, -gapDimToPart * 2,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 3;
+                                                ldParamC.Update();
+                                            }
+                                            if (!isCrossSection && paramBManual != 0)
+                                            {
+                                                //Зазора в стыке
+                                                ILineDimension ldParamB = LineDimension(lineDimensions, lsTransitionAngle.X2, -paramBManual, lsParamC.X2, lsParamC.Y2, ldParamA.X3, -paramBManual / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ldParamC.Y3 -= paramBManual;
+                                                ldParamC.Update();
+                                                //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                                //При это в размер забиваем вручную ноль
+                                                if (ParamB == 0)
+                                                {
+                                                    IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                    dtparamB.NominalValue = 0;
+                                                    ldParamB.Update();
+                                                }
+                                            }
+                                            //Линейный горизонтальный толщины в стыке
+                                            ILineDimension ldThicknessJoint = LineDimension(lineDimensions, 0, 0, lsAngle.X2, lsAngle.Y2,
+                                                ldThickness.X3, ldParamC.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный перехода
+                                            ILineDimension ldTransitionD = LineDimension(lineDimensions, lsTransition0.X2, lsTransition0.Y2, 0, 0,
+                                                transitionData.DimH / 2, ldThicknessJoint.Y3 , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldTransitionD).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldTransitionD.Update();
+                                            ILineDimension ldTransitionU = LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X1, lsTransitionAngle.Y1,
+                                                lsAngle.X2 - transitionData.DimH / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldTransitionU.Update();
+                                            //Расчёты для углового размера
+                                            double r1 = (ldParamA.X3 + ParamC - gapDimToDim) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 + ParamC - gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, -angleDRadius, lsAngle.Y2 / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);           
+                                        }
+                                    }
+
                                     break;
                                 case LocationPart.Верх_Право:
-                                    
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        //Размер скоса
+                                        double xangle = (thickness - ParamC) * Math.Tan(ParamA * Math.PI / 180);
+                                        extraLength += xangle;
+                                        extraLength = extraLength < 1 ? 1 : extraLength;
+                                        //Чертим графику
+                                        //Притупление
+                                        ILineSegment lsParamC = DrawLineSegment(lineSegments, 0, 0, ParamC, 0);
+                                        //Угла
+                                        ILineSegment lsAngle = DrawLineSegment(lineSegments, lsParamC.X2, lsParamC.Y2, thickness, xangle);
+                                        //Переход от угла
+                                        ILineSegment lsTransitionAngle = DrawLineSegment(lineSegments, lsAngle.X2, lsAngle.Y2, lsAngle.X2 + transitionData.DimH, transitionData.DimL);
+                                        //От перехода к краю детали
+                                        ILineSegment lsExtraTransition = DrawLineSegment(lineSegments, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X2, lsTransitionAngle.Y2 + extraLength);
+                                        //Переход от нуля
+                                        ILineSegment lsTransition0= DrawLineSegment(lineSegments, 0, 0, -transitionData.DimH, lsTransitionAngle.Y2);
+                                        //От перехода к краю детали
+                                        ILineSegment lsExtraTransition0 = DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, lsTransition0.X2, lsExtraTransition.Y2);
+                                        //Волнистая линия
+                                        IWaveLines waveLines = symbols2DContainer.WaveLines;
+                                        IWaveLine waveLine = waveLines.Add();
+                                        waveLine.X1 = lsExtraTransition0.X2;
+                                        waveLine.Y1 = lsExtraTransition0.Y2;
+                                        waveLine.X2 = lsExtraTransition.X2;
+                                        waveLine.Y2 = lsExtraTransition.Y2;
+                                        waveLine.Style = (int)ksCurveStyleEnum.ksCSBrokenLine;
+                                        waveLine.Update();
+                                        if (isHatches)
+                                        {
+                                            //Создаём контур для штриховки. При создании на прямую из линий штриховка вызывает ошибку
+                                            IDrawingContours drawingContours = drawingContainer.DrawingContours;
+                                            IDrawingContour drawingContour = drawingContours.Add();
+                                            IContour contour = (IContour)drawingContour;
+                                            //Добавляем в контур элементы которые ограничивают штриховку
+                                            contour.CopySegments(lsParamC, false);
+                                            contour.CopySegments(lsAngle, false);
+                                            contour.CopySegments(lsTransitionAngle, false);
+                                            contour.CopySegments(lsExtraTransition, false);
+                                            contour.CopySegments(lsTransition0, false);
+                                            contour.CopySegments(lsExtraTransition0, false);
+                                            contour.CopySegments(waveLine, false);
+                                            drawingContour.Update();
+                                            //Штриховка
+                                            IHatches hatches = drawingContainer.Hatches;
+                                            IHatch hatch = hatches.Add();
+                                            IBoundariesObject boundariesObject = (IBoundariesObject)hatch;
+                                            boundariesObject.AddBoundaries(drawingContour, true);
+                                            hatch.Update();
+                                        }
+                                        //Если разрез
+                                        if (!isCrossSection)
+                                        {
+                                            DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, lsTransition0.X2, -paramBManual);
+                                            DrawLineSegment(lineSegments, lsTransition0.X2, -paramBManual, lsTransitionAngle.X2, -paramBManual);
+                                            DrawLineSegment(lineSegments, lsTransitionAngle.X2, -paramBManual, lsTransitionAngle.X2, lsTransitionAngle.Y2);
+                                        }
+                                        //Чертим размеры
+                                        if (drawDimensions)
+                                        {
+                                            //Линейный горизонтальный толщины
+                                            ILineDimension ldThickness = LineDimension(lineDimensions, lsExtraTransition0.X2, lsExtraTransition0.Y2, lsExtraTransition.X2, lsExtraTransition.Y2,
+                                                thickness / 2, lsExtraTransition.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamA = LineDimension(lineDimensions, lsAngle.X2, lsAngle.Y2, lsAngle.X1, lsAngle.Y1, lsTransitionAngle.X2 + gapDimToPart * 2, lsAngle.Y2 / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный перехода
+                                            ILineDimension ldTransitionH = LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, 0, 0,
+                                                lsTransition0.X2 - gapDimToPart, lsTransition0.Y2 / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamC = LineDimension(lineDimensions, lsParamC.X2, lsParamC.Y2, lsParamC.X1, lsParamC.Y1, lsParamC.X2 / 2, -gapDimToPart * 2,
+                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamC, paramCTolerance);
+                                            //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamC.Y3 = -gapDimToPart * 3;
+                                                ldParamC.Update();
+                                            }
+                                            if (!isCrossSection && paramBManual != 0)
+                                            {
+                                                //Зазора в стыке
+                                                ILineDimension ldParamB = LineDimension(lineDimensions, lsTransition0.X2, -paramBManual, 0, 0, ldTransitionH.X3, -paramBManual / 2,
+                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                                //Двигаем размер притупления на величину зазора если выбран разрез
+                                                ldParamC.Y3 -= paramBManual;
+                                                ldParamC.Update();
+                                                //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                                //При это в размер забиваем вручную ноль
+                                                if (ParamB == 0)
+                                                {
+                                                    IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                    dtparamB.NominalValue = 0;
+                                                    ldParamB.Update();
+                                                }
+                                            }
+                                            //Линейный горизонтальный толщины в стыке
+                                            ILineDimension ldThicknessJoint = LineDimension(lineDimensions, 0, 0, lsAngle.X2, lsAngle.Y2,
+                                                ldThickness.X3, ldParamC.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный перехода
+                                            ILineDimension ldTransitionD = LineDimension(lineDimensions, lsTransition0.X2, lsTransition0.Y2, 0, 0,
+                                                -transitionData.DimH / 2, ldThicknessJoint.Y3 , ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldTransitionD).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldTransitionD.Update();
+                                            ILineDimension ldTransitionU = LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X1, lsTransitionAngle.Y1,
+                                                lsAngle.X2 + transitionData.DimH / 2, ldThicknessJoint.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldTransitionU.Update();
+                                            //Расчёты для углового размера
+                                            double r1 = (ldParamA.X3 - ParamC) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 - ParamC, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                            //Угол
+                                            IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, angleDRadius, lsAngle.Y2 / 2, angleDRadius);
+                                            SetDeviation(dtParamA, ParamATolerance);           
+                                        }
+                                    }
                                     break;
                                 case LocationPart.Низ_Лево:
                                     
