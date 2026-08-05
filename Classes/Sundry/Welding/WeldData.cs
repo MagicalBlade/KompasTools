@@ -1339,7 +1339,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                     break;
                             }
                         break;
-
                         case (TransitionTypeEnum.Симметричный, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Симметричный):
                             #region Чтобы не плодить код, меняю положение детали на противоположное.
                             if (transitionData.TransitionTypePart1 == TransitionTypeEnum.Без_перехода && transitionData.TransitionTypePart2 == TransitionTypeEnum.Симметричный)
@@ -1692,7 +1691,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
                                 case LocationPart.Верх_Лево or LocationPart.Верх_Право:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
@@ -1768,12 +1766,12 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension ldParamCH = LineDimension(lineDimensions,
                                                 ParamC / 2, paramBManual / 2,
                                                 -ParamC / 2, paramBManual / 2,
-                                                0, xangle + extraLength + gapDimToPart + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                0, paramBManual / 2 + transitionData.DimL + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamCH, paramCTolerance);
                                             ILineDimension ldParamCD = LineDimension(lineDimensions,
                                                 ldParamCH.X1, -ldParamCH.Y1,
                                                 ldParamCH.X2, -ldParamCH.Y2,
-                                                0, -paramBManual / 2 - transitionData.DimL - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                0, -paramBManual / 2 - xangle - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             SetDeviation((IDimensionText)ldParamCD, paramCTolerance);
                                             if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
                                             {
@@ -1782,21 +1780,21 @@ namespace KompasTools.Classes.Sundry.Welding
                                             }
                                             //Линейный горизонтальный угла
                                             ILineDimension ldParamAHH = LineDimension(lineDimensions,
-                                                -thickness / 2, paramBManual / 2 + xangle + extraLength,
+                                                -thickness / 2, paramBManual / 2 + xangle,
                                                 -ParamC / 2, paramBManual / 2,
                                                 -(thickness + ParamC) / 4, ldParamCH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)ldParamAHH).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldParamAHH.Update();
                                             ILineDimension ldParamAHD = LineDimension(lineDimensions,
-                                                -thickness / 2, -paramBManual / 2 - xangle,
+                                                -thickness / 2, -paramBManual / 2 - xangle - extraLength,
                                                 -ParamC / 2, -paramBManual / 2,
                                                 -(thickness + ParamC) / 4, ldParamCD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)ldParamAHD).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldParamAHD.Update();
-                                            //Линейный горизонтальный толщины верхний
+                                            //Линейный горизонтальный толщины стыка                                            
                                             ILineDimension ldThicknessH = LineDimension(lineDimensions,
-                                                -thickness / 2, paramBManual / 2 + xangle + extraLength,
-                                                thickness / 2, paramBManual / 2 + xangle + extraLength,
+                                                -thickness / 2, paramBManual / 2 + xangle ,
+                                                thickness / 2, paramBManual / 2 + xangle,
                                                 0, ldParamCH.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
                                             if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
@@ -1804,21 +1802,21 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessH.Y3 = ldParamCH.Y3 + gapDimToDim * 1.5;
                                                 ldThicknessH.Update();
                                             }
-                                            //Линейный горизонтальный толщины стыка
-                                            ILineDimension ldThicknessD = LineDimension(lineDimensions,
-                                                -thickness / 2, -paramBManual / 2 - xangle,
-                                                thickness / 2, -paramBManual / 2 - xangle,
-                                                0, ldParamCD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный толщины верхний
+                                            ILineDimension ldThicknessU = LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, paramBManual / 2 + transitionData.DimL + extraLength,
+                                                thickness / 2 + transitionData.DimH, paramBManual / 2 + transitionData.DimL + extraLength,
+                                                0, ldThicknessH.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный толщины нижний
                                             LineDimension(lineDimensions,
-                                                -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
-                                                thickness / 2 + transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
-                                                0, ldThicknessD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                -thickness / 2, -paramBManual / 2 - xangle - extraLength,
+                                                thickness / 2, -paramBManual / 2 - xangle - extraLength,
+                                                0, ldParamCD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Горизонтальный перехода
                                             ILineDimension ldTransitionHL = LineDimension(lineDimensions,
-                                                -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
-                                                ldThicknessD.X1, ldThicknessD.Y1,
-                                                -thickness / 2 - transitionData.DimH / 2, ldThicknessD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                ldThicknessU.X1, ldThicknessU.Y1,
+                                                ldThicknessH.X1, ldThicknessH.Y1,
+                                                -thickness / 2 - transitionData.DimH / 2, ldThicknessH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             LineDimension(lineDimensions,
                                                 -ldTransitionHL.X1, ldTransitionHL.Y1,
                                                 -ldTransitionHL.X2, ldTransitionHL.Y2,
@@ -1853,8 +1851,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
-
                                 case LocationPart.Низ_Лево or LocationPart.Низ_Право:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
@@ -2015,12 +2011,846 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
-
                             }
                             break;
-                    } 
-                break;
+
+
+                        case (TransitionTypeEnum.Вверх, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Вверх)
+                            or (TransitionTypeEnum.Вниз, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Вниз):
+                            #region Чтобы не плодить код, меняю положение детали на противоположное.
+                            if (transitionData.TransitionTypePart1 == TransitionTypeEnum.Без_перехода && transitionData.TransitionTypePart2 == TransitionTypeEnum.Симметричный)
+                            {
+                                (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2) = (transitionData.TransitionTypePart2, transitionData.TransitionTypePart1);
+                                switch (locationPart)
+                                {
+                                    case LocationPart.Лево_Верх:
+                                        locationPart = LocationPart.Право_Верх;
+                                        break;
+                                    case LocationPart.Лево_Низ:
+                                        locationPart = LocationPart.Право_Низ;
+                                        break;
+                                    case LocationPart.Право_Верх:
+                                        locationPart = LocationPart.Лево_Верх;
+                                        break;
+                                    case LocationPart.Право_Низ:
+                                        locationPart = LocationPart.Лево_Низ;
+                                        break;
+                                    case LocationPart.Верх_Лево:
+                                        locationPart = LocationPart.Низ_Лево;
+                                        break;
+                                    case LocationPart.Верх_Право:
+                                        locationPart = LocationPart.Низ_Право;
+                                        break;
+                                    case LocationPart.Низ_Лево:
+                                        locationPart = LocationPart.Верх_Лево;
+                                        break;
+                                    case LocationPart.Низ_Право:
+                                        locationPart = LocationPart.Верх_Право;
+                                        break;
+                                }
+                            }
+                            #endregion
+                            switch (locationPart)
+                            {
+                                case LocationPart.Лево_Верх:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            //Размер скоса
+                                            double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
+                                            extraLength += xangle;
+                                            extraLength = extraLength < 1 ? 1 : extraLength;
+                                            //Горизонтальный угла
+                                            ILineDimension ldParamAL = LineDimension(lineDimensions, -xangle - paramBManual / 2, -thickness / 2, -paramBManual / 2, -ParamC / 2,
+                                                -xangle / 2, -thickness / 2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions, xangle + paramBManual / 2, -thickness / 2, paramBManual / 2, -ParamC / 2,
+                                                xangle / 2, ldParamAL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, -ParamC / 2, paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2 + 1, ldParamAL.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если верхний и нижний допуск зазора одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                            {
+                                                ldParamB.Y3 = ldParamAL.Y3 - gapDimToDim * 1.5;
+                                                ldParamB.Update();
+                                            }
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный вертикальный притупления
+                                            ILineDimension ldParamCL = LineDimension(lineDimensions,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                -paramBManual / 2 - transitionData.DimL - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamCL, paramCTolerance);
+                                            ILineDimension ldParamCR = LineDimension(lineDimensions,
+                                                paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                xangle + extraLength + gapDimToPart * 2 + paramBManual / 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamCR.X3 = xangle + extraLength + gapDimToPart * 3 + paramBManual / 2;
+                                                ldParamCR.Update();
+                                            }
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamAHL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - xangle, thickness / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                ldParamCL.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHL).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHL.Update();
+                                            ILineDimension ldParamAHR = LineDimension(lineDimensions,
+                                                paramBManual / 2 + xangle + extraLength, thickness / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                ldParamCR.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHR).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHR.Update();
+                                            //Толщина в стыке
+                                            ILineDimension ldThicknessL = LineDimension(lineDimensions, -paramBManual / 2 - xangle, thickness / 2, -paramBManual / 2 - xangle, -thickness / 2,
+                                                ldParamAHL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldThicknessL.X3 = ldParamCL.X3 - gapDimToDim * 1.5;
+                                                ldThicknessL.Update();
+                                            }
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, -paramBManual / 2 - transitionData.DimL - extraLength, thickness / 2 + transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength, -thickness / 2 - transitionData.DimH,
+                                                ldThicknessL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, paramBManual / 2 + xangle + extraLength, thickness / 2, paramBManual / 2 + xangle + extraLength, -thickness / 2,
+                                                ldParamCR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
+                                            //Вертикальные размеры перехода
+                                            ILineDimension ldTtransitionUL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - transitionData.DimL - extraLength, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2 - xangle, thickness / 2,
+                                                ldThicknessL.X3, thickness / 2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions,
+                                                ldTtransitionUL.X1, -ldTtransitionUL.Y1,
+                                                ldTtransitionUL.X2, -ldTtransitionUL.Y2,
+                                                ldThicknessL.X3, -ldTtransitionUL.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Горизонтальный размер перехода
+                                            LineDimension(lineDimensions,
+                                                -paramBManual / 2 - transitionData.DimL, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                (-transitionData.DimL - paramBManual) / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Угол
+                                            double r1 = ((thickness - ParamC) / 2 + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart * 2, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                                                       //Линии нужны для построения размера угла
+                                            ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -paramBManual / 2, ParamC / 2, -paramBManual / 2 - xangle, thickness / 2);
+                                            ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, paramBManual / 2, ParamC / 2, paramBManual / 2 + xangle, thickness / 2);
+                                            //Эти линии удалять нельзя. Компас вылетает с ошибкой.
+                                            //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
+                                            if (drawingGroup.Objects[0] is object[] obj)
+                                            {
+                                                foreach (var item in obj)
+                                                {
+                                                    if (item is ILineSegment lineSegment)
+                                                    {
+                                                        if ((baseobjAngle1.X1 == lineSegment.X1 && baseobjAngle1.Y1 == lineSegment.Y1 && baseobjAngle1.X2 == lineSegment.X2 && baseobjAngle1.Y2 == lineSegment.Y2 && baseobjAngle1 != lineSegment)
+                                                            || (baseobjAngle2.X1 == lineSegment.X1 && baseobjAngle2.Y1 == lineSegment.Y1 && baseobjAngle2.X2 == lineSegment.X2 && baseobjAngle2.Y2 == lineSegment.Y2 && baseobjAngle2 != lineSegment))
+                                                        {
+                                                            lineSegment.Delete();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                0, (thickness - ParamC) / 2 + gapDimToPart * 2, angleDRadius);
+                                            SetDeviation((IDimensionText)adParamA, ParamATolerance);
+                                        }
+                                    }
+                                    break;
+
+                                case LocationPart.Лево_Низ:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            //Размер скоса
+                                            double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
+                                            extraLength += xangle;
+                                            extraLength = extraLength < 1 ? 1 : extraLength;
+                                            //Горизонтальный угла
+                                            ILineDimension ldParamAL = LineDimension(lineDimensions, -xangle - paramBManual / 2, -thickness / 2, -paramBManual / 2, -ParamC / 2,
+                                                -xangle / 2, -thickness / 2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions, xangle + paramBManual / 2, -thickness / 2, paramBManual / 2, -ParamC / 2,
+                                                xangle / 2, ldParamAL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual / 2, -ParamC / 2, paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2 + 1, ldParamAL.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если верхний и нижний допуск зазора одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                            {
+                                                ldParamB.Y3 = ldParamAL.Y3 - gapDimToDim * 1.5;
+                                                ldParamB.Update();
+                                            }
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный вертикальный притупления
+                                            ILineDimension ldParamCL = LineDimension(lineDimensions,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                -paramBManual / 2 - transitionData.DimL - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamCL, paramCTolerance);
+                                            ILineDimension ldParamCR = LineDimension(lineDimensions,
+                                                paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                xangle + extraLength + gapDimToPart * 2 + paramBManual / 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamCR.X3 = xangle + extraLength + gapDimToPart * 3 + paramBManual / 2;
+                                                ldParamCR.Update();
+                                            }
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamAHL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - xangle, thickness / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                ldParamCL.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHL).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHL.Update();
+                                            ILineDimension ldParamAHR = LineDimension(lineDimensions,
+                                                paramBManual / 2 + xangle + extraLength, thickness / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                ldParamCR.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHR).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHR.Update();
+                                            //Толщина в стыке
+                                            ILineDimension ldThicknessL = LineDimension(lineDimensions, -paramBManual / 2 - xangle, thickness / 2, -paramBManual / 2 - xangle, -thickness / 2,
+                                                ldParamAHL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldThicknessL.X3 = ldParamCL.X3 - gapDimToDim * 1.5;
+                                                ldThicknessL.Update();
+                                            }
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions, -paramBManual / 2 - transitionData.DimL - extraLength, thickness / 2 + transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength, -thickness / 2 - transitionData.DimH,
+                                                ldThicknessL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions, paramBManual / 2 + xangle + extraLength, thickness / 2, paramBManual / 2 + xangle + extraLength, -thickness / 2,
+                                                ldParamCR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
+                                            //Вертикальные размеры перехода
+                                            ILineDimension ldTtransitionUL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - transitionData.DimL - extraLength, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2 - xangle, thickness / 2,
+                                                ldThicknessL.X3, thickness / 2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions,
+                                                ldTtransitionUL.X1, -ldTtransitionUL.Y1,
+                                                ldTtransitionUL.X2, -ldTtransitionUL.Y2,
+                                                ldThicknessL.X3, -ldTtransitionUL.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Горизонтальный размер перехода
+                                            LineDimension(lineDimensions,
+                                                -paramBManual / 2 - transitionData.DimL, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                (-transitionData.DimL - paramBManual) / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Угол
+                                            double r1 = ((thickness - ParamC) / 2 + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart * 2, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                                                       //Линии нужны для построения размера угла
+                                            ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -paramBManual / 2, ParamC / 2, -paramBManual / 2 - xangle, thickness / 2);
+                                            ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, paramBManual / 2, ParamC / 2, paramBManual / 2 + xangle, thickness / 2);
+                                            //Эти линии удалять нельзя. Компас вылетает с ошибкой.
+                                            //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
+                                            if (drawingGroup.Objects[0] is object[] obj)
+                                            {
+                                                foreach (var item in obj)
+                                                {
+                                                    if (item is ILineSegment lineSegment)
+                                                    {
+                                                        if ((baseobjAngle1.X1 == lineSegment.X1 && baseobjAngle1.Y1 == lineSegment.Y1 && baseobjAngle1.X2 == lineSegment.X2 && baseobjAngle1.Y2 == lineSegment.Y2 && baseobjAngle1 != lineSegment)
+                                                            || (baseobjAngle2.X1 == lineSegment.X1 && baseobjAngle2.Y1 == lineSegment.Y1 && baseobjAngle2.X2 == lineSegment.X2 && baseobjAngle2.Y2 == lineSegment.Y2 && baseobjAngle2 != lineSegment))
+                                                        {
+                                                            lineSegment.Delete();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                0, (thickness - ParamC) / 2 + gapDimToPart * 2, angleDRadius);
+                                            SetDeviation((IDimensionText)adParamA, ParamATolerance);
+                                        }
+                                    }
+                                    break;
+
+
+
+                                case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, paramBManual / 2, 0);
+                                                break;
+                                            case LocationPart.Право_Верх or LocationPart.Право_Низ:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, -paramBManual / 2, 0);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            //Размер скоса
+                                            double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
+                                            extraLength += xangle;
+                                            extraLength = extraLength < 1 ? 1 : extraLength;
+                                            //Горизонтальный угла
+                                            ILineDimension ldParamAL = LineDimension(lineDimensions, -xangle - paramBManual / 2, -thickness / 2, -paramBManual / 2, -ParamC / 2,
+                                                -xangle / 2, -thickness / 2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions, xangle + paramBManual / 2, -thickness / 2, paramBManual / 2, -ParamC / 2,
+                                                xangle / 2, ldParamAL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2, -ParamC / 2,
+                                                -paramBManual / 2 - 1, ldParamAL.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если верхний и нижний допуск зазора одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamBTolerance[0]) != Math.Abs(ParamBTolerance[1]))
+                                            {
+                                                ldParamB.Y3 = ldParamAL.Y3 - gapDimToDim * 1.5;
+                                                ldParamB.Update();
+                                            }
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный вертикальный притупления
+                                            ILineDimension ldParamCL = LineDimension(lineDimensions,
+                                                -paramBManual / 2, -ParamC / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                -paramBManual / 2 - xangle - extraLength - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamCL, paramCTolerance);
+                                            ILineDimension ldParamCR = LineDimension(lineDimensions,
+                                                paramBManual / 2, -ParamC / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                paramBManual / 2 + transitionData.DimL + extraLength + gapDimToPart * 2, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamCR.X3 += gapDimToPart;
+                                                ldParamCR.Update();
+                                            }
+                                            SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamAHL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - xangle - extraLength, thickness / 2,
+                                                -paramBManual / 2, ParamC / 2,
+                                                ldParamCL.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHL).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHL.Update();
+                                            ILineDimension ldParamAHR = LineDimension(lineDimensions,
+                                                paramBManual / 2 + xangle, thickness / 2,
+                                                paramBManual / 2, ParamC / 2,
+                                                ldParamCR.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ((IDimensionText)ldParamAHR).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHR.Update();
+                                            //Толщина в стыке
+                                            ILineDimension ldThicknessL = LineDimension(lineDimensions,
+                                                -paramBManual / 2 - xangle - extraLength, thickness / 2,
+                                                -paramBManual / 2 - xangle - extraLength, -thickness / 2,
+                                                ldParamAHL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension ldThicknessR = LineDimension(lineDimensions,
+                                                paramBManual / 2 + xangle, thickness / 2,
+                                                paramBManual / 2 + xangle, -thickness / 2,
+                                                ldParamCR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldThicknessL.X3 = ldParamCL.X3 - gapDimToDim * 1.5;
+                                                ldThicknessL.Update();
+                                            }
+                                            //Линейный вертикальный толщины
+                                            LineDimension(lineDimensions,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2 + transitionData.DimH,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, -thickness / 2 - transitionData.DimH,
+                                                ldThicknessR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Вертикальные размеры перехода
+                                            ILineDimension ldTtransitionUL = LineDimension(lineDimensions,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2 + transitionData.DimH,
+                                                paramBManual / 2 + xangle, thickness / 2,
+                                                ldThicknessR.X3, thickness / 2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions,
+                                                ldTtransitionUL.X1, -ldTtransitionUL.Y1,
+                                                ldTtransitionUL.X2, -ldTtransitionUL.Y2,
+                                                ldThicknessR.X3, -ldTtransitionUL.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Горизонтальный размер перехода
+                                            LineDimension(lineDimensions,
+                                                paramBManual / 2 + transitionData.DimL, thickness / 2 + transitionData.DimH,
+                                                paramBManual / 2, -ParamC / 2,
+                                                (transitionData.DimL + paramBManual) / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Угол
+                                            double r1 = ((thickness - ParamC) / 2 + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart * 2, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                                                       //Линии нужны для построения размера угла
+                                            ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, -paramBManual / 2, ParamC / 2, -paramBManual / 2 - xangle, thickness / 2);
+                                            ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, paramBManual / 2, ParamC / 2, paramBManual / 2 + xangle, thickness / 2);
+                                            //Эти линии удалять нельзя. Компас вылетает с ошибкой.
+                                            //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
+                                            if (drawingGroup.Objects[0] is object[] obj)
+                                            {
+                                                foreach (var item in obj)
+                                                {
+                                                    if (item is ILineSegment lineSegment)
+                                                    {
+                                                        if ((baseobjAngle1.X1 == lineSegment.X1 && baseobjAngle1.Y1 == lineSegment.Y1 && baseobjAngle1.X2 == lineSegment.X2 && baseobjAngle1.Y2 == lineSegment.Y2 && baseobjAngle1 != lineSegment)
+                                                            || (baseobjAngle2.X1 == lineSegment.X1 && baseobjAngle2.Y1 == lineSegment.Y1 && baseobjAngle2.X2 == lineSegment.X2 && baseobjAngle2.Y2 == lineSegment.Y2 && baseobjAngle2 != lineSegment))
+                                                        {
+                                                            lineSegment.Delete();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                0, (thickness - ParamC) / 2 + gapDimToPart * 2, angleDRadius);
+                                            SetDeviation((IDimensionText)adParamA, ParamATolerance);
+                                        }
+                                    }
+                                    break;
+                                case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
+                                                break;
+                                            case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
+                                                break;
+                                            case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            //Размер скоса
+                                            double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
+                                            extraLength += xangle;
+                                            extraLength = extraLength < 1 ? 1 : extraLength;
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamA = LineDimension(lineDimensions,
+                                                -thickness / 2, -xangle - paramBManual / 2,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -thickness / 2 - gapDimToPart, -xangle / 2 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions,
+                                                ldParamA.X1, -ldParamA.Y1,
+                                                ldParamA.X2, -ldParamA.Y2,
+                                                ldParamA.X3, -ldParamA.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -ParamC / 2, paramBManual / 2,
+                                                ldParamA.X3 - gapDimToDim, -paramBManual / 2 - 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Вертикальный перехода
+                                            LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, paramBManual / 2 + transitionData.DimL,
+                                                -ParamC / 2, paramBManual / 2,
+                                                ldParamB.X3, paramBManual / 2 + transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamCH = LineDimension(lineDimensions,
+                                                ParamC / 2, paramBManual / 2,
+                                                -ParamC / 2, paramBManual / 2,
+                                                0, paramBManual / 2 + transitionData.DimL + extraLength + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamCH, paramCTolerance);
+                                            ILineDimension ldParamCD = LineDimension(lineDimensions,
+                                                ldParamCH.X1, -ldParamCH.Y1,
+                                                ldParamCH.X2, -ldParamCH.Y2,
+                                                0, -paramBManual / 2 - xangle - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamCD, paramCTolerance);
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamCD.Y3 -= gapDimToPart;
+                                                ldParamCD.Update();
+                                            }
+                                            //Линейный горизонтальный угла
+                                            ILineDimension ldParamAHH = LineDimension(lineDimensions,
+                                                -thickness / 2, paramBManual / 2 + xangle,
+                                                -ParamC / 2, paramBManual / 2,
+                                                -(thickness + ParamC) / 4, ldParamCH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldParamAHH).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHH.Update();
+                                            ILineDimension ldParamAHD = LineDimension(lineDimensions,
+                                                -thickness / 2, -paramBManual / 2 - xangle - extraLength,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -(thickness + ParamC) / 4, ldParamCD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldParamAHD).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHD.Update();
+                                            //Линейный горизонтальный толщины стыка                                            
+                                            ILineDimension ldThicknessH = LineDimension(lineDimensions,
+                                                -thickness / 2, paramBManual / 2 + xangle,
+                                                thickness / 2, paramBManual / 2 + xangle,
+                                                0, ldParamCH.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldThicknessH.Y3 = ldParamCH.Y3 + gapDimToDim * 1.5;
+                                                ldThicknessH.Update();
+                                            }
+                                            //Линейный горизонтальный толщины верхний
+                                            ILineDimension ldThicknessU = LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, paramBManual / 2 + transitionData.DimL + extraLength,
+                                                thickness / 2 + transitionData.DimH, paramBManual / 2 + transitionData.DimL + extraLength,
+                                                0, ldThicknessH.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный толщины нижний
+                                            LineDimension(lineDimensions,
+                                                -thickness / 2, -paramBManual / 2 - xangle - extraLength,
+                                                thickness / 2, -paramBManual / 2 - xangle - extraLength,
+                                                0, ldParamCD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Горизонтальный перехода
+                                            ILineDimension ldTransitionHL = LineDimension(lineDimensions,
+                                                ldThicknessU.X1, ldThicknessU.Y1,
+                                                ldThicknessH.X1, ldThicknessH.Y1,
+                                                -thickness / 2 - transitionData.DimH / 2, ldThicknessH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions,
+                                                -ldTransitionHL.X1, ldTransitionHL.Y1,
+                                                -ldTransitionHL.X2, ldTransitionHL.Y2,
+                                                -ldTransitionHL.X3, ldTransitionHL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Угол
+                                            double r1 = ((thickness - ParamC) / 2 + gapDimToPart * 2.5) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart * 2.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                                                       //Линии нужны для построения размера угла
+                                            ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamC / 2, -paramBManual / 2, thickness / 2, -paramBManual / 2 - xangle);
+                                            ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, paramBManual / 2, thickness / 2, paramBManual / 2 + xangle);
+                                            //Эти линии удалять нельзя. Компас вылетает с ошибкой.
+                                            //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
+                                            if (drawingGroup.Objects[0] is object[] obj)
+                                            {
+                                                foreach (var item in obj)
+                                                {
+                                                    if (item is ILineSegment lineSegment)
+                                                    {
+                                                        if ((baseobjAngle1.X1 == lineSegment.X1 && baseobjAngle1.Y1 == lineSegment.Y1 && baseobjAngle1.X2 == lineSegment.X2 && baseobjAngle1.Y2 == lineSegment.Y2 && baseobjAngle1 != lineSegment)
+                                                            || (baseobjAngle2.X1 == lineSegment.X1 && baseobjAngle2.Y1 == lineSegment.Y1 && baseobjAngle2.X2 == lineSegment.X2 && baseobjAngle2.Y2 == lineSegment.Y2 && baseobjAngle2 != lineSegment))
+                                                        {
+                                                            lineSegment.Delete();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                (thickness - ParamC) / 2 + gapDimToPart * 2.5, 0, angleDRadius);
+                                            SetDeviation((IDimensionText)adParamA, ParamATolerance);
+                                        }
+                                    }
+                                    break;
+                                case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                    {
+                                        //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                        //При это в размер забиваем вручную ноль
+                                        double paramBManual = 2;
+                                        if (ParamB != 0)
+                                        {
+                                            paramBManual = ParamB;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, true, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual);
+                                                break;
+                                            case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        DrawingPart(view, thickness, locationPart, false, false,
+                                                    gapDimToPart, gapDimToDim, gapDimToPartLeft, extraLength, isCrossSection, isHatches, transitionData);
+                                        //Что бы не плодить код, делаю поправку смещения группы тут.
+                                        switch (locationPart)
+                                        {
+                                            case LocationPart.Верх_Лево or LocationPart.Верх_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, -paramBManual / 2);
+                                                break;
+                                            case LocationPart.Низ_Лево or LocationPart.Низ_Право:
+                                                document2DAPI5.ksMoveObj(drawingGroup.Reference, 0, paramBManual / 2);
+                                                break;
+                                            default:
+                                                break;
+                                        }
+                                        if (drawDimensions)
+                                        {
+                                            //Размер скоса
+                                            double xangle = (thickness - ParamC) / 2 * Math.Tan(ParamA * Math.PI / 180);
+                                            extraLength += xangle;
+                                            extraLength = extraLength < 1 ? 1 : extraLength;
+                                            //Линейный вертикальный угла
+                                            ILineDimension ldParamA = LineDimension(lineDimensions,
+                                                -thickness / 2, -xangle - paramBManual / 2,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -thickness / 2 - gapDimToPart, -xangle / 2 - paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            LineDimension(lineDimensions,
+                                                ldParamA.X1, -ldParamA.Y1,
+                                                ldParamA.X2, -ldParamA.Y2,
+                                                ldParamA.X3, -ldParamA.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Линейный вертикальный зазора в стыке
+                                            ILineDimension ldParamB = LineDimension(lineDimensions,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -ParamC / 2, paramBManual / 2,
+                                                ldParamA.X3 - gapDimToDim, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            SetDeviation((IDimensionText)ldParamB, paramBTolerance);
+                                            //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
+                                            //При это в размер забиваем вручную ноль
+                                            if (ParamB == 0)
+                                            {
+                                                IDimensionText dtparamB = (IDimensionText)ldParamB;
+                                                dtparamB.NominalValue = 0;
+                                                ldParamB.Update();
+                                            }
+                                            //Линейный горизонтальный притупления
+                                            ILineDimension ldParamCH = LineDimension(lineDimensions,
+                                                ParamC / 2, paramBManual / 2,
+                                                -ParamC / 2, paramBManual / 2,
+                                                0, xangle + extraLength + gapDimToPart + paramBManual / 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamCH, paramCTolerance);
+                                            ILineDimension ldParamCD = LineDimension(lineDimensions,
+                                                ldParamCH.X1, -ldParamCH.Y1,
+                                                ldParamCH.X2, -ldParamCH.Y2,
+                                                0, -paramBManual / 2 - transitionData.DimL - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            SetDeviation((IDimensionText)ldParamCD, paramCTolerance);
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldParamCD.Y3 -= gapDimToPart;
+                                                ldParamCD.Update();
+                                            }
+                                            //Линейный горизонтальный угла
+                                            ILineDimension ldParamAHH = LineDimension(lineDimensions,
+                                                -thickness / 2, paramBManual / 2 + xangle + extraLength,
+                                                -ParamC / 2, paramBManual / 2,
+                                                -(thickness + ParamC) / 4, ldParamCH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldParamAHH).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHH.Update();
+                                            ILineDimension ldParamAHD = LineDimension(lineDimensions,
+                                                -thickness / 2, -paramBManual / 2 - xangle,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                -(thickness + ParamC) / 4, ldParamCD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ((IDimensionText)ldParamAHD).Accuracy = ksAccuracyEnum.ksAccuracy1;
+                                            ldParamAHD.Update();
+                                            //Линейный горизонтальный толщины верхний
+                                            ILineDimension ldThicknessH = LineDimension(lineDimensions,
+                                                -thickness / 2, paramBManual / 2 + xangle + extraLength,
+                                                thickness / 2, paramBManual / 2 + xangle + extraLength,
+                                                0, ldParamCH.Y3 + gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
+                                            if (Math.Abs(ParamCTolerance[0]) != Math.Abs(ParamCTolerance[1]))
+                                            {
+                                                ldThicknessH.Y3 = ldParamCH.Y3 + gapDimToDim * 1.5;
+                                                ldThicknessH.Update();
+                                            }
+                                            //Линейный горизонтальный толщины стыка
+                                            ILineDimension ldThicknessD = LineDimension(lineDimensions,
+                                                -thickness / 2, -paramBManual / 2 - xangle,
+                                                thickness / 2, -paramBManual / 2 - xangle,
+                                                0, ldParamCD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Линейный горизонтальный толщины нижний
+                                            LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
+                                                thickness / 2 + transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
+                                                0, ldThicknessD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Горизонтальный перехода
+                                            ILineDimension ldTransitionHL = LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
+                                                ldThicknessD.X1, ldThicknessD.Y1,
+                                                -thickness / 2 - transitionData.DimH / 2, ldThicknessD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            LineDimension(lineDimensions,
+                                                -ldTransitionHL.X1, ldTransitionHL.Y1,
+                                                -ldTransitionHL.X2, ldTransitionHL.Y2,
+                                                -ldTransitionHL.X3, ldTransitionHL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            //Вертикальный перехода
+                                            LineDimension(lineDimensions,
+                                                -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL,
+                                                -ParamC / 2, -paramBManual / 2,
+                                                ldParamB.X3, -paramBManual / 2 - transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            //Угол
+                                            double r1 = ((thickness - ParamC) / 2 + gapDimToPart * 2.5) / Math.Cos(ParamA * Math.PI / 180);
+                                            double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart * 2.5, 2) + Math.Pow(xangle / 2, 2));
+                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
+                                                                       //Линии нужны для построения размера угла
+                                            ILineSegment baseobjAngle1 = DrawLineSegment(lineSegments, ParamC / 2, -paramBManual / 2, thickness / 2, -paramBManual / 2 - xangle);
+                                            ILineSegment baseobjAngle2 = DrawLineSegment(lineSegments, ParamC / 2, paramBManual / 2, thickness / 2, paramBManual / 2 + xangle);
+                                            //Эти линии удалять нельзя. Компас вылетает с ошибкой.
+                                            //Т.к. эти линии дублируют уже существующие то желательно удалить существующие.
+                                            if (drawingGroup.Objects[0] is object[] obj)
+                                            {
+                                                foreach (var item in obj)
+                                                {
+                                                    if (item is ILineSegment lineSegment)
+                                                    {
+                                                        if ((baseobjAngle1.X1 == lineSegment.X1 && baseobjAngle1.Y1 == lineSegment.Y1 && baseobjAngle1.X2 == lineSegment.X2 && baseobjAngle1.Y2 == lineSegment.Y2 && baseobjAngle1 != lineSegment)
+                                                            || (baseobjAngle2.X1 == lineSegment.X1 && baseobjAngle2.Y1 == lineSegment.Y1 && baseobjAngle2.X2 == lineSegment.X2 && baseobjAngle2.Y2 == lineSegment.Y2 && baseobjAngle2 != lineSegment))
+                                                        {
+                                                            lineSegment.Delete();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
+                                                (thickness - ParamC) / 2 + gapDimToPart * 2.5, 0, angleDRadius);
+                                            SetDeviation((IDimensionText)adParamA, ParamATolerance);
+                                        }
+                                    }
+                                    break;
+                            }
+                            break;
+
+                    }
+                    break;
 
 
                 case ("5264-80" or "8713-79" or "14771-76", ConnectionTypeEnum.Стыковое, ShapePreparedEdgesEnum.С_двумя_симметричными_скосами, ShapePreparedEdgesEnum.Без_скоса_стыковое):
