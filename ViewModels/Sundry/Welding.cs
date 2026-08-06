@@ -621,7 +621,7 @@ namespace KompasTools.ViewModels.Sundry
             #endregion
             Thickness1Str = "12"; //TODO Удалить
             Thickness2Str = "10"; //TODO Удалить
-            SelectTransitionTypes = TransitionTypeEnum.Вверх;
+            SelectTransitionTypes = TransitionTypeEnum.Вниз;
             Filter();
         }
         /// <summary>
