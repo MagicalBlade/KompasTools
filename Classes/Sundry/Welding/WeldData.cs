@@ -579,6 +579,39 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                         break;
                         case (TransitionTypeEnum.Вверх, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Вверх):
+                            #region Чтобы не плодить код, меняю положение детали на противоположное.
+                            if (transitionData.TransitionTypePart1 == TransitionTypeEnum.Без_перехода && transitionData.TransitionTypePart2 == TransitionTypeEnum.Вверх)
+                            {
+                                (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2) = (transitionData.TransitionTypePart2, transitionData.TransitionTypePart1);
+                                switch (locationPart)
+                                {
+                                    case LocationPart.Лево_Верх:
+                                        locationPart = LocationPart.Право_Верх;
+                                        break;
+                                    case LocationPart.Лево_Низ:
+                                        locationPart = LocationPart.Право_Низ;
+                                        break;
+                                    case LocationPart.Право_Верх:
+                                        locationPart = LocationPart.Лево_Верх;
+                                        break;
+                                    case LocationPart.Право_Низ:
+                                        locationPart = LocationPart.Лево_Низ;
+                                        break;
+                                    case LocationPart.Верх_Лево:
+                                        locationPart = LocationPart.Низ_Лево;
+                                        break;
+                                    case LocationPart.Верх_Право:
+                                        locationPart = LocationPart.Низ_Право;
+                                        break;
+                                    case LocationPart.Низ_Лево:
+                                        locationPart = LocationPart.Верх_Лево;
+                                        break;
+                                    case LocationPart.Низ_Право:
+                                        locationPart = LocationPart.Верх_Право;
+                                        break;
+                                }
+                            }
+                            #endregion
                             switch (locationPart)
                             {                                
                                 case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
@@ -772,6 +805,39 @@ namespace KompasTools.Classes.Sundry.Welding
                             }
                         break;
                         case (TransitionTypeEnum.Вниз, TransitionTypeEnum.Без_перехода) or (TransitionTypeEnum.Без_перехода, TransitionTypeEnum.Вниз):
+                            #region Чтобы не плодить код, меняю положение детали на противоположное.
+                            if (transitionData.TransitionTypePart1 == TransitionTypeEnum.Без_перехода && transitionData.TransitionTypePart2 == TransitionTypeEnum.Вниз)
+                            {
+                                (transitionData.TransitionTypePart1, transitionData.TransitionTypePart2) = (transitionData.TransitionTypePart2, transitionData.TransitionTypePart1);
+                                switch (locationPart)
+                                {
+                                    case LocationPart.Лево_Верх:
+                                        locationPart = LocationPart.Право_Верх;
+                                        break;
+                                    case LocationPart.Лево_Низ:
+                                        locationPart = LocationPart.Право_Низ;
+                                        break;
+                                    case LocationPart.Право_Верх:
+                                        locationPart = LocationPart.Лево_Верх;
+                                        break;
+                                    case LocationPart.Право_Низ:
+                                        locationPart = LocationPart.Лево_Низ;
+                                        break;
+                                    case LocationPart.Верх_Лево:
+                                        locationPart = LocationPart.Низ_Лево;
+                                        break;
+                                    case LocationPart.Верх_Право:
+                                        locationPart = LocationPart.Низ_Право;
+                                        break;
+                                    case LocationPart.Низ_Лево:
+                                        locationPart = LocationPart.Верх_Лево;
+                                        break;
+                                    case LocationPart.Низ_Право:
+                                        locationPart = LocationPart.Верх_Право;
+                                        break;
+                                }
+                            }
+                            #endregion
                             switch (locationPart)
                             {
                                 case LocationPart.Лево_Верх or LocationPart.Лево_Низ:
