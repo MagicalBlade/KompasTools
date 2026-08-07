@@ -2843,9 +2843,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
-
-
-
                                 case LocationPart.Право_Верх or LocationPart.Право_Низ:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
@@ -2939,7 +2936,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldParamAHL).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldParamAHL.Update();
                                             ILineDimension ldParamAHR = LineDimension(lineDimensions,
-                                                paramBManual / 2 + xangle, thickness / 2,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2,
                                                 paramBManual / 2, ParamC / 2,
                                                 ldParamCR.X3, (thickness + ParamC) / 4, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)ldParamAHR).Accuracy = ksAccuracyEnum.ksAccuracy1;
@@ -2950,7 +2947,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 -paramBManual / 2 - xangle - extraLength, -thickness / 2,
                                                 ldParamAHL.X3 - gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ILineDimension ldThicknessR = LineDimension(lineDimensions,
-                                                paramBManual / 2 + xangle, thickness / 2,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2,
                                                 paramBManual / 2 + xangle, -thickness / 2,
                                                 ldParamCR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
@@ -2961,21 +2958,17 @@ namespace KompasTools.Classes.Sundry.Welding
                                             }
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions,
-                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2 + transitionData.DimH,
+                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2,
                                                 paramBManual / 2 + transitionData.DimL + extraLength, -thickness / 2 - transitionData.DimH,
                                                 ldThicknessR.X3 + gapDimToDim, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Вертикальные размеры перехода
-                                            ILineDimension ldTtransitionUL = LineDimension(lineDimensions,
-                                                paramBManual / 2 + transitionData.DimL + extraLength, thickness / 2 + transitionData.DimH,
-                                                paramBManual / 2 + xangle, thickness / 2,
-                                                ldThicknessR.X3, thickness / 2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             LineDimension(lineDimensions,
-                                                ldTtransitionUL.X1, -ldTtransitionUL.Y1,
-                                                ldTtransitionUL.X2, -ldTtransitionUL.Y2,
-                                                ldThicknessR.X3, -ldTtransitionUL.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                paramBManual / 2 + transitionData.DimL + extraLength, -thickness / 2 - transitionData.DimH,
+                                                paramBManual / 2 + xangle, -thickness / 2,
+                                                ldThicknessR.X3, -thickness / 2 - transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Горизонтальный размер перехода
                                             LineDimension(lineDimensions,
-                                                paramBManual / 2 + transitionData.DimL, thickness / 2 + transitionData.DimH,
+                                                paramBManual / 2 + transitionData.DimL, -thickness / 2 - transitionData.DimH,
                                                 paramBManual / 2, -ParamC / 2,
                                                 (transitionData.DimL + paramBManual) / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Угол
@@ -3008,6 +3001,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         }
                                     }
                                     break;
+
+
                                 case LocationPart.Верх_Лево or LocationPart.Верх_Право:
                                     {
                                         //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
