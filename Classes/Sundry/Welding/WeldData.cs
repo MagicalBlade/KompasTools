@@ -5032,22 +5032,18 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный горизонтальный толщины стыка
                                             ILineDimension ldThicknessD = LineDimension(lineDimensions,
                                                 -thickness / 2, -paramBManual / 2 - xangle,
-                                                thickness / 2, -paramBManual / 2 - xangle,
+                                                thickness / 2, -paramBManual / 2 - transitionData.DimL  -extraLength,
                                                 0, ldParamCD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный толщины нижний
                                             LineDimension(lineDimensions,
                                                 -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
-                                                thickness / 2 + transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
+                                                thickness / 2, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 0, ldThicknessD.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Горизонтальный перехода
                                             ILineDimension ldTransitionHL = LineDimension(lineDimensions,
                                                 -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 ldThicknessD.X1, ldThicknessD.Y1,
                                                 -thickness / 2 - transitionData.DimH / 2, ldThicknessD.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            LineDimension(lineDimensions,
-                                                -ldTransitionHL.X1, ldTransitionHL.Y1,
-                                                -ldTransitionHL.X2, ldTransitionHL.Y2,
-                                                -ldTransitionHL.X3, ldTransitionHL.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Вертикальный перехода
                                             LineDimension(lineDimensions,
                                                 -thickness / 2 - transitionData.DimH, -paramBManual / 2 - transitionData.DimL,
