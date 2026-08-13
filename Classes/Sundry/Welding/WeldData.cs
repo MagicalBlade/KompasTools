@@ -6140,7 +6140,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension ldParamAL = LineDimension(lineDimensions,
                                                 xangle + paramBManual / 2, thickness / 2,
                                                 paramBManual / 2, ParamC / 2,
-                                                xangle / 2, thickness / 2 + transitionData.DimH + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                xangle / 2, thickness / 2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный зазора в стыке
                                             ILineDimension ldParamB = LineDimension(lineDimensions,
                                                 paramBManual / 2, -ParamC / 2,
@@ -6188,21 +6188,17 @@ namespace KompasTools.Classes.Sundry.Welding
                                             double extraLengthNotCh = extraLength - xangle + extraLengthNotChamfer;
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions,
-                                                -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, thickness / 2,
                                                 -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, -thickness / 2 - transitionData.DimH,
                                                 -paramBManual / 2 - transitionData.DimL - extraLengthNotCh - gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Вертикальные размеры перехода
-                                            ILineDimension ldTtransitionUL = LineDimension(lineDimensions,
-                                                -paramBManual / 2 - transitionData.DimL, thickness / 2 + transitionData.DimH,
-                                                paramBManual / 2 + xangle + extraLength, thickness / 2,
-                                                ldThicknessL.X3, thickness / 2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             LineDimension(lineDimensions,
-                                                ldTtransitionUL.X1, -ldTtransitionUL.Y1,
-                                                ldTtransitionUL.X2, -ldTtransitionUL.Y2,
-                                                ldThicknessL.X3, -ldTtransitionUL.Y3, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                -paramBManual / 2 - transitionData.DimL, -thickness / 2 - transitionData.DimH,
+                                                paramBManual / 2 + xangle + extraLength, -thickness / 2,
+                                                ldThicknessL.X3, -thickness / 2 - transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Горизонтальный размер перехода
                                             LineDimension(lineDimensions,
-                                                -paramBManual / 2 - transitionData.DimL, thickness / 2 + transitionData.DimH,
+                                                -paramBManual / 2 - transitionData.DimL, -thickness / 2 - transitionData.DimH,
                                                 -paramBManual / 2, -thickness / 2,
                                                 -(transitionData.DimL + paramBManual) / 2, ldParamB.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Угол
