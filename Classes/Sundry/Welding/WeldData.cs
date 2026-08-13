@@ -12076,9 +12076,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.Y3 - ParamC + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 - ParamC + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.Y3 - ParamC + gapDimToDim, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, lsAngle.X2 / 2, angleDRadius, angleDRadius);
@@ -12204,16 +12202,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.Y3 + ParamC - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.Y3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, lsAngle.X2 / 2, -angleDRadius, angleDRadius);
                                             SetDeviation(dtParamA, ParamATolerance);           
                                         }
                                     }
-
                                     break;
                                 case LocationPart.Право_Верх:
                                     {
@@ -12333,9 +12328,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.Y3 - ParamC + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 - ParamC + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.Y3 - ParamC + gapDimToDim, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, lsAngle.X2 / 2, angleDRadius, angleDRadius);
@@ -12461,16 +12454,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.Y3 + ParamC - gapDimToDim * 1.5) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.Y3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.Y3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, lsAngle.X2 / 2, -angleDRadius, angleDRadius);
                                             SetDeviation(dtParamA, ParamATolerance);           
                                         }
                                     }
-
                                     break;
                                 case LocationPart.Верх_Лево:
                                     {
@@ -12589,9 +12579,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.X3 + ParamC - gapDimToDim) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 + ParamC - gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.X3 + ParamC - gapDimToDim, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, -angleDRadius, lsAngle.Y2 / 2, angleDRadius);
@@ -12716,9 +12704,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.X3 - ParamC) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 - ParamC, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.X3 - ParamC + gapDimToDim, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, angleDRadius, lsAngle.Y2 / 2, angleDRadius);
@@ -12843,16 +12829,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.X3 + ParamC - gapDimToDim * 1.7) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 + ParamC - gapDimToDim * 1.7, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.X3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, -angleDRadius, lsAngle.Y2 / 2, angleDRadius);
                                             SetDeviation(dtParamA, ParamATolerance);           
                                         }
                                     }
-
                                     break;
                                 case LocationPart.Низ_Право:
                                     {
@@ -12971,16 +12954,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
                                             //Расчёты для углового размера
-                                            double r1 = (ldParamA.X3 - ParamC + gapDimToDim / 2) / Math.Cos(ParamA * Math.PI / 180);
-                                            double r2 = Math.Sqrt(Math.Pow(ldParamA.X3 - ParamC + gapDimToDim / 2, 2) + Math.Pow(xangle / 2, 2));
-                                            double angleDRadius = r1 > r2 ? r1 : r2;
+                                            double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.X3 - ParamC + gapDimToDim * 1.5, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
                                             //Угол
                                             IDimensionText dtParamA = (IDimensionText)AngleDimension(angleDimensions, lsParamC, lsAngle, angleDRadius, lsAngle.Y2 / 2, angleDRadius);
                                             SetDeviation(dtParamA, ParamATolerance);           
                                         }
                                     }
-
                                     break;
                             }
                             break;
