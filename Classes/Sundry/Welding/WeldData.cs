@@ -14020,8 +14020,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                             LineDimension(lineDimensions, -(xangle + extraLength), -thickness / 2, -(xangle + extraLength), thickness / 2, -(xangle + extraLength + gapDimToPartLeft),
                                                 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtLineHParamA = LineDimension(lineDimensions, 0, ParamC / 2, -xangle, thickness / 2, -xangle / 2, thickness / 2 + gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtLineHParamA = LineDimension(lineDimensions,
+                                                0, ParamC / 2,
+                                                -xangle, thickness / 2,
+                                                -xangle / 2, thickness / 2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
                                             if (ParamA == 45)
                                             {
@@ -14029,8 +14031,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtLineHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions, 0, ParamC / 2, -xangle, thickness / 2, gapDimToPart, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions,
+                                                -xangle, thickness / 2,
+                                                0, ParamC / 2,
+                                                gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный вертикальный притупления
@@ -14144,13 +14148,17 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtLineHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions, 0, ParamC / 2, xangle, thickness / 2, -gapDimToPart, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions,
+                                                xangle, thickness / 2,
+                                                0, ParamC / 2,
+                                                -gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный вертикальный притупления
-                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions, 0, -ParamC / 2, 0, ParamC / 2, -gapDimToPart, 0,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            IDimensionText dtParamC = (IDimensionText)LineDimension(lineDimensions,
+                                                0, -ParamC / 2,
+                                                0, ParamC / 2,
+                                                -gapDimToPart, 0, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation(dtParamC, paramCTolerance);
                                             double r1 = ((thickness - ParamC) / 2 + gapDimToPart) / Math.Cos(ParamA * Math.PI / 180);
                                             double r2 = Math.Sqrt(Math.Pow((thickness - ParamC) / 2 + gapDimToPart + gapDimToDim, 2) + Math.Pow(xangle / 2, 2));
@@ -14245,8 +14253,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtLineHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions, ParamC / 2, 0, thickness / 2, xangle, (thickness - ParamC) / 2, -gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions,
+                                                thickness / 2, xangle,
+                                                ParamC / 2, 0,
+                                                (thickness - ParamC) / 2, -gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный горизонтальный притупления
@@ -14360,8 +14370,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtLineHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions, ParamC / 2, 0, thickness / 2, -xangle, (thickness - ParamC) / 2 , gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtLineVParamA = LineDimension(lineDimensions,
+                                                thickness / 2, -xangle,
+                                                ParamC / 2, 0,
+                                                (thickness - ParamC) / 2 , gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtLineVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtLineVParamA.Update();
                                             //Линейный горизонтальный притупления
@@ -14473,8 +14485,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, gapDimToPart * 2, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                gapDimToPart * 2, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -14597,8 +14611,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, -gapDimToPart, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                -gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
@@ -14721,8 +14737,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, -gapDimToPart * 2,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -14845,8 +14863,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
@@ -14972,8 +14992,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, gapDimToPart * 2, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                gapDimToPart * 2, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -15088,8 +15110,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, -gapDimToPart, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                -gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
@@ -15204,8 +15228,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, -gapDimToPart * 2,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -15320,8 +15346,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
@@ -15432,7 +15460,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension dtHParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2,
                                                 -xangle / 2, baseobjAngle2.Y2 + gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный перехода
-                                            ILineDimension ldTransition = LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, lsTransition1.X2, lsTransition1.Y2,
+                                            LineDimension(lineDimensions, baseobjAngle1.X1, baseobjAngle1.Y1, lsTransition1.X2, lsTransition1.Y2,
                                                 -transitionData.DimL / 2, lsTransition1.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Если угол равен 45 то оба размера угла делаем с десятыми
                                             if (ParamA == 45)
@@ -15441,8 +15469,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, gapDimToPart * 2, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                gapDimToPart * 2, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -15557,8 +15587,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный вертикальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, -gapDimToPart, (thickness - ParamC) / 2,
-                                                ksLineDimensionOrientationEnum.ksLinDVertical);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                -gapDimToPart, (thickness - ParamC) / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
@@ -15674,8 +15706,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, -gapDimToPart * 2,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если верхний и нижний допуск на притупление одинаков то расстояние до детали меньше чем при разных допусках
@@ -15790,8 +15824,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 dtHParamA.Update();
                                             }
                                             //Линейный горизонтальный угла
-                                            ILineDimension dtVParamA = LineDimension(lineDimensions, baseobjAngle2.X1, baseobjAngle2.Y1, baseobjAngle2.X2, baseobjAngle2.Y2, (thickness - ParamC) / 2, gapDimToPart,
-                                                ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                            ILineDimension dtVParamA = LineDimension(lineDimensions,
+                                                baseobjAngle2.X2, baseobjAngle2.Y2,
+                                                baseobjAngle2.X1, baseobjAngle2.Y1,
+                                                (thickness - ParamC) / 2, gapDimToPart, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             ((IDimensionText)dtVParamA).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             dtVParamA.Update();
                                             //Если разрез
