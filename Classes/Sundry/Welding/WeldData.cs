@@ -14210,12 +14210,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                         ILineSegment lsParamC = DrawLineSegment(lineSegments, 0, 0, 0, ParamC);
                                         //Угла
                                         ILineSegment lsAngle = DrawLineSegment(lineSegments, lsParamC.X2, lsParamC.Y2, xangle, thickness);
-                                        //Переход от угла
-                                        ILineSegment lsTransitionAngle = DrawLineSegment(lineSegments, lsAngle.X2, lsAngle.Y2, transitionData.DimL, lsAngle.Y2 + transitionData.DimH);
-                                        //От перехода к краю детали
-                                        ILineSegment lsExtraTransition = DrawLineSegment(lineSegments, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X2 + extraLength, lsTransitionAngle.Y2);
+                                        //От угла к краю детали
+                                        ILineSegment lsExtraTransition = DrawLineSegment(lineSegments, lsAngle.X2, lsAngle.Y2, transitionData.DimL + extraLength, lsAngle.Y2);
                                         //Переход от нуля
-                                        ILineSegment lsTransition0 = DrawLineSegment(lineSegments, 0, 0, lsTransitionAngle.X2, -transitionData.DimH);
+                                        ILineSegment lsTransition0 = DrawLineSegment(lineSegments, 0, 0, transitionData.DimL, -transitionData.DimH);
                                         //От перехода к краю детали
                                         ILineSegment lsExtraTransition0 = DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, lsExtraTransition.X2, lsTransition0.Y2);
                                         //Волнистая линия
@@ -14236,7 +14234,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Добавляем в контур элементы которые ограничивают штриховку
                                             contour.CopySegments(lsParamC, false);
                                             contour.CopySegments(lsAngle, false);
-                                            contour.CopySegments(lsTransitionAngle, false);
                                             contour.CopySegments(lsExtraTransition, false);
                                             contour.CopySegments(lsTransition0, false);
                                             contour.CopySegments(lsExtraTransition0, false);
@@ -14253,8 +14250,8 @@ namespace KompasTools.Classes.Sundry.Welding
                                         if (!isCrossSection)
                                         {
                                             DrawLineSegment(lineSegments, lsTransition0.X2, lsTransition0.Y2, -paramBManual, lsTransition0.Y2);
-                                            DrawLineSegment(lineSegments, -paramBManual, lsTransition0.Y2, -paramBManual, lsTransitionAngle.Y2);
-                                            DrawLineSegment(lineSegments, -paramBManual, lsTransitionAngle.Y2, lsTransitionAngle.X2, lsTransitionAngle.Y2);
+                                            DrawLineSegment(lineSegments, -paramBManual, lsTransition0.Y2, -paramBManual, lsAngle.Y2);
+                                            DrawLineSegment(lineSegments, -paramBManual, lsAngle.Y2, lsAngle.X2, lsAngle.Y2);
                                         }
                                         //Чертим размеры
                                         if (drawDimensions)
@@ -14263,7 +14260,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension ldThickness = LineDimension(lineDimensions, lsExtraTransition0.X2, lsExtraTransition0.Y2, lsExtraTransition.X2, lsExtraTransition.Y2,
                                                 lsExtraTransition.X2 + gapDimToPart * 2, thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный горизонтальный угла
-                                            ILineDimension ldParamA = LineDimension(lineDimensions, lsAngle.X2, lsAngle.Y2, lsAngle.X1, lsAngle.Y1, lsAngle.X2 / 2, lsTransitionAngle.Y2 + gapDimToPart,
+                                            ILineDimension ldParamA = LineDimension(lineDimensions,
+                                                lsAngle.X2, lsAngle.Y2,
+                                                lsAngle.X1, lsAngle.Y1,
+                                                lsAngle.X2 / 2, lsAngle.Y2 + gapDimToPart,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный притупления
                                             ILineDimension ldParamC = LineDimension(lineDimensions, lsParamC.X2, lsParamC.Y2, lsParamC.X1, lsParamC.Y1, -gapDimToPart, lsParamC.Y2 / 2,
@@ -14272,7 +14272,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             if (!isCrossSection && paramBManual != 0)
                                             {
                                                 //Зазора в стыке
-                                                ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual, lsTransitionAngle.Y2, lsParamC.X2, lsParamC.Y2, -paramBManual / 2, ldParamA.Y3,
+                                                ILineDimension ldParamB = LineDimension(lineDimensions, -paramBManual, lsAngle.Y2, lsParamC.X2, lsParamC.Y2, -paramBManual / 2, ldParamA.Y3,
                                                 ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                                 SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                                 //Двигаем размер притупления на величину зазора если выбран разрез
@@ -14288,7 +14288,9 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 }
                                             }
                                             //Линейный горизонтальный перехода
-                                            LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, 0, 0,
+                                            LineDimension(lineDimensions,
+                                                lsTransition0.X2, lsTransition0.Y2,
+                                                0, 0,
                                                 lsTransition0.X2 / 2, lsTransition0.Y2 - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный толщины в стыке
                                             ILineDimension ldThicknessJoint = LineDimension(lineDimensions, 0, 0, lsAngle.X2, lsAngle.Y2,
@@ -14304,10 +14306,6 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessJoint.X3, -transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)ldTransitionD).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionD.Update();
-                                            ILineDimension ldTransitionU = LineDimension(lineDimensions, lsTransitionAngle.X2, lsTransitionAngle.Y2, lsTransitionAngle.X1, lsTransitionAngle.Y1,
-                                                ldThicknessJoint.X3, lsAngle.Y2 + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
-                                            ldTransitionU.Update();
                                             //Расчёты для углового размера
                                             double angleDRadius = Math.Sqrt(Math.Pow(ldParamA.Y3 - ParamC + gapDimToDim, 2) + Math.Pow(xangle, 2));
                                             angleDRadius *= view.Scale;//Радиус будто бы должен задаваться в масштабе 1:1
