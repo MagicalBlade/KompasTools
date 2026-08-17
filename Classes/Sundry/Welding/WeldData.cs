@@ -8066,7 +8066,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ldTransitionU.Update();
                                             ILineDimension ldTransitionD = LineDimension(lineDimensions,
                                                 ldTransitionU.X1, -transitionData.DimH,
-                                                ldTransitionU.X2, 0,
+                                                -paramBManual / 2, 0,
                                                 ldThicknessL.X3, -transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)ldTransitionD).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionD.Update();
