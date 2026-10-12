@@ -11510,7 +11510,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 }
                                             }
                                             IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                                0, ldParamB.Y3 + gapDimToDim / 2, angleDRadius);
+                                                -ParamB / 2 - xangle / 2, ldParamB.Y3 + gapDimToDim / 2, angleDRadius);
                                             SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                         }
                                     }
@@ -11625,7 +11625,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 }
                                             }
                                             IAngleDimension adParamA = AngleDimension(angleDimensions, baseobjAngle1, baseobjAngle2,
-                                                0, angleDRadius, Math.Abs(angleDRadius));
+                                                -ParamB / 2 - xangle / 2, angleDRadius, Math.Abs(angleDRadius));
                                             SetDeviation((IDimensionText)adParamA, ParamATolerance);
                                         }
                                     }
