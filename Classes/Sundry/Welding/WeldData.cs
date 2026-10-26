@@ -14307,7 +14307,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             //Линейный вертикальный толщины в стыке
                                             ILineDimension ldThicknessL = LineDimension(lineDimensions,
                                                 -paramBManual / 2, thickness,
-                                                -paramBManual / 2, 0,
+                                                -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, 0,
                                                 -paramBManual / 2 - transitionData.DimL - extraLengthNotCh - gapDimToPart, thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Линейный вертикальный перехода
                                             ILineDimension ldTransitionU = LineDimension(lineDimensions,
@@ -14316,16 +14316,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                                 ldThicknessL.X3, thickness + transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
                                             ldTransitionU.Update();
-                                            ILineDimension ldTransitionD = LineDimension(lineDimensions,
-                                                ldTransitionU.X1, -transitionData.DimH,
-                                                ldTransitionU.X2, 0,
-                                                ldThicknessL.X3, -transitionData.DimH / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
-                                            ((IDimensionText)ldTransitionD).Accuracy = ksAccuracyEnum.ksAccuracy1;
-                                            ldTransitionD.Update();
                                             //Линейный вертикальный толщины
                                             LineDimension(lineDimensions,
                                                 -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, thickness + transitionData.DimH,
-                                                -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, -transitionData.DimH,
+                                                -paramBManual / 2 - transitionData.DimL - extraLengthNotCh, 0,
                                                 ldThicknessL.X3 - gapDimToDim, thickness / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             LineDimension(lineDimensions,
                                                 paramBManual / 2 + xangle + extraLength, thickness,
@@ -14335,7 +14329,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             LineDimension(lineDimensions,
                                                 -paramBManual / 2 - transitionData.DimL, thickness + transitionData.DimH,
                                                 -paramBManual / 2, 0,
-                                                -paramBManual / 2 - transitionData.DimL / 2, -transitionData.DimH - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
+                                                -paramBManual / 2 - transitionData.DimL / 2, -gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Угол
                                             //Если верхний и нижний допуск притупления одинаков то расстояние до детали меньше чем при разных допусках
                                             double angleDRadius = Math.Sqrt(Math.Pow(ldParamB.Y3 - ParamC + gapDimToDim, 2) + Math.Pow(xangle, 2));
