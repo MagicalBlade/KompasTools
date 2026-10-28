@@ -15568,7 +15568,7 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ILineDimension ldParamB = LineDimension(lineDimensions,
                                                 -ParamC, -paramBManual / 2,
                                                 -thickness, paramBManual / 2,
-                                                -thickness - transitionData.DimH - gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
+                                                -thickness - gapDimToPart, paramBManual / 2 + 1, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             SetDeviation((IDimensionText)ldParamB, paramBTolerance);
                                             //Если зазор в стыке равен нулю приходится для наглядности сделать его равным двум милиметрам
                                             //При это в размер забиваем вручную ноль
@@ -15589,16 +15589,10 @@ namespace KompasTools.Classes.Sundry.Welding
                                             SetDeviation((IDimensionText)ldParamCR, paramCTolerance);
                                             //Линейный горизонтальный толщины в стыке
                                             ILineDimension ldThicknessH = LineDimension(lineDimensions,
-                                                -thickness, -paramBManual / 2 - xangle,
+                                                -thickness, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 0, -paramBManual / 2,
                                                 -thickness / 2, -paramBManual / 2 - transitionData.DimL - extraLength - gapDimToPart * 2, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный горизонтальный перехода
-                                            ILineDimension ldTransitionU = LineDimension(lineDimensions,
-                                                -thickness - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
-                                                ldThicknessH.X1, ldThicknessH.Y1,
-                                                -thickness - transitionData.DimH / 2, ldThicknessH.Y3, ksLineDimensionOrientationEnum.ksLinDHorizontal);
-                                            ((IDimensionText)ldTransitionU).Accuracy = ksAccuracyEnum.ksAccuracy1;
-                                            ldTransitionU.Update();
                                             ILineDimension ldTransitionD = LineDimension(lineDimensions,
                                                 transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 0, -paramBManual / 2,
@@ -15607,13 +15601,13 @@ namespace KompasTools.Classes.Sundry.Welding
                                             ldTransitionD.Update();
                                             //Линейный горизонтальный толщины
                                             LineDimension(lineDimensions,
-                                                -thickness - transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
+                                                -thickness, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 transitionData.DimH, -paramBManual / 2 - transitionData.DimL - extraLength,
                                                 -thickness / 2, ldThicknessH.Y3 - gapDimToDim, ksLineDimensionOrientationEnum.ksLinDHorizontal);
                                             //Линейный вертикальный перехода
                                             LineDimension(lineDimensions,
                                                 0, -paramBManual / 2,
-                                                -thickness - transitionData.DimH, -paramBManual / 2 - transitionData.DimL,
+                                                transitionData.DimH, -paramBManual / 2 - transitionData.DimL,
                                                 transitionData.DimH + gapDimToPart * 2, -transitionData.DimL / 2, ksLineDimensionOrientationEnum.ksLinDVertical);
                                             //Угол
                                             double angleDRadius = Math.Sqrt(Math.Pow(ldParamB.X3 + ParamC - gapDimToDim * 1.5, 2) + Math.Pow(xangle, 2));
